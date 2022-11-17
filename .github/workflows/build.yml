@@ -1,0 +1,464 @@
+name: Build
+
+# Controls when the workflow will run
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+#    tags:
+#      - 'v*.*.*'
+  pull_request:
+    branches:
+      - 'dev'
+      - 'testing'
+
+# permissions are needed if pushing to ghcr.io
+permissions: 
+  packages: write
+
+env:
+  REGISTRY_GITHUB: ghcr.io
+  REGISTRY_DOCKER: index.docker.io
+  GH_IMAGE_NAME: ${{ github.repository }}
+  
+
+jobs:
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+  upstream:
+    runs-on: ubuntu-latest
+    environment: build
+    permissions:
+      packages: read
+      contents: read
+    if: github.repository_owner == 'TheFoundation'
+    steps:
+      - uses: actions/checkout@v3
+      - name: prep-upstream
+        run: |
+             mkdir upstream
+             cp -aurv _build_hocker.sh .github upstream/
+      - uses: cpina/github-action-push-to-another-repository@main
+        env:
+          SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+#          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'upstream'
+          destination-github-username: 'thefoundation-builder'
+          destination-repository-name: 'hocker-builder-github'
+          user-email: actions@github.com
+          target-branch: main
+
+  build-base-focal:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh base-focal
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-base-bionic:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh base-bionic
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-php81-nomysql:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-base-focal ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php81-nomysql
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php81-mini:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php81-nomysql ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php81-mini
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-php81-maxi:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php81-mini ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php81-maxi
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php80-nomysql:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-base-focal ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php80-nomysql
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php80-mini:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php80-nomysql ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php80-mini
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-php80-maxi:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php80-mini ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php80-maxi
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php74-nomysql:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-base-focal ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php74-nomysql
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php74-mini:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php74-nomysql ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php74-mini
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-php74-maxi:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php74-mini ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php74-maxi
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php72-nomysql:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-base-bionic ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php72-nomysql
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+  build-php72-mini:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php72-nomysql ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php72-mini
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+  build-php72-maxi:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-php72-mini ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php72-maxi
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+
+
+  build-php56:  
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    needs: [ build-base-bionic ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: docker image ls   
+      - name: current images
+        run: /bin/bash bash _build_hocker.sh php5
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: dist-without-markdown
+         path: |
+              buildlogs
+
+
+#    - name: go to repo and build
+#      run: /bin/bash -c "cd Hocker;/bin/bash _build.hocker.sh base-bionic"
+#            !build/**/*.md
+###    - name: Login
+###      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+###    - name: Run Buildx
+###      env:
+##         EZORED_AWS_KEY_ID: ${{ secrets.EZORED_AWS_KEY_ID }}
+##         EZORED_AWS_SECRET_KEY: ${{ secrets.EZORED_AWS_SECRET_KEY }}
+###      run: |
+###       docker buildx build -f Dockerfile -t ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPO }}:latest --output "type=image,push=true" --platform linux/amd64,linux/arm/v7,linux/arm64 .
+##
