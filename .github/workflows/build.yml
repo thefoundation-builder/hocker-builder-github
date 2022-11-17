@@ -52,6 +52,7 @@ jobs:
 
   build-base-focal:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -68,7 +69,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh base-focal
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-focal "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -77,6 +78,7 @@ jobs:
               buildlogs
   build-base-bionic:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -93,7 +95,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh base-bionic
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-bionic "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -102,6 +104,7 @@ jobs:
               buildlogs
   build-php81-nomysql:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -119,7 +122,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php81-nomysql
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-nomysql "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -129,6 +132,7 @@ jobs:
 
   build-php81-mini:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -146,7 +150,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php81-mini
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-mini "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -155,6 +159,7 @@ jobs:
               buildlogs
   build-php81-maxi:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -172,7 +177,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php81-maxi
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-maxi "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -182,6 +187,7 @@ jobs:
 
   build-php80-nomysql:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -199,7 +205,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php80-nomysql
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-nomysql "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -209,6 +215,7 @@ jobs:
 
   build-php80-mini:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -226,7 +233,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php80-mini
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-mini "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -235,6 +242,7 @@ jobs:
               buildlogs
   build-php80-maxi:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -252,7 +260,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php80-maxi
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-maxi "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -262,6 +270,7 @@ jobs:
 
   build-php74-nomysql:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -279,7 +288,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php74-nomysql
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-nomysql "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -289,6 +298,7 @@ jobs:
 
   build-php74-mini:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -306,7 +316,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php74-mini
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-mini "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -315,6 +325,7 @@ jobs:
               buildlogs
   build-php74-maxi:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -332,7 +343,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php74-maxi
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-maxi "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -342,6 +353,7 @@ jobs:
 
   build-php72-nomysql:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -359,7 +371,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php72-nomysql
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-nomysql "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -369,6 +381,7 @@ jobs:
 
   build-php72-mini:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -386,7 +399,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php72-mini
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-mini "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -395,6 +408,7 @@ jobs:
               buildlogs
   build-php72-maxi:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -412,7 +426,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php72-maxi
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-maxi "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -424,6 +438,7 @@ jobs:
 
   build-php56:  
     runs-on: ubuntu-latest
+    environment: push-dockerhub
     permissions:
       packages: write
       contents: read
@@ -441,7 +456,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: current images
-        run: /bin/bash bash _build_hocker.sh php5
+        run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php5 "
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
