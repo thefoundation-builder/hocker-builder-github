@@ -303,7 +303,7 @@ _docker_build() {
         #        buildstring=${buildstring}" --squash "
         #fi
         echo -n "testing for buildx:"|red
-        if $(docker buildx 2>&1 |grep -q "imagetools") ;then echo "FOUND"|green ; else echo "MISSING"|red;done
+        if $(docker buildx 2>&1 |grep -q "imagetools") ;then echo "FOUND"|green ; else echo "MISSING"|red;fi
         
         ## HAVING BUILDX , builder should loop over stack e.g. armV7 / aarch64 / amd64 
             if $(docker buildx 2>&1 |grep -q "imagetools") ;then
@@ -315,7 +315,7 @@ _docker_build() {
                 docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
                 echo -n "buildx:create:qemu" |yellow ;
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
-                echo -n "buildx:create:buildx" |yellow ;
+                echo -n "buildx:create:qemu" |yellow ;
                 docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
