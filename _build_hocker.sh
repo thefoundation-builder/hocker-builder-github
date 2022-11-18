@@ -282,10 +282,10 @@ _docker_build() {
         buildstring=${MYBUILDSTRING}" "${buildstring}
         start=$(date -u +%s)
         ## NO BUILDX ,use standard instructions
-        DOCKER_BUILDKIT=0
+        #export DOCKER_BUILDKIT=0
         echo;_clock
         echo -n "TAG: $IMAGETAG | BUILD: $buildstring | PULLING ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} IF NOT FOUND | "|yellow
-        echo pull our own recent image|green
+        echo pull our own recent image with DOCKER_BUILDKIT=0 |green
         _docker_pull_multiarch ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
         echo pull the baseimage in dockerfile: from |green
         _docker_pull_multiarch $(cat ${DFILENAME}|grep ^FROM|sed 's/^FROM/ /g' |cut -d"#" -f1 |cut -f1)
@@ -298,31 +298,34 @@ _docker_build() {
         _clock
         native_build_failed=yes
         buildx_failed=no
-        ## BUILDX does not support squash
+        ## BUILDX does not support squash (2020)
         #if [ "${MERGE_LAYERS}" = "YES" ] ; then
         #        buildstring=${buildstring}" --squash "
         #fi
-
+        echo -n "testing for buildx:"|red
+        if $(docker buildx 2>&1 |grep -q "imagetools") ;then echo "FOUND"|green ; else echo "MISSING"|red;done
+        
         ## HAVING BUILDX , builder should loop over stack e.g. armV7 / aarch64 / amd64 
             if $(docker buildx 2>&1 |grep -q "imagetools") ;then
-                echo " TRYING MULTIARCH ";
+                echo " TRYING MULTIARCH "|blue
                 #echo ${have_buildx} |grep -q =true$ &&  docker buildx create --buildkitd-flags '--allow-insecure-entitlement network.host' --driver-opt network=host --driver docker-container --use --name mybuilder_${BUILDER_TOK} ; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --use --name mybuilder_${BUILDER_TOK}; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --append --name mybuilder_${BUILDER_TOK} --platform=linux/aarch64 rpi4
                 # --driver docker-container --driver-opt network=host
-                echo RECREATING  buildx HELPER
+                echo RECREATING  buildx HELPER | green
                 (echo -n buildx:rm: ;
                 docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
-                echo -n buildx:create: ;
-                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+                echo -n buildx:create: |yellow ;
+                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
                 docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
-                docker buildx inspect --bootstrap 2>&1 |redb ) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
+                echo "TESTING CREATED BUILDER:"|blue
+                docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
                 arch_ok=yes
                 if [ "$arch_ok" = "yes" ] ;then echo "arch_ok" for $TARGETARCH
                 ## RANDOMIZE LOGIN TIME ; SO MULTIPLE RUNNERS DON't TRIGGER POSSIBLE BOT/DDOS-PREVENTION SCRIPTS
                 sleep $(($RANDOM%2));sleep  $(($RANDOM%3));
                 loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" | blue |_oneline)
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
-                  echo "login seems ok"
+                echo "login seems ok"|green
                 echo -ne "d0ck³r buildX , running the following command ( first to daemon , then Registry):"|yellow|blueb;echo -ne "\e[1;31m"
                 echo "docker buildx build  --output=type=image                --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH} --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f ${DFILENAME}"  . | yellowb
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log \e[0m"
