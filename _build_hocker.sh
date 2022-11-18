@@ -942,7 +942,7 @@ return $localbuildfail ; } ;
 
 
 _build_php80() {
-  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs);
+  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
   echo "building for $DFILES" >&2
   for FILENAME in $DFILES;do
         echo DOCKERFILE: $FILENAME|yellow
@@ -958,12 +958,28 @@ return $localbuildfail ; } ;
 
 _build_php80_nomysql() {
     localbuildfail=0
-    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
         echo DOCKERFILE: $FILENAME|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
        _run_buildwheel ${FILENAME} NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
+echo "##############################"|blue
+return $localbuildfail ; } ;
+
+_build_php80_nomysql() {
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "building for $DFILES"
+    for FILENAME in $DFILES;do
+        echo DOCKERFILE: $FILENAME|yellow
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel ${FILENAME} 
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1082,6 +1098,7 @@ case $1 in
   php80-mini|p80-mini)        _build_php80 "$@" ;         buildfail=$? ;;
   php80-nomysql|p80-nomysql)  _build_php80_nomysql "$@" ; buildfail=$? ;;
   php80-maxi|p80-maxi)        _build_php80 "$@" ;         buildfail=$? ;;
+  php80-alpine|p80-alpine)        _build_php80_alpine "$@" ;         buildfail=$? ;;
 
   php81|p81)                  _build_php81 "$@" ;         buildfail=$? ;;
   php81-mini|p81-mini)        _build_php81 "$@" ;         buildfail=$? ;;
