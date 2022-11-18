@@ -41,7 +41,8 @@ jobs:
              cp -aurv _build_hocker.sh .github downstream &
              bash build/_generate_downstream_readme.sh thefoundation-builder hocker-builder-github > downstream/README.md
              wait
-      - uses: cpina/github-action-push-to-another-repository@main
+#      - uses: cpina/github-action-push-to-another-repository@main
+      - uses: TheFoundation/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
 #          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
