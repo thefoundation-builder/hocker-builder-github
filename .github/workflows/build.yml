@@ -35,16 +35,17 @@ jobs:
     if: github.repository_owner == 'TheFoundation'
     steps:
       - uses: actions/checkout@v3
-      - name: prep-upstream
+      - name: prep-downstream
         run: |
-             mkdir upstream
-             cp -aurv _build_hocker.sh .github upstream/
+             mkdir downstream
+             cp -aurv _build_hocker.sh .github downstream
+             bash build/_generate_downstream_readme.sh thefoundation-builder hocker-builder-github > downstream/README.md
       - uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
 #          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: 'upstream'
+          source-directory: 'downstream'
           destination-github-username: 'thefoundation-builder'
           destination-repository-name: 'hocker-builder-github'
           user-email: actions@github.com
