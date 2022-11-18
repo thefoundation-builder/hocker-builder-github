@@ -71,7 +71,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-focal "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -100,7 +100,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-bionic "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -130,7 +130,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-nomysql "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -161,7 +161,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-mini "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -191,7 +191,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-maxi "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -222,7 +222,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-nomysql "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -253,7 +253,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-mini "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -283,7 +283,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-maxi "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -314,7 +314,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-nomysql "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -345,7 +345,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-mini "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -375,7 +375,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-maxi "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -406,7 +406,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-nomysql "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -437,7 +437,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-mini "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -467,7 +467,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-maxi "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -500,7 +500,7 @@ jobs:
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php5 "
       - name: show files
-        run: ls buildlogs/  -lh1   
+        run: bash -c "ls buildlogs/  -lh1 ; taill -n 20 buildlogs/*"  
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
