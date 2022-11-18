@@ -310,11 +310,12 @@ _docker_build() {
                 echo " TRYING MULTIARCH "|blue
                 #echo ${have_buildx} |grep -q =true$ &&  docker buildx create --buildkitd-flags '--allow-insecure-entitlement network.host' --driver-opt network=host --driver docker-container --use --name mybuilder_${BUILDER_TOK} ; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --use --name mybuilder_${BUILDER_TOK}; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --append --name mybuilder_${BUILDER_TOK} --platform=linux/aarch64 rpi4
                 # --driver docker-container --driver-opt network=host
-                echo RECREATING  buildx HELPER | green
-                (echo -n buildx:rm: ;
+                echo "RECREATING buildx HELPER" | green
+                (echo -n buildx:rm: |yellow;
                 docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
-                echo -n buildx:create: |yellow ;
+                echo -n "buildx:create:qemu" |yellow ;
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
+                echo -n "buildx:create:buildx" |yellow ;
                 docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
