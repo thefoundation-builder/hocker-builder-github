@@ -332,7 +332,7 @@ _docker_build() {
                 echo "$loginresult" | red
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
                  echo "could not login . would never push .." |red
-                exit 123
+                exit 409
                 fi
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
                 echo "login seems ok"|green
