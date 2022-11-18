@@ -330,7 +330,7 @@ _docker_build() {
                 echo -n "docker:login:( ${REGISTRY_USER}@${REGISTRY_HOST} )"|blue
                 loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" |_oneline)
                 echo "$loginresult" | red
-                if echo "$loginresult"|grep -i -v "unauthorized" ; then
+                if echo "$loginresult"|grep -i  "unauthorized" ; then
                  echo "could not login . would never push .." |red
                 exit 409
                 fi
