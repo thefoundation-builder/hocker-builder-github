@@ -57,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
     environment: push-dockerhub
     permissions:
       packages: write
@@ -105,7 +106,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-bionic "
+        run: sudo /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }};echo "$REGISTRY_USER"|base64 -w0 ;bash _build_hocker.sh base-bionic "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
       - name: Archive production artifacts
