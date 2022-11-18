@@ -331,6 +331,10 @@ _docker_build() {
                 loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" |_oneline)
                 echo "$loginresult" | red
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
+                 echo "could not login . would never push .." |red
+                exit 123
+                fi
+                if echo "$loginresult"|grep -i -v "unauthorized" ; then
                 echo "login seems ok"|green
                 echo -ne "d0ck³r buildX , running the following command ( first to daemon , then Registry):"|yellow|blueb;echo -ne "\e[1;31m"
                 echo "docker buildx build  --output=type=image                --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH} --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f ${DFILENAME}"  . | yellowb
