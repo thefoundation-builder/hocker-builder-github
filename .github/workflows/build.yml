@@ -68,12 +68,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-focal "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-base-bionic:  
@@ -94,12 +97,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh base-bionic "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-php81-nomysql:  
@@ -121,12 +127,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-nomysql "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -149,12 +158,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-mini "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-php81-maxi:  
@@ -176,12 +188,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php81-maxi "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -204,12 +219,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-nomysql "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -232,12 +250,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-mini "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-php80-maxi:  
@@ -259,12 +280,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php80-maxi "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -287,12 +311,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-nomysql "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -315,12 +342,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-mini "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-php74-maxi:  
@@ -342,12 +372,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php74-maxi "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -370,12 +403,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-nomysql "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -398,12 +434,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-mini "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
   build-php72-maxi:  
@@ -425,12 +464,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php72-maxi "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
@@ -455,12 +497,15 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: docker image ls   
-      - name: current images
+      - name: build images
         run: /bin/bash -c "export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;export REGISTRY_PASSWORD=${{ secrets.REGISTRY_PASSWORD }} ;bash _build_hocker.sh php5 "
+      - name: show files
+        run: ls buildlogs/  -lh1   
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
         with:
-         name: dist-without-markdown
+         name: buildlogs
          path: |
               buildlogs
 
