@@ -316,15 +316,20 @@ _docker_build() {
                 echo -n "buildx:create:qemu" |yellow ;
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
                 echo -n "buildx:create:qemu" |yellow ;
-                docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
+                docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
                 docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
                 arch_ok=yes
                 if [ "$arch_ok" = "yes" ] ;then echo "arch_ok" for $TARGETARCH
                 ## RANDOMIZE LOGIN TIME ; SO MULTIPLE RUNNERS DON't TRIGGER POSSIBLE BOT/DDOS-PREVENTION SCRIPTS
-                sleep $(($RANDOM%2));sleep  $(($RANDOM%3));
-                loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" | blue |_oneline)
+                rsleepa=$(($RANDOM%2))
+                rsleepb=$(($RANDOM%3))
+                echo "WAITING $rsleepa + $rsleepb"|green
+                sleep $rsleepa;sleep $rsleepb ;
+                echo -n "docker:login:( ${REGISTRY_USER}@${REGISTRY_HOST} )"|blue
+                loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" |_oneline)
+                echo "$loginresult" | red
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
                 echo "login seems ok"|green
                 echo -ne "d0ck³r buildX , running the following command ( first to daemon , then Registry):"|yellow|blueb;echo -ne "\e[1;31m"

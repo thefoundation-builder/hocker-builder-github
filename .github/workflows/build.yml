@@ -38,8 +38,9 @@ jobs:
       - name: prep-downstream
         run: |
              mkdir downstream
-             cp -aurv _build_hocker.sh .github downstream
+             cp -aurv _build_hocker.sh .github downstream &
              bash build/_generate_downstream_readme.sh thefoundation-builder hocker-builder-github > downstream/README.md
+             wait
       - uses: cpina/github-action-push-to-another-repository@main
         env:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
