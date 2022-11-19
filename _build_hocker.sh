@@ -999,6 +999,21 @@ echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
 echo "##############################"|blue
 return $localbuildfail ; } ;
 
+_build_php80_alpine_nomysql() {
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "building for $DFILES"
+    for FILENAME in $DFILES;do
+        echo DOCKERFILE: $FILENAME|yellow
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel ${FILENAME} NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
+echo "##############################"|blue
+return $localbuildfail ; } ;
 
 _build_php81() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
@@ -1088,33 +1103,34 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 buildfail=0
 
 case $1 in
-  buildx)                     _build_docker_buildx ;;
-  latest)                     _build_latest "$@" ;        buildfail=$? ;;
-  base-focal)                 _build_base focal  "$@" ;        buildfail=$? ;;
-  base-bionic)                _build_base bionic "$@" ;        buildfail=$? ;;
+  buildx)                                      _build_docker_buildx ;;
+  latest)                                      _build_latest "$@" ;               buildfail=$? ;;
+  base-focal)                                  _build_base focal  "$@" ;          buildfail=$? ;;
+  base-bionic)                                 _build_base bionic "$@" ;          buildfail=$? ;;
+                 
+  latest_nomysql)                              _build_latest_nomysql "$@";        buildfail=$? ;;
+  php5|p5)                                     _build_php5 "$@" ;                 buildfail=$? ;;
+  php72|p72)                                   _build_php72 "$@" ;                buildfail=$? ;;
+  php72-mini|p72-mini)                         _build_php72 "$@" ;                buildfail=$? ;;
+  php72-nomysql|p72_nomysql)                   _build_php72_nomysql "$@" ;        buildfail=$? ;;
+  php72-maxi|p72-maxi)                         _build_php72 "$@" ;                buildfail=$? ;;
+                        
+  php74|p74)                                   _build_php74 "$@" ;                buildfail=$? ;;
+  php74-mini|p74-mini)                         _build_php74 "$@" ;                buildfail=$? ;;
+  php74-nomysql|p74-nomysql)                   _build_php74_nomysql "$@" ;        buildfail=$? ;;
+  php74-maxi|p74-maxi)                         _build_php74 "$@" ;                buildfail=$? ;;
+                        
+  php80|p80)                                   _build_php80 "$@" ;                buildfail=$? ;;
+  php80-mini|p80-mini)                         _build_php80 "$@" ;                buildfail=$? ;;
+  php80-nomysql|p80-nomysql)                   _build_php80_nomysql "$@" ;        buildfail=$? ;;
+  php80-maxi|p80-maxi)                         _build_php80 "$@" ;                buildfail=$? ;;
+  php80-alpine|p80-alpine)                     _build_php80_alpine "$@" ;         buildfail=$? ;;
+  php80-nomysql-alpine|p80-mini-alpine)        _build_php80_alpine_nomysql "$@" ; buildfail=$? ;;
 
-  latest_nomysql)             _build_latest_nomysql "$@"; buildfail=$? ;;
-  php5|p5)                    _build_php5 "$@" ;          buildfail=$? ;;
-  php72|p72)                  _build_php72 "$@" ;         buildfail=$? ;;
-  php72-mini|p72-mini)        _build_php72 "$@" ;         buildfail=$? ;;
-  php72-nomysql|p72_nomysql)  _build_php72_nomysql "$@" ; buildfail=$? ;;
-  php72-maxi|p72-maxi)        _build_php72 "$@" ;         buildfail=$? ;;
-
-  php74|p74)                  _build_php74 "$@" ;         buildfail=$? ;;
-  php74-mini|p74-mini)        _build_php74 "$@" ;         buildfail=$? ;;
-  php74-nomysql|p74-nomysql)  _build_php74_nomysql "$@" ; buildfail=$? ;;
-  php74-maxi|p74-maxi)        _build_php74 "$@" ;         buildfail=$? ;;
-
-  php80|p80)                  _build_php80 "$@" ;         buildfail=$? ;;
-  php80-mini|p80-mini)        _build_php80 "$@" ;         buildfail=$? ;;
-  php80-nomysql|p80-nomysql)  _build_php80_nomysql "$@" ; buildfail=$? ;;
-  php80-maxi|p80-maxi)        _build_php80 "$@" ;         buildfail=$? ;;
-  php80-alpine|p80-alpine)        _build_php80_alpine "$@" ;         buildfail=$? ;;
-
-  php81|p81)                  _build_php81 "$@" ;         buildfail=$? ;;
-  php81-mini|p81-mini)        _build_php81 "$@" ;         buildfail=$? ;;
-  php81-nomysql|p81-nomysql)  _build_php81_nomysql "$@" ; buildfail=$? ;;
-  php81-maxi|p81-maxi)        _build_php81 "$@" ;         buildfail=$? ;;
+  php81|p81)                                   _build_php81 "$@" ;                buildfail=$? ;;
+  php81-mini|p81-mini)                         _build_php81 "$@" ;                buildfail=$? ;;
+  php81-nomysql|p81-nomysql)                   _build_php81_nomysql "$@" ;        buildfail=$? ;;
+  php81-maxi|p81-maxi)                         _build_php81 "$@" ;                buildfail=$? ;;
 
   rest|aux)                   _build_aux  "$@" ;          buildfail=$? ;;
   **  )                       _build_all ;                buildfail=$? ; _build_latest ; buildfail=$(($buildfail+$?)) ;;
