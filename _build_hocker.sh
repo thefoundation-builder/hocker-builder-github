@@ -973,7 +973,7 @@ echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
 echo "##############################"|blue
 return $localbuildfail ; } ;
 
-_build_php80_alpinel() {
+_build_php80_alpine() {
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
