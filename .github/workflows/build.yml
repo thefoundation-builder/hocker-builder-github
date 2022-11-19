@@ -328,6 +328,40 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
+  scan-php81-maxi:  
+    runs-on: ubuntu-latest
+    needs: build-php74-maxi
+    env: 
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+    environment: push-dockerhub
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+      - name: Trivy vulnerability scan @ baseimage-focal
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results-php81.sarif'
 
   build-php80-nomysql:  
     runs-on: ubuntu-latest
@@ -426,6 +460,40 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
+  scan-php80-maxi:  
+    runs-on: ubuntu-latest
+    needs: build-php74-maxi
+    env: 
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+    environment: push-dockerhub
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+      - name: Trivy vulnerability scan @ baseimage-focal
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results-php80.sarif'
 
   build-php74-nomysql:  
     runs-on: ubuntu-latest
@@ -524,6 +592,40 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
+  scan-php74-maxi:  
+    runs-on: ubuntu-latest
+    needs: build-php74-maxi
+    env: 
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+    environment: push-dockerhub
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: bash -c "docker pull docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+      - name: Trivy vulnerability scan @ baseimage-focal
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results-php74.sarif'
 
   build-php72-nomysql:  
     runs-on: ubuntu-latest
@@ -622,7 +724,40 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
+  scan-php72-maxi:  
+    runs-on: ubuntu-latest
+    needs: build-php72-maxi
+    env: 
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+    environment: push-dockerhub
+    permissions:
+      packages: write
+      contents: read
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: bash -c "docker pull docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+      - name: Trivy vulnerability scan @ baseimage-focal
+        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        with:
+          image-ref: 'docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
 
+      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results-php72.sarif'
 
 
   build-php56:  
@@ -657,7 +792,7 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php5:  
+  scan-php56:  
     runs-on: ubuntu-latest
     needs: build-php56
     env: 
@@ -690,7 +825,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php6.sarif'
+          sarif_file: 'trivy-results-php56.sarif'
 
 #    - name: go to repo and build
 #      run: sudo /bin/bash -c "cd Hocker;/bin/bash _build.hocker.sh base-bionic"
