@@ -95,6 +95,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -160,6 +161,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -262,6 +264,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -396,6 +399,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -660,6 +664,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -792,6 +797,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
@@ -860,6 +866,7 @@ jobs:
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v2
