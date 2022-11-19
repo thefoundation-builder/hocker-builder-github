@@ -116,7 +116,7 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  build-php81-alpine:  
+  build-php80-alpine:  
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -138,7 +138,7 @@ jobs:
       - name: current images
         run: docker image ls   
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-nomysql "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
       - name: Archive production artifacts
