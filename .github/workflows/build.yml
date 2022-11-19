@@ -659,7 +659,7 @@ jobs:
               buildlogs
   scan-php5:  
     runs-on: ubuntu-latest
-    needs: build-base-focal
+    needs: build-php56
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
     environment: push-dockerhub
