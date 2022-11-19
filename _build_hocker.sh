@@ -381,6 +381,7 @@ echo -n ; } ;
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
             cp "$imagetester" image-tester.sh
             ( cat "${DFILENAME}"
+            echo
             echo "COPY image-tester.sh / " 
             echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
             echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
