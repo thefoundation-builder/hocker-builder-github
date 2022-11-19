@@ -378,13 +378,18 @@ echo -n ; } ;
             _diskfree|blue;docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
             ## in workers of GitLab-Runners/GH-Actions mounts are empty.. create a dockerfile
             #echo "FROM ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
-            cat ${DFILENAME} > ${DFILENAME}.imagetest
-            cp "$imagetester" .
-            echo "COPY thefoundation-imagetester.sh / " >> "${DFILENAME}.imagetest"
-            echo "CMD /bin/bash /thefoundation-imagetester.sh" >> "${DFILENAME}.imagetest"
-            cat "${DFILENAME}.imagetest"
+            echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
+            cat ${DFILENAME} > "${DFILENAME}.imagetest"
+            cp "$imagetester" image-tester.sh
+            echo "COPY image-tester.sh / " >> "${DFILENAME}.imagetest"
+            echo "CMD /bin/bash /image-tester.sh" >> "${DFILENAME}.imagetest"
+            echo "SHOWING HEAD AND TAIL OF NEW DOCKERFILE"|yellow
+            cat "${DFILENAME}.imagetest"|head -n 5|red
+            echo ..
+            echo ..
             _clock
-            echo "::BUILDX:IMAGETEST:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log"
+            cat "${DFILENAME}.imagetest"|tail -n 5 |purlpe
+            echo "::BUILDX:IMAGETEST:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" |green
             time ( docker buildx build   --output=type=docker                     --pull --progress plain  --network=host --memory-swap -1 --memory 1024M   --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest  $buildstring -f "${DFILENAME}.imagetest"  .  2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" | grep -v "sha256:"|awk '!x[$0]++'|blue|sed  -u 's/^/|DAEM-IMAGETEST |/g' )
             _clock
             docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
@@ -401,7 +406,7 @@ echo -n ; } ;
                         -e MYSQL_PASSWORD=ImageTestPW \
                         -e MYSQL_DATABASE=ImageTestDB \
                         -e MARIADB_REMOTE_ACCESS=true \
-                         --rm -e "TERM=xterm-256color"  -t ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest /bin/bash /thefoundation-imagetester.sh |  tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log"
+                         --rm -e "TERM=xterm-256color"  -t ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest /bin/bash /image-tester.sh |  tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log"
 
             echo -n "deleting imagetester" ;docker rmi ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest | tr -d '\n';echo
             tail -n10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" |grep -q "build_ok"
