@@ -614,6 +614,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       doreplace=no;
       echo "$DFILENAME"|grep "_NOMYSQL"  || doreplace=yes
       echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
+      echo "$DFILENAME"|grep "alpine"  || doreplace=no      
       [[ "$doreplace" = "no" ]]|| {
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i 
@@ -689,6 +690,8 @@ echo "NOMYSQL"
       doreplace=no;
       echo "$DFILENAME"|grep "_NOMYSQL"  || doreplace=yes
       echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
+      echo "$DFILENAME"|grep "alpine"  || doreplace=no
+
       [[ "$doreplace" = "no" ]]|| { 
 
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
