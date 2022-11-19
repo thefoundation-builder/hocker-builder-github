@@ -85,19 +85,7 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-      - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
-        with:
-          image-ref: 'docker.io/thefoundation/hocker:base-focal'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
 
-      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'
   scan-base-focal:  
     runs-on: ubuntu-latest
     needs: build-base-focal
