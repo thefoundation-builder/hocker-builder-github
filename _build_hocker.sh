@@ -379,16 +379,15 @@ echo -n ; } ;
             ## in workers of GitLab-Runners/GH-Actions mounts are empty.. create a dockerfile
             #echo "FROM ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
-            cat ${DFILENAME} > "${DFILENAME}.imagetest"
             cp "$imagetester" image-tester.sh
-            echo "COPY image-tester.sh / " >> "${DFILENAME}.imagetest"
-            echo "CMD /bin/bash /image-tester.sh" >> "${DFILENAME}.imagetest"
-            echo "SHOWING HEAD AND TAIL OF NEW DOCKERFILE"|yellow
-            cat "${DFILENAME}.imagetest"|head -n 5|red
+            ( cat "${DFILENAME}"
+            echo "COPY image-tester.sh / " 
+            echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
+            echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
             echo ..
             echo ..
-            _clock
             cat "${DFILENAME}.imagetest"|tail -n 5 |purple
+            _clock
             echo "::BUILDX:IMAGETEST:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" |green
             time ( docker buildx build   --output=type=docker                     --pull --progress plain  --network=host --memory-swap -1 --memory 1024M   --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest  $buildstring -f "${DFILENAME}.imagetest"  .  2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" | grep -v "sha256:"|awk '!x[$0]++'|blue|sed  -u 's/^/|DAEM-IMAGETEST |/g' )
             _clock
