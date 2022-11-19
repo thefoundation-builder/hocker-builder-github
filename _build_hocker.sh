@@ -380,7 +380,7 @@ echo -n ; } ;
             #echo "FROM ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
             cp "$imagetester" image-tester.sh
-            ( cat "${DFILENAME}"
+            ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK
             echo
             echo "COPY image-tester.sh / " 
             echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
