@@ -338,12 +338,14 @@ _docker_build() {
                 echo "login seems ok"|green
                 echo -ne "d0ck³r buildX , running the following command ( first to daemon , then Registry):"|yellow|blueb;echo -ne "\e[1;31m"
                 echo "docker buildx build  --output=type=image                --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH} --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f ${DFILENAME}"  . | yellowb
+                echo "IMAGE FROM TAG IS :"|blue;grep "FROM" $DFILENAME|grep -v "#FROM"
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log \e[0m"
                 ##docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7,darwin --cache-from ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} -o type=registry $buildstring -f "${DFILENAME}"  .  &> ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
                 #docker buildx build  --pull --progress plain --platform=linux/amd64,linux/arm64,linux/arm/v7  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -o type=local,dest=./dockeroutput $buildstring -f "${DFILENAME}"  .  &> ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
                 #--cache-from type=local,src=/root/buildcache/ --cache-to type=local,dest=/root/buildcache/
 ## :MAIN: BUILDX RUN
                 #build2reg without uploading@singlearch
+                test -e ${startdir}/buildlogs/ || mkdir ${startdir}/buildlogs/
                 echo "::BUILDX:2reg NOUPLOAD@singlearch"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
                 time docker buildx build  --output=type=registry,push=false   --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch) --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green |sed  -u 's/^/|REG-NOUPL |/g'
 ## if local docker daemon does not see buildx cache for whatever reasen ( running isolated )
