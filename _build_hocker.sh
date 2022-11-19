@@ -136,17 +136,17 @@ fi
 echo $(date -u +%s) > /tmp/.dockerbuildenvlastsysupgrade
 
 startdir=$(pwd)
-mkdir buildlogs || mv buildlogs/*log /tmp/ || true
+#mkdir buildlogs || mv buildlogs/*log /tmp/ || true
 echo -n "::GIT"|red|whiteb
 /bin/sh -c "test -d Hocker || git clone https://github.com/TheFoundation/Hocker.git --recurse-submodules && (cd Hocker ;git pull origin master --recurse-submodules )"|green|whiteb
 imagetester=$(pwd)/Hocker/thefoundation-imagetester.sh
 cp $imagetester $(pwd)/Hocker/build/
-
-echo using $imagetester
-ls -lh1 $imagetester
+echo "using $imagetester"|yellow
+#echo -n ":BUILD:VERIFY:"|blue;echo "using $imagetester"|yellow
+#ls -lh1 $imagetester
 
 cd Hocker/build/
-## end head preparat stage
+## end head preparation stage
 ####
                         ### 
 _build_docker_buildx() { 
@@ -369,11 +369,12 @@ echo "build_ok:yes"  && build_success=yes
 echo -n ; } ;
 
 [[ "$SKIP_IMAGETEST"  = "yes"  ]] || {
-## image test
+## image is tested
             build_succes=no
             echo "TEST:TESTRUN"|green;
+            echo -n ":BUILD:VERIFY:"|blue;echo "using "$(ls -lh1 $imagetester)|yellow
             _diskfree|blue;docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
-            ## in workers mounts are empty.. create a dockerfile
+            ## in workers of GitLab-Runners/GH-Actions mounts are empty.. create a dockerfile
             #echo "FROM ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
             cat ${DFILENAME} > ${DFILENAME}.imagetest
             cp "$imagetester" .
