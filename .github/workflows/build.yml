@@ -108,7 +108,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:base-focal;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:base-focal'
           format: 'template'
@@ -173,7 +173,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:base-bionic;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-bionic
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:base-bionic'
           format: 'template'
@@ -275,7 +275,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm'
           format: 'template'
@@ -409,7 +409,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
@@ -541,7 +541,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
@@ -673,7 +673,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
@@ -805,7 +805,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
@@ -873,7 +873,7 @@ jobs:
       - name: current images
         run: bash -c "docker pull docker.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
-        uses: aquasecurity/trivy-action@maste
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'docker.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
