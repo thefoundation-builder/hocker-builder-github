@@ -129,7 +129,7 @@ if [ "$(date -u +%s)" -ge  "$(($(cat /tmp/.dockerbuildenvlastsysupgrade|sed 's/^
   echo "max_threads_per_process = 4" >> /etc/libvirt/qemu.conf
 
 
-( echo -n ":REG_LOGIN[test:init]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ; docker logout 2>&1  ) |grep -i -v warning |blue  | _oneline
+( echo -n ":REG_LOGIN[test:init]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; docker logout 2>&1  ) |grep -i -v warning |blue  | _oneline
 else
   echo " → no upgr (1h threshold)→"|green
 fi
@@ -161,7 +161,7 @@ _build_docker_buildx() {
         buildx_dir=$(pwd)"/docker-buildx"
         ##  --platform=local needs experimental docker scope
 
-        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ; } |_oneline ;
+        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; } |_oneline ;
         [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline
         echo daemon settings
         cat /etc/docker/daemon.json|green
@@ -183,7 +183,7 @@ _build_docker_buildx() {
         echo "BUILDX missing-pulling from hub and recreating too old or not executable"
           docker build -t ${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx ${buildx_dir}
           _diskfree|blue;docker system df|red;docker image ls|grep buildx|blue |_oneline;echo
-          ( echo -n ":REG_LOGIN[push:buildx]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ;  ) |grep -i -v warning |blue  | _oneline
+          ( echo -n ":REG_LOGIN[push:buildx]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;  ) |grep -i -v warning |blue  | _oneline
           echo -n ":DOCKER:PUSH@"${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx":"
           (docker push ${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx |grep -v -e Waiting$ -e Preparing$ -e "Layer already exists$";docker logout 2>&1 | _oneline |grep -v -e emov -e redential)  |sed 's/$/ →→ /g;s/Pushed/+/g' |tr -d '\n'
           docker build -o . ${buildx_dir}
@@ -202,7 +202,7 @@ _docker_pull_multiarch() {
     [[ -z "$PULLTAG"  ]] && ( echo "no PULLTAG" |red)
     #for curtag in ${PULLTAG} $(DOCKER_CLI_EXPERIMENTAL=enabled  docker buildx imagetools inspect "${PULLTAG}" 2>&1 |grep Name|cut -d: -f2- |sed 's/ //g'|grep @) ;do
     curtag=${PULLTAG}
-    [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ; } |_oneline;echo ;
+    [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; } |_oneline;echo ;
     [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline;echo
     for current_target in $(echo ${BUILD_TARGET_PLATFORMS}|sed 's/,/ /g');do
         echo ;echo -n "docker pull  (native)                     ${curtag} | :: |" | blue
@@ -226,7 +226,7 @@ _docker_push() {
     ##docker buildx 2>&1 |grep -q "imagetools" || ( )
     IMAGETAG_SHORT=$1
     export DOCKER_BUILDKIT=0
-    docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ;
+    docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;
     echo -n "↑↑↑UPLOAD↑↑↑ "|yellow;_clock
     docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
     echo -n ":REG_LOGIN[push]:"
@@ -332,7 +332,7 @@ _docker_build() {
                 echo "$loginresult" | red
                 if echo "$loginresult"|grep -i  "unauthorized" ; then
                  echo "could not login . would never push .." |red
-                exit 409
+                exit 40
                 fi
                 if echo "$loginresult"|grep -i -v "unauthorized" ; then
                 echo "login seems ok"|green
@@ -447,7 +447,7 @@ echo "uploading multiarch with buildx"
             if $(docker buildx 2>&1 |grep -q "imagetools" ) ;then
                 echo -n "::build::x" ;
                 echo -ne "d0ck³r buildX , running the following command ( to daemon):"|yellow|blueb;echo -ne "\e[1;31m"
-                docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 666 ;
+                docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;
 
                 docker pull ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}  2>&1  | _oneline
                 echo docker buildx build  --output=type=image --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch)  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  . | yellowb
@@ -466,7 +466,7 @@ echo "uploading multiarch with buildx"
                 DOCKER_BUILDKIT=0 time docker build  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t ${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}" --rm=false -t ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} . 2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log" |awk '!x[$0]++'|green
                 echo -n "VERIFYING NATIVE BUILD";docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
                 grep -i -e "uccessfully built " -e  "writing image" -e "exporting layers"  -e "exporting config" ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log" && native_build_failed=no
-                #if [ "${native_build_failed}" = "no" ] ; then echo OK ;else echo NATIVE BUILD FAILED ; exit 333 ;fi
+                #if [ "${native_build_failed}" = "no" ] ; then echo OK ;else echo NATIVE BUILD FAILED ; exit 33 ;fi
                 _clock
                 ###PUSH ONLY NATIVE ARCH IF ALLOW_SINGLE_ARCH_UPLOAD is YES
                 if [ "${ALLOW_SINGLE_ARCH_UPLOAD}" = "YES" ] ; then
@@ -600,7 +600,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
         _docker_rm_buildimage ${IMAGETAG_SHORT} 2>/dev/null | _oneline || true
         #remove all pulled old images from dockerhub
         test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
-        echo return val currently: $rundbuildfail |green
+        echo return val currently: $runbuildfail |green
     fi
   else ## NOMYSQL
 
@@ -664,7 +664,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
                 _docker_rm_buildimage ${IMAGETAG_SHORT} 2>/dev/null | _oneline || true
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
-      echo return val currently: ${rundbuildfail} |green
+      echo return val currently: ${runbuildfail} |green
 
 
   fi ## END IF NOMYSQL
@@ -751,7 +751,7 @@ echo "NOMYSQL"
                   _docker_rm_buildimage ${IMAGETAG_SHORT} 2>/dev/null | _oneline || true
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
-        echo return val currently: $rundbuildfail |green
+        echo return val currently: $runbuildfail |green
     fi
 else ## NOMYSQL
 echo MYSQL
@@ -816,7 +816,7 @@ echo MYSQL
              _docker_rm_buildimage ${IMAGETAG_SHORT} 2>/dev/null | _oneline || true
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
-   echo return val currently: $rundbuildfail |green
+   echo return val currently: $runbuildfail |green
 fi # end if mode
 
 fi ## if NOMYSQL
