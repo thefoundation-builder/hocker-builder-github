@@ -3,7 +3,7 @@ on: [push]
 jobs:
   delete-workflow-runs:
     runs-on: ubuntu-latest
-    name: A demo job to delete workflow runs
+    name: delete  old workflow runs
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,6 +23,8 @@ jobs:
           # what-if: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout2
+        uses: actions/checkout@v2
       - name: Delete ALL workflow runs older than 2d
         uses: ./ # Uses an action in the root directory
         id: delete-old-workflow-runs-all
