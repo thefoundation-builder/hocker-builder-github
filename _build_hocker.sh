@@ -257,7 +257,7 @@ _docker_build() {
         #if echo $(docker inspect --format='{{(index (index .NetworkSettings.Ports "3142/tcp") 0).HostPort}}' apt-cacher-ng || true ) |grep "3142"  ; then
     ## APT CACHE DOCKER
         if echo $(docker ps -a |grep apt-cacher-ng)|grep "3142/tcp";then
-            if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on gitlab-runners
+            if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
              BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
              else
             ## last fail: Connection failure: Address family not supported by protocol [IP: 172.20.0.5 3142]
@@ -265,6 +265,11 @@ _docker_build() {
              #
              echo "NOT USING PROXY BECAUSE WE ARE ON GITLAB RUNNER , set CI_COMMIT_SHA=00000000 to use anyway"
             fi
+        fi
+        if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
+        [[ -z "$APT_HTTP_PROXY_URL" ]] || USING APT_HTTP_PROXY_URL FROM SECRETS
+        [[ -z "$APT_HTTP_PROXY_URL" ]] || BUILDER_APT_HTTP_PROXY_LINE=$APT_HTTP_PROXY_URL
+        
         fi
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
             echo "==NO OVERRIDE APT PROXYSET"
