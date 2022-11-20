@@ -214,7 +214,7 @@ _docker_pull_multiarch() {
     echo ;echo "now pulling multiarch by digest"|green
     for mydigest in $(DOCKER_CLI_EXPERIMENTAL=enabled  docker manifest inspect ${curtag} |jq  -c '.manifests[]|.digest'|sed 's/"//g') ;do echo "->pull digest for $mydigest";
         docker pull ${curtag}@${mydigest} 2>&1 |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline &
-        echo ${mydigest} > /dev/shm/pulled_docker_digests
+        echo ${mydigest} >> /dev/shm/pulled_docker_digests
    done;
    docker image ls
 wait
