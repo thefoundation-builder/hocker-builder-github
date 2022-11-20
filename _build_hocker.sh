@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 ## BUILD SCRIPT ##
 #limit datasize 1000M || ulimit -v 1048576 -u 1048576 -d 1048576 -s 1048576 || true
 
