@@ -10,7 +10,7 @@ jobs:
 
       - name: Delete COMPLETED workflow runs older than 12hrs
         uses: ./ # Uses an action in the root directory
-        id: delete-old-workflow-runs
+        id: delete-old-workflow-runs-completed
         with:
           repository: MajorScruffy/delete-old-workflow-runs
           workflow: ".github/workflows/main.yml"
@@ -25,7 +25,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Delete ALL workflow runs older than 2d
         uses: ./ # Uses an action in the root directory
-        id: delete-old-workflow-runs
+        id: delete-old-workflow-runs-all
         with:
           repository: MajorScruffy/delete-old-workflow-runs
           workflow: ".github/workflows/main.yml"
