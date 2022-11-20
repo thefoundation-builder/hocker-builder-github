@@ -122,7 +122,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-focal.sarif'
+          sarif_file: "trivy-results.sarif"
   build-base-bionic:  
     runs-on: ubuntu-latest
     env: 
@@ -189,7 +189,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-bionic
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-bionic.sarif'
+          sarif_file: "trivy-results.sarif"
 
 
   build-php80-alpine-nomysql:  
@@ -294,7 +294,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php80-alpine.sarif'
+          sarif_file: "trivy-results.sarif"
 
   build-php81-alpine-nomysql:  
     runs-on: ubuntu-latest
@@ -398,7 +398,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php81-alpine.sarif'
+          sarif_file: "trivy-results.sarif"
 
   build-php81-nomysql:  
     runs-on: ubuntu-latest
@@ -534,7 +534,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php81.sarif'
+          sarif_file: "trivy-results.sarif"
 
   build-php80-nomysql:  
     runs-on: ubuntu-latest
@@ -669,7 +669,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php80.sarif'
+          sarif_file: "trivy-results.sarif"
 
   build-php74-nomysql:  
     runs-on: ubuntu-latest
@@ -805,7 +805,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php74.sarif'
+          sarif_file: "trivy-results.sarif"
 
   build-php72-nomysql:  
     runs-on: ubuntu-latest
@@ -941,7 +941,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php72.sarif'
+          sarif_file: "trivy-results.sarif"
 
 
   build-php56:  
@@ -1011,7 +1011,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results-php56.sarif'
+          sarif_file: "trivy-results.sarif"
 
 #    - name: go to repo and build
 #      run: sudo /bin/bash -c "cd Hocker;/bin/bash _build.hocker.sh base-bionic"
