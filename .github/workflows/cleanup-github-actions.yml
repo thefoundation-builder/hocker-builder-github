@@ -22,15 +22,7 @@ jobs:
           # event: completed
           # what-if: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-jobs:
-  delete-workflow-runs:
-    runs-on: ubuntu-latest
-    name: A demo job to delete workflow runs
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
       - name: Delete ALL workflow runs older than 1d
         uses: ./ # Uses an action in the root directory
         id: delete-old-workflow-runs
