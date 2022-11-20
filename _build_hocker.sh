@@ -423,6 +423,9 @@ echo "uploading multiarch with buildx"
             _clock;
             echo "::BUILDX:2reg PUSHING MULTIARCH TO REGISTRY AS ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
             time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
+            test -e /tmp/multisquash|| git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash
+            echo "SQUASH"
+            time bash /tmp/multisquash/docker-squash-multiarch.sh ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
             echo ; } ;
             _clock
 
