@@ -58,6 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
 
     environment: push-dockerhub
     permissions:
@@ -91,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-base-focal
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -126,6 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -157,7 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-base-bionic
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -194,6 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -228,6 +231,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -260,7 +264,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php80-alpine
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -296,6 +300,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -330,6 +335,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -362,7 +368,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php81-alpine
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -398,6 +404,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -431,6 +438,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -463,6 +471,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -495,7 +504,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php81-maxi
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -531,6 +540,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -564,6 +574,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -596,6 +607,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -628,7 +640,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php80-maxi
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -663,6 +675,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -696,6 +709,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -728,6 +742,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -760,7 +775,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php74-maxi
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -796,6 +811,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -829,6 +845,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -861,6 +878,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -893,7 +911,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php72-maxi
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -930,6 +948,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -962,7 +981,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-php56
     env: 
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
