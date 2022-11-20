@@ -19,17 +19,17 @@ jobs:
           # actor: test@test.com
           # branch: main
           # event: push
-          # event: completed
+          event: completed
           # what-if: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
-      - name: Delete ALL workflow runs older than 1d
+      - name: Delete ALL workflow runs older than 2d
         uses: ./ # Uses an action in the root directory
         id: delete-old-workflow-runs
         with:
           repository: MajorScruffy/delete-old-workflow-runs
           workflow: ".github/workflows/main.yml"
-          older-than-seconds: 86400
+          older-than-seconds: 14400
           # created-before: "2021-12-08T16:34:00Z"
           # actor: test@test.com
           # branch: main
