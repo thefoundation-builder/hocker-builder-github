@@ -22,7 +22,7 @@ jobs:
           event: completed
           # what-if: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Delete ALL workflow runs older than 2d
         uses: ./ # Uses an action in the root directory
         id: delete-old-workflow-runs
