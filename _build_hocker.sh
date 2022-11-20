@@ -425,7 +425,7 @@ echo "uploading multiarch with buildx"
             time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
             test -e /tmp/multisquash|| git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash
             echo "SQUASH"
-            time bash /tmp/multisquash/docker-squash-multiarch.sh ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
+            echo "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |grep -q base || time bash /tmp/multisquash/docker-squash-multiarch.sh ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
             echo ; } ;
             _clock
 
@@ -1018,6 +1018,40 @@ echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
 echo "##############################"|blue
 return $localbuildfail ; } ;
 
+_build_php81_alpine() {
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "building for $DFILES"
+    for FILENAME in $DFILES;do
+        echo DOCKERFILE: $FILENAME|yellow
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel ${FILENAME} 
+        if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
+echo "##############################"|blue
+return $localbuildfail ; } ;
+
+_build_php81_alpine_nomysql() {
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "building for $DFILES"
+    for FILENAME in $DFILES;do
+        echo DOCKERFILE: $FILENAME|yellow
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel ${FILENAME} NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo $localbuildfail
+echo "##############################"|blue
+return $localbuildfail ; } ;
+
+
+
 _build_php81() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for $DFILES" >&2
@@ -1134,6 +1168,8 @@ case $1 in
   php81-mini|p81-mini)                         _build_php81 "$@" ;                buildfail=$? ;;
   php81-nomysql|p81-nomysql)                   _build_php81_nomysql "$@" ;        buildfail=$? ;;
   php81-maxi|p81-maxi)                         _build_php81 "$@" ;                buildfail=$? ;;
+  php81-alpine|p81-alpine)                     _build_php81_alpine "$@" ;         buildfail=$? ;;
+  php81-nomysql-alpine|p81-mini-alpine)        _build_php81_alpine_nomysql "$@" ; buildfail=$? ;;
 
   rest|aux)                   _build_aux  "$@" ;          buildfail=$? ;;
   **  )                       _build_all ;                buildfail=$? ; _build_latest ; buildfail=$(($buildfail+$?)) ;;
