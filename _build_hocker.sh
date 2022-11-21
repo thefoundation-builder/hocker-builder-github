@@ -148,8 +148,8 @@ echo "using $imagetester"|yellow
 cd Hocker/build/
 ## end head preparation stage
 ####
-                        ### 
-_build_docker_buildx() { 
+                        ###
+_build_docker_buildx() {
         cd ${startdir}
         PROJECT_NAME=hocker
         export PROJECT_NAME=hocker
@@ -269,7 +269,7 @@ _docker_build() {
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
         [[ -z "$APT_HTTP_PROXY_URL" ]] || USING APT_HTTP_PROXY_URL FROM SECRETS
         [[ -z "$APT_HTTP_PROXY_URL" ]] || BUILDER_APT_HTTP_PROXY_LINE=$APT_HTTP_PROXY_URL
-        
+
         fi
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
             echo "==NO OVERRIDE APT PROXYSET"
@@ -279,7 +279,7 @@ _docker_build() {
     #APT CACHE IN /etc/
         if $( test -d /etc/apt/  &&  grep ^Acquire::http::Proxy /etc/apt/ -rlq) ;then  echo -n "FOUND NATIVE APT proxy:";
                 proxystring=$(grep ^Acquire::http::Proxy /etc/apt/ -r|cut -d: -f2-|sed 's/Acquire::http::Proxy//g;s/ //g;s/\t//g;s/"//g;s/'"'"'//g;s/;//g');
-                buildstring='--build-arg APT_HTTP_PROXY_URL='${proxystring};                
+                buildstring='--build-arg APT_HTTP_PROXY_URL='${proxystring};
         else
             echo "NO SYSTEM APT PROXY FOUND" ;
           export APT_HTTP_PROXY_URL="";
@@ -303,14 +303,14 @@ _docker_build() {
         _clock
         native_build_failed=yes
         buildx_failed=no
-        ## BUILDX does not support squash (2020)
+        ## BUILDX does not support squash (2020) USING https://gitlab.com/the-foundation/docker-squash-multiarch
         #if [ "${MERGE_LAYERS}" = "YES" ] ; then
         #        buildstring=${buildstring}" --squash "
         #fi
         echo -n "testing for buildx:"|red
         if $(docker buildx 2>&1 |grep -q "imagetools") ;then echo "FOUND"|green ; else echo "MISSING"|red;fi
-        
-        ## HAVING BUILDX , builder should loop over stack e.g. armV7 / aarch64 / amd64 
+
+        ## HAVING BUILDX , builder should loop over stack e.g. armV7 / aarch64 / amd64
             if $(docker buildx 2>&1 |grep -q "imagetools") ;then
                 echo " TRYING MULTIARCH "|blue
                 #echo ${have_buildx} |grep -q =true$ &&  docker buildx create --buildkitd-flags '--allow-insecure-entitlement network.host' --driver-opt network=host --driver docker-container --use --name mybuilder_${BUILDER_TOK} ; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --use --name mybuilder_${BUILDER_TOK}; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --append --name mybuilder_${BUILDER_TOK} --platform=linux/aarch64 rpi4
@@ -387,7 +387,7 @@ echo -n ; } ;
             cp "$imagetester" image-tester.sh
             ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK
             echo
-            echo "COPY image-tester.sh / " 
+            echo "COPY image-tester.sh / "
             echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
             echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
             echo ..
@@ -426,14 +426,14 @@ echo -n ; } ;
 ###   upload    multiarch withbuildx
 echo "uploading multiarch with buildx"
             _clock;
+            test -e /tmp/multisquash|| git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash  &> ${startdir}/buildlogs/install_multisquash.log &
             echo "::BUILDX:2reg PUSHING MULTIARCH TO REGISTRY AS ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
             time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
-            test -e /tmp/multisquash|| git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash
-            echo "SQUASH"
-            echo "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |grep -q base || time bash /tmp/multisquash/docker-squash-multiarch.sh ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
+            _clock
+            test -e /tmp/multisquash/docker-squash-multiarch.sh &&   echo "SQUASHing ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"|green | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
+            test -e /tmp/multisquash/docker-squash-multiarch.sh && ( echo "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |grep -q base || time bash /tmp/multisquash/docker-squash-multiarch.sh "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" )
             echo ; } ;
             _clock
-
             echo -n ":past:buildx_multiarch"|green|whiteb;echo ;tail -n6 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -v "exporting config sha256" |yellow
                 fi ## LOGIN succeeded
             fi # end if buildx has TARGETARCH
@@ -623,14 +623,14 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       #### we pull also the "dotted" version" before , since they will have exactly the same steps and our "undotted" version does not exist
       SHORTALIAS=$(echo "${SHORTALIAS}"|sed 's/Dockerfile//g;s/^-//g')
       build_success=no;start=$(date -u +%s)
-      
+
       doreplace=no;
       echo "$DFILENAME"|grep "_NOMYSQL"  || doreplace=yes
       echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
-      echo "$DFILENAME"|grep "alpine"  && doreplace=no      
+      echo "$DFILENAME"|grep "alpine"  && doreplace=no
       [[ "$doreplace" = "no" ]]|| {
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
-      sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i 
+      sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
       }
 
@@ -705,7 +705,7 @@ echo "NOMYSQL"
       echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
       echo "$DFILENAME"|grep "alpine"  && doreplace=no
 
-      [[ "$doreplace" = "no" ]]|| { 
+      [[ "$doreplace" = "no" ]]|| {
 
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
 ## special_case, use mini featureset as FROM base image
@@ -716,8 +716,8 @@ echo "NOMYSQL"
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
           myIMAGETAG=$(echo "$myIMAGETAG"|sed 's/_\+/_/g;s/_$//g');myIMAGETAG=${myIMAGETAG/-_/_};myIMAGETAG_SHORT=${IMAGETAG/_*/}
           myIMAGETAG=${myIMAGETAG}_NOMYSQL
-          
-        
+
+
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
       }
@@ -781,10 +781,10 @@ echo MYSQL
           mycleantags=$(echo "$tagstring"|sed 's/@/_/g'|sed 's/^_//g;s/_\+/_/g'|sed 's/_/-/g' | _oneline)
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
           myIMAGETAG=$(echo "$myIMAGETAG"|sed 's/_\+/_/g;s/_$//g');myIMAGETAG=${myIMAGETAG/-_/_};myIMAGETAG_SHORT=${IMAGETAG/_*/}
-          myIMAGETAG=${myIMAGETAG}_NOMYSQL        
+          myIMAGETAG=${myIMAGETAG}_NOMYSQL
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
-      
+
 
 
     echo "::BUILD:PLATFORM:"$realtarget"::BUILDING...$DFILENAME.."|red
@@ -998,7 +998,7 @@ _build_php80_alpine() {
     for FILENAME in $DFILES;do
         echo DOCKERFILE: $FILENAME|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} 
+       _run_buildwheel ${FILENAME}
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1030,7 +1030,7 @@ _build_php81_alpine() {
     for FILENAME in $DFILES;do
         echo DOCKERFILE: $FILENAME|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} 
+       _run_buildwheel ${FILENAME}
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1149,19 +1149,19 @@ case $1 in
   latest)                                      _build_latest "$@" ;               buildfail=$? ;;
   base-focal)                                  _build_base focal  "$@" ;          buildfail=$? ;;
   base-bionic)                                 _build_base bionic "$@" ;          buildfail=$? ;;
-                 
+
   latest_nomysql)                              _build_latest_nomysql "$@";        buildfail=$? ;;
   php5|p5)                                     _build_php5 "$@" ;                 buildfail=$? ;;
   php72|p72)                                   _build_php72 "$@" ;                buildfail=$? ;;
   php72-mini|p72-mini)                         _build_php72 "$@" ;                buildfail=$? ;;
   php72-nomysql|p72_nomysql)                   _build_php72_nomysql "$@" ;        buildfail=$? ;;
   php72-maxi|p72-maxi)                         _build_php72 "$@" ;                buildfail=$? ;;
-                        
+
   php74|p74)                                   _build_php74 "$@" ;                buildfail=$? ;;
   php74-mini|p74-mini)                         _build_php74 "$@" ;                buildfail=$? ;;
   php74-nomysql|p74-nomysql)                   _build_php74_nomysql "$@" ;        buildfail=$? ;;
   php74-maxi|p74-maxi)                         _build_php74 "$@" ;                buildfail=$? ;;
-                        
+
   php80|p80)                                   _build_php80 "$@" ;                buildfail=$? ;;
   php80-mini|p80-mini)                         _build_php80 "$@" ;                buildfail=$? ;;
   php80-nomysql|p80-nomysql)                   _build_php80_nomysql "$@" ;        buildfail=$? ;;
