@@ -14,14 +14,14 @@ on:
       - 'testing'
 
 # permissions are needed if pushing to ghcr.io
-permissions: 
+permissions:
   packages: write
 
 env:
   REGISTRY_GITHUB: ghcr.io
   REGISTRY_DOCKER: index.docker.io
   GH_IMAGE_NAME: ${{ github.repository }}
-  
+
 
 jobs:
   # Push image to GitHub Packages.
@@ -54,9 +54,9 @@ jobs:
           user-email: actions@github.com
           target-branch: main
 
-  build-base-focal:  
+  build-base-focal:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
 
@@ -75,11 +75,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -88,10 +88,10 @@ jobs:
          path: |
               buildlogs
 
-  scan-base-focal:  
+  scan-base-focal:
     runs-on: ubuntu-latest
     needs: build-base-focal
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -123,9 +123,9 @@ jobs:
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: "trivy-results.sarif"
-  build-base-bionic:  
+  build-base-bionic:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -143,11 +143,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }};echo "$REGISTRY_USER"|base64 -w0 ;bash _build_hocker.sh base-bionic "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -155,10 +155,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-base-bionic:  
+  scan-base-bionic:
     runs-on: ubuntu-latest
     needs: build-base-bionic
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -192,9 +192,9 @@ jobs:
           sarif_file: "trivy-results.sarif"
 
 
-  build-php80-alpine-nomysql:  
+  build-php80-alpine-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -213,11 +213,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-nomysql-alpine"
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -226,10 +226,10 @@ jobs:
          path: |
               buildlogs
 
-          
-  build-php80-alpine:  
+
+  build-php80-alpine:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -248,11 +248,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-alpine "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -260,10 +260,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php80-alpine:  
+  scan-php80-alpine:
     runs-on: ubuntu-latest
     needs: build-php80-alpine
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -296,9 +296,9 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
 
-  build-php81-alpine-nomysql:  
+  build-php81-alpine-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -317,11 +317,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-nomysql-alpine"
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -330,10 +330,10 @@ jobs:
          path: |
               buildlogs
 
-          
-  build-php81-alpine:  
+
+  build-php81-alpine:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -352,11 +352,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-alpine "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -364,10 +364,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php81-alpine:  
+  scan-php81-alpine:
     runs-on: ubuntu-latest
     needs: build-php81-alpine
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -400,9 +400,9 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
 
-  build-php81-nomysql:  
+  build-php81-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -421,11 +421,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-nomysql "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -434,9 +434,9 @@ jobs:
          path: |
               buildlogs
 
-  build-php81-mini:  
+  build-php81-mini:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -455,11 +455,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-mini "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -467,9 +467,9 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  build-php81-maxi:  
+  build-php81-maxi:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -488,11 +488,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-maxi "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -500,10 +500,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php81-maxi:  
+  scan-php81-maxi:
     runs-on: ubuntu-latest
     needs: build-php81-maxi
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -536,9 +536,9 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
 
-  build-php80-nomysql:  
+  build-php80-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -557,11 +557,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-nomysql "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -570,9 +570,9 @@ jobs:
          path: |
               buildlogs
 
-  build-php80-mini:  
+  build-php80-mini:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -591,11 +591,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-mini "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -603,9 +603,9 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  build-php80-maxi:  
+  build-php80-maxi:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -624,11 +624,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-maxi "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -636,15 +636,16 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php80-maxi:  
+  scan-php80-maxi:
     runs-on: ubuntu-latest
-    needs: build-php80-maxi
-    env: 
+    needs: build-php74-maxi
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
       packages: write
       contents: read
+      security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -671,9 +672,9 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
 
-  build-php74-nomysql:  
+  build-php74-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -692,11 +693,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-nomysql "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -705,9 +706,9 @@ jobs:
          path: |
               buildlogs
 
-  build-php74-mini:  
+  build-php74-mini:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -726,11 +727,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-mini "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -738,9 +739,9 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  build-php74-maxi:  
+  build-php74-maxi:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -759,11 +760,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-maxi "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -771,10 +772,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php74-maxi:  
+  scan-php74-maxi:
     runs-on: ubuntu-latest
     needs: build-php74-maxi
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -807,9 +808,9 @@ jobs:
         with:
           sarif_file: "trivy-results.sarif"
 
-  build-php72-nomysql:  
+  build-php72-nomysql:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -828,11 +829,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-nomysql "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -841,9 +842,9 @@ jobs:
          path: |
               buildlogs
 
-  build-php72-mini:  
+  build-php72-mini:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -862,11 +863,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-mini "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -874,9 +875,9 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  build-php72-maxi:  
+  build-php72-maxi:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -895,11 +896,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-maxi "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -907,10 +908,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php72-maxi:  
+  scan-php72-maxi:
     runs-on: ubuntu-latest
     needs: build-php72-maxi
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
@@ -944,9 +945,9 @@ jobs:
           sarif_file: "trivy-results.sarif"
 
 
-  build-php56:  
+  build-php56:
     runs-on: ubuntu-latest
-    env: 
+    env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -965,11 +966,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: docker image ls   
+        run: docker image ls
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php5 "
       - name: show files
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"  
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         if: failure()
@@ -977,10 +978,10 @@ jobs:
          name: buildlogs
          path: |
               buildlogs
-  scan-php56:  
+  scan-php56:
     runs-on: ubuntu-latest
     needs: build-php56
-    env: 
+    env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
