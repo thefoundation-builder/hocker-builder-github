@@ -625,10 +625,10 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       build_success=no;start=$(date -u +%s)
 
       doreplace=no;
-      echo "$DFILENAME"|grep "_NOMYSQL"  || doreplace=yes
-      echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
-      echo "$DFILENAME"|grep "alpine"  && doreplace=no
-      [[ "$doreplace" = "no" ]]|| {
+      echo "$DFILENAME"|grep -q "_NOMYSQL"  || doreplace=yes
+      echo "$DFILENAME"|grep -q -e "Dockerfile-base" -e  "5.6"  && doreplace=no
+      echo "$DFILENAME"|grep -q "alpine"  && doreplace=no
+      [[ "$doreplace" = "no" ]] || {
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
@@ -682,8 +682,14 @@ tagstring=$(echo "${FEATURES}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)
 cleantags=$(echo "$tagstring"|sed 's/^_//g;s/_\+/_/g')
 if $(echo $MODE|grep -q -e featuresincreasing -e onefullimage -e full) ; then
 echo -n "FULL"
+#if [[ "$2" == "NOMYSQL"  ]];then
+
+##LOGIC overwrite## nomysql jobs timed out
 if [[ "$2" == "NOMYSQL"  ]];then
-echo "NOMYSQL"
+
+echo "NOMYSQL not trigered by inverse logix for nomysql/maxi builds"
+else
+
 ###2.1 maxi nomysql
     if [ 0 -lt  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
           echo "MARIADB FOUND IN DOCKERFILE 2.1"
@@ -758,7 +764,8 @@ echo "NOMYSQL"
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
         echo return val currently: $runbuildfail |green
     fi
-else ## NOMYSQL
+#else ## NOMYSQL
+
 echo MYSQL
 ###2.1 maxi mysql
     FEATURESET=${FEATURESET_MAXI}
