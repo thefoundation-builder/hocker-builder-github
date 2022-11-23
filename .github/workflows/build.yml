@@ -444,7 +444,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php81-nomysql ]
+    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -477,7 +477,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php81-mini ]
+    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -613,7 +613,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php80-mini ]
+    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -638,7 +638,7 @@ jobs:
               buildlogs
   scan-php80-maxi:
     runs-on: ubuntu-latest
-    needs: build-php74-maxi
+    needs: build-php80-maxi
     env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
@@ -716,7 +716,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php74-nomysql ]
+    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -749,7 +749,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php74-mini ]
+    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -852,7 +852,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php72-nomysql ]
+    needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -910,7 +910,7 @@ jobs:
               buildlogs
   scan-php72-maxi:
     runs-on: ubuntu-latest
-    needs: build-php72-maxi
+    needs: [ build-base-bionic ]
     env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub

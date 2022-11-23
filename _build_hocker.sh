@@ -526,9 +526,7 @@ if $(test -f ${DFILENAME});then echo -n ;else   echo "Dockerfile not found..";br
 
 SHORTALIAS=$(basename $(readlink -f ${DFILENAME}))
 
-
 ## for current_target in ${BUILD_TARGET_PLATFORMS//,/ };do
-
 for current_target in $(echo "${BUILD_TARGET_PLATFORMS}");do
 realtarget=$current_target
 echo "TARGET::"$current_target
@@ -566,7 +564,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
         #### since softlinks are eg Dockerfile-php7-bla → Dockerfile-php7.4-bla
         #### we pull also the "dotted" version" before , since they will have exactly the same steps and our "undotted" version does not exist
         SHORTALIAS=$(echo "${SHORTALIAS}"|sed 's/Dockerfile//g;s/^-//g')
-        build_success=no;start=$(date -u +%s)
+        build_success="no";start=$(date -u +%s)
         seconds=$((end-start))
         echo -en "\e[1:42m";
         TZ=UTC printf "1.1 FINISHED: %d days %(%H hours %M minutes %S seconds)T\n" $((seconds/86400)) $seconds | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
@@ -580,7 +578,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
         echo "VERIFY BUILD LOG: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
         all_ok=no
         logs_ok=no
-        build_success=no
+        build_success="no"
         [[ "$SKIP_IMAGETEST" = "yes" ]] && { (echo SKIPPED IMAGETEST ;echo  build_ok:yes ) |tee  ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" ; } ;
         cat ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"  |tail -n 50 | grep  -e "error: failed to solve:" -e "did not terminate successfully"  || logs_ok=yes;echo "#######"
         tail -n10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" |grep -q "build_ok:yes"  && build_success=yes ;
@@ -622,12 +620,12 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       #### since softlinks are eg Dockerfile-php7-bla → Dockerfile-php7.4-bla
       #### we pull also the "dotted" version" before , since they will have exactly the same steps and our "undotted" version does not exist
       SHORTALIAS=$(echo "${SHORTALIAS}"|sed 's/Dockerfile//g;s/^-//g')
-      build_success=no;start=$(date -u +%s)
+      build_success="no";start=$(date -u +%s)
 
-      doreplace=no;
+      doreplace="no";
       echo "$DFILENAME"|grep -q "_NOMYSQL"  || doreplace=yes
-      echo "$DFILENAME"|grep -q -e "Dockerfile-base" -e  "5.6"  && doreplace=no
-      echo "$DFILENAME"|grep -q "alpine"  && doreplace=no
+      echo "$DFILENAME"|grep -q -e "Dockerfile-base" -e  "5.6"  && doreplace="no"
+      echo "$DFILENAME"|grep -q "alpine"  && doreplace="no"
       [[ "$doreplace" = "no" ]] || {
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i
@@ -644,7 +642,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       echo "VERIFY BUILD LOG: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
       all_ok=no
       logs_ok=no
-      build_success=no
+      build_success="no"
       [[ "$SKIP_IMAGETEST" = "yes" ]] && { (echo SKIPPED IMAGETEST ;echo  build_ok:yes ) |tee  ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" ; } ;
       cat ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"  |tail -n 50 | grep  -e "error: failed to solve:" -e "did not terminate successfully"  || logs_ok=yes;echo "#######"
       tail -n10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" |grep -q "build_ok:yes"  && build_success=yes ;
@@ -669,7 +667,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
                 _docker_rm_buildimage ${IMAGETAG_SHORT} 2>/dev/null | _oneline || true
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm $digest;done;rm /dev/shm/pulled_docker_digests
-      echo return val currently: ${runbuildfail} |green
+      echo "return val currently: ${runbuildfail}" |green
 
 
   fi ## END IF NOMYSQL
@@ -693,7 +691,7 @@ else
 ###2.1 maxi nomysql
     if [ 0 -lt  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
           echo "MARIADB FOUND IN DOCKERFILE 2.1"
-        FEATURESET=${FEATURESET_MAXI_NOMYSQL}
+        FEATURESET="${FEATURESET_MAXI_NOMYSQL}"
         buildstring=$(echo ${FEATURESET} |sed 's/@/\n/g' | grep -v ^$ | sed 's/ \+$//g;s/^/--build-arg /g;s/$/=true /g'|grep -v MARIADB|_oneline)" --build-arg INSTALL_MARIADB=false ";
         tagstring=$(echo "${FEATURESET}"|sed 's/@/\n/g'|cut -d_ -f2 |cut -d= -f1 |sed 's/$/_/g'|awk '{print tolower($0)}' | _oneline |sed 's/_\+$//g') ;
         cleantags=$(echo "$tagstring"|sed 's/@/_/g'|sed 's/^_//g;s/_\+/_/g'|sed 's/_/-/g' | _oneline)
@@ -704,12 +702,12 @@ else
         #### since softlinks are eg Dockerfile-php7-bla → Dockerfile-php7.4-bla
         #### we pull also the "dotted" version" before , since they will have exactly the same steps and our "undotted" version does not exist
         SHORTALIAS=$(echo "${SHORTALIAS}"|sed 's/Dockerfile//g;s/^-//g')
-        build_success=no;start=$(date -u +%s)
+        build_success="no";start=$(date -u +%s)
 
-      doreplace=no;
+      doreplace="no";
       echo "$DFILENAME"|grep "_NOMYSQL"  || doreplace=yes
-      echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace=no
-      echo "$DFILENAME"|grep "alpine"  && doreplace=no
+      echo "$DFILENAME"|grep -e "Dockerfile-base" -e  "5.6" -q && doreplace="no"
+      echo "$DFILENAME"|grep "alpine"  && doreplace="no"
 
       [[ "$doreplace" = "no" ]]|| {
 
@@ -721,7 +719,7 @@ else
           mycleantags=$(echo "$tagstring"|sed 's/@/_/g'|sed 's/^_//g;s/_\+/_/g'|sed 's/_/-/g' | _oneline)
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
           myIMAGETAG=$(echo "$myIMAGETAG"|sed 's/_\+/_/g;s/_$//g');myIMAGETAG=${myIMAGETAG/-_/_};myIMAGETAG_SHORT=${IMAGETAG/_*/}
-          myIMAGETAG=${myIMAGETAG}_NOMYSQL
+          myIMAGETAG="${myIMAGETAG}_NOMYSQL"
 
 
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
@@ -738,7 +736,7 @@ else
         echo "VERIFY BUILD LOG: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
         all_ok=no
         logs_ok=no
-        build_success=no
+        build_success="no"
         [[ "$SKIP_IMAGETEST" = "yes" ]] && { (echo SKIPPED IMAGETEST ;echo  build_ok:yes ) |tee  ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" ; } ;
         cat ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"  |tail -n 50 | grep  -e "error: failed to solve:" -e "did not terminate successfully"  || logs_ok=yes;echo "#######"
         tail -n10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" |grep -q "build_ok:yes"  && build_success=yes ;
@@ -778,18 +776,18 @@ echo MYSQL
     #### since softlinks are eg Dockerfile-php7-bla → Dockerfile-php7.4-bla
     #### we pull also the "dotted" version" before , since they will have exactly the same steps and our "undotted" version does not exist
     SHORTALIAS=$(echo "${SHORTALIAS}"|sed 's/Dockerfile//g;s/^-//g')
-    build_success=no;start=$(date -u +%s)
+    build_success="no";start=$(date -u +%s)
 
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
 ## special_case, use mini featureset as FROM base image
           ##speacial case, big NOMYSQL FROM SMALL _NOMYSQL
           #myFEATURESET=${FEATURESET_MINI_NOMYSQL}
-          myFEATURESET=${FEATURESET_MAXI_NOMYSQL}
+          myFEATURESET="${FEATURESET_MAXI_NOMYSQL}"
           mytagstring=$(echo "${myFEATURESET}"|sed 's/@/\n/g'|cut -d_ -f2 |cut -d= -f1 |sed 's/$/_/g'|awk '{print tolower($0)}' | _oneline |sed 's/_\+$//g') ;
           mycleantags=$(echo "$tagstring"|sed 's/@/_/g'|sed 's/^_//g;s/_\+/_/g'|sed 's/_/-/g' | _oneline)
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
           myIMAGETAG=$(echo "$myIMAGETAG"|sed 's/_\+/_/g;s/_$//g');myIMAGETAG=${myIMAGETAG/-_/_};myIMAGETAG_SHORT=${IMAGETAG/_*/}
-          myIMAGETAG=${myIMAGETAG}_NOMYSQL
+          myIMAGETAG="${myIMAGETAG}_NOMYSQL"
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
 
@@ -803,7 +801,7 @@ echo MYSQL
     echo "VERIFY BUILD LOG: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
     all_ok=no
     logs_ok=no
-    build_success=no
+    build_success="no"
     [[ "$SKIP_IMAGETEST" = "yes" ]] && { (echo SKIPPED IMAGETEST ;echo  build_ok:yes ) |tee  ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" ; } ;
     cat ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"  |tail -n 50 | grep  -e "error: failed to solve:" -e "did not terminate successfully"  || logs_ok=yes;echo "#######"
     tail -n10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".TESTRUN.log" |grep -q "build_ok:yes"  && build_success=yes ;
@@ -843,9 +841,9 @@ _build_latest() {
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     for FILENAME in $(ls -1 Dockerfile*latest |sort -r);do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+10000));fi
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -858,9 +856,9 @@ _build_latest_nomysql() {
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     for FILENAME in $(ls -1 Dockerfile*latest |sort -r);do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+10000));fi
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -874,9 +872,9 @@ _build_php5() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php5*  | grep -v nodejs);
   echo "building for $DFILES"
       for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+10));fi
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -890,9 +888,9 @@ _build_php72() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for $DFILES"
       for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -906,9 +904,9 @@ _build_php72_nomysql() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
         for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -922,9 +920,9 @@ _build_php74() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME |yellow
+        echo "DOCKERFILE: $FILENAME" |yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -938,9 +936,9 @@ _build_php74() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -954,9 +952,9 @@ localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for $DFILES" >&2
   for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -970,9 +968,9 @@ _build_php80() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
   echo "building for $DFILES" >&2
   for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -986,9 +984,9 @@ _build_php80_nomysql() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1002,9 +1000,9 @@ _build_php80_alpine() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1018,9 +1016,9 @@ _build_php80_alpine_nomysql() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1034,9 +1032,9 @@ _build_php81_alpine() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1050,9 +1048,9 @@ _build_php81_alpine_nomysql() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1067,9 +1065,9 @@ _build_php81() {
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for $DFILES" >&2
   for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1083,9 +1081,9 @@ _build_php81_nomysql() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for $DFILES"
     for FILENAME in $DFILES;do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME} NOMYSQL
+       _run_buildwheel "${FILENAME}" NOMYSQL
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1099,10 +1097,10 @@ _build_base() {
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     for FILENAME in $(ls -1 Dockerfile-base-$1 |grep -v latest$ |sort -r | grep -v nodejs);do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
         export SKIP_IMAGETEST=yes
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
@@ -1117,9 +1115,9 @@ _build_aux() {
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     export SKIP_IMAGETEST=yes
     for FILENAME in $(ls -1 Dockerfile-*|grep -v Dockerfile-php|grep -v latest$ |grep -v Dockerfile-base |sort -r);do
-        echo DOCKERFILE: $FILENAME|yellow
+        echo "DOCKERFILE: $FILENAME"|yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+1000));fi
     done
 echo "#############################"|blue
@@ -1131,9 +1129,9 @@ _build_all() {
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     for FILENAME in $(ls -1 Dockerfile-*|grep -v latest$ |sort -r | grep -v nodejs);do
-        echo DOCKERFILE: $FILENAME |yellow
+        echo "DOCKERFILE: $FILENAME" |yellow
         #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel ${FILENAME}
+       _run_buildwheel "${FILENAME}"
         if [ "$?" -ne 0 ] ;then localbuildfail=$(($localbuildfail+1000000));fi
     done
 echo "#############################"|blue
