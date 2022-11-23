@@ -885,7 +885,7 @@ jobs:
       packages: write
       contents: read
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-php72-mini ]
+    needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
