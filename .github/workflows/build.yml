@@ -910,7 +910,7 @@ jobs:
               buildlogs
   scan-php72-maxi:
     runs-on: ubuntu-latest
-    needs: [ build-base-bionic ]
+    needs: build-php72-maxi
     env:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
