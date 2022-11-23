@@ -783,7 +783,8 @@ echo MYSQL
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
 ## special_case, use mini featureset as FROM base image
           ##speacial case, big NOMYSQL FROM SMALL _NOMYSQL
-          myFEATURESET=${FEATURESET_MINI_NOMYSQL}
+          #myFEATURESET=${FEATURESET_MINI_NOMYSQL}
+          myFEATURESET=${FEATURESET_MAXI_NOMYSQL}
           mytagstring=$(echo "${myFEATURESET}"|sed 's/@/\n/g'|cut -d_ -f2 |cut -d= -f1 |sed 's/$/_/g'|awk '{print tolower($0)}' | _oneline |sed 's/_\+$//g') ;
           mycleantags=$(echo "$tagstring"|sed 's/@/_/g'|sed 's/^_//g;s/_\+/_/g'|sed 's/_/-/g' | _oneline)
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
@@ -791,8 +792,6 @@ echo MYSQL
           myIMAGETAG=${myIMAGETAG}_NOMYSQL
       sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
-
-
 
     echo "::BUILD:PLATFORM:"$realtarget"::BUILDING...$DFILENAME.."|red
     build64=" "$(echo $buildstring|base64 | _oneline)" "; _docker_build ${IMAGETAG_SHORT} ${IMAGETAG}  ${DFILENAME} ${build64} ${realtarget// /}
