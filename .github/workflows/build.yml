@@ -36,6 +36,7 @@ jobs:
     permissions:
       packages: read
       contents: read
+    ## ONLY on https://github.com/thefoundation/ -> push to the builder repo
     if: github.repository_owner == 'TheFoundation'
     steps:
       - uses: actions/checkout@v3
