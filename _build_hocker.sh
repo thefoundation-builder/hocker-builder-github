@@ -383,7 +383,7 @@ echo "build_ok:yes"  && build_success=yes
 echo -n ; } ;
 
 [[ "$SKIP_IMAGETEST"  = "yes"  ]] || {
-## image is tested
+## image is being tested
             build_succes=no
             echo "TEST:TESTRUN"|green;
             echo -n ":BUILD:VERIFY:"|blue;echo "using "$(ls -lh1 $imagetester)|yellow
@@ -392,8 +392,11 @@ echo -n ; } ;
             #echo "FROM ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
             cp "$imagetester" image-tester.sh
-            ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK
+            wget -c https://the-foundation.gitlab.io/static-testing-assets/ssl/dhparam-8192.pem -O dhparam.pem
+
+            ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK|grep -v ^CMD
             echo
+            echo "COPY dhparam.pem /etc/ssl/dhparam.pem"
             echo "COPY image-tester.sh / "
             echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
             echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
