@@ -80,7 +80,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
       - name: show files
@@ -148,7 +148,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }};echo "$REGISTRY_USER"|base64 -w0 ;bash _build_hocker.sh base-bionic "
       - name: show files
@@ -218,7 +218,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-nomysql-alpine"
       - name: show files
@@ -253,7 +253,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-alpine "
       - name: show files
@@ -322,7 +322,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-nomysql-alpine"
       - name: show files
@@ -357,7 +357,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-alpine "
       - name: show files
@@ -426,7 +426,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-nomysql "
       - name: show files
@@ -460,7 +460,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-mini "
       - name: show files
@@ -493,7 +493,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php81-maxi "
       - name: show files
@@ -562,7 +562,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-nomysql "
       - name: show files
@@ -596,7 +596,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-mini "
       - name: show files
@@ -629,7 +629,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php80-maxi "
       - name: show files
@@ -698,7 +698,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-nomysql "
       - name: show files
@@ -732,7 +732,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-mini "
       - name: show files
@@ -765,7 +765,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php74-maxi "
       - name: show files
@@ -834,7 +834,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-nomysql "
       - name: show files
@@ -868,7 +868,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-mini "
       - name: show files
@@ -901,7 +901,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php72-maxi "
       - name: show files
@@ -971,7 +971,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/; git submodule update --remote|| true);docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*");pwd ;(cd $(pwd)/Hocker/;docker image ls '
       - name: build images
         run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh php5 "
       - name: show files
