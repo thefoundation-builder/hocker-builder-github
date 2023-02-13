@@ -46,6 +46,9 @@ MODE=onefullimage
 
 ## BUILD SINGLE LAYER IMAGE
 MERGE_LAYERS=NO
+export MERGE_LAYERS=NO
+
+#MERGE_LAYERS=YES
 
 #export DOCKER_BUILDKIT=1
 
@@ -106,6 +109,9 @@ case $1 in
 esac
 ##
 buildargs="";
+echo -n "::SHOW:CONFIG"|yellow
+echo "MERGE_LAYERS=$MERGE_LAYERS ALLOW_SINGLE_ARCH_ULOAD=$ALLOW_SINGLE_ARCH_ULOAD BUILD_TARGET_PLATFORMS=$BUILD_TARGET_PLATFORMS"
+echo "######"
 echo -n "::SYS:PREP"|yellow
 echo -n "::DISABLE:SELINUX"|yellow
 echo 0 |tee  /sys/fs/selinux/enforce
@@ -140,7 +146,8 @@ startdir=$(pwd)
 echo -n "::GIT"|red|whiteb
 /bin/sh -c "test -d Hocker || git clone https://github.com/TheFoundation/Hocker.git --recurse-submodules && (cd Hocker ;git pull origin master --recurse-submodules )"|green|whiteb
 imagetester=$(pwd)/Hocker/thefoundation-imagetester.sh
-cp $imagetester $(pwd)/Hocker/build/
+cp $imagetester build/
+(cd $(pwd)/Hocker/; git submodule update --remote)
 echo "using $imagetester"|yellow
 #echo -n ":BUILD:VERIFY:"|blue;echo "using $imagetester"|yellow
 #ls -lh1 $imagetester
@@ -430,8 +437,10 @@ echo "uploading multiarch with buildx"
             echo "::BUILDX:2reg PUSHING MULTIARCH TO REGISTRY AS ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
             time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT}  -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
             _clock
-            test -e /tmp/multisquash/docker-squash-multiarch.sh &&   echo "SQUASHing ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"|green | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
-            test -e /tmp/multisquash/docker-squash-multiarch.sh && ( echo "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |grep -q base || time bash /tmp/multisquash/docker-squash-multiarch.sh "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log" )
+            echo "${MERGE_LAYERS}" |grep -q "YES" && {
+                test -e /tmp/multisquash/docker-squash-multiarch.sh &&   echo "SQUASHing ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"|green | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
+                test -e /tmp/multisquash/docker-squash-multiarch.sh && ( echo "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" |grep -q base || time bash /tmp/multisquash/docker-squash-multiarch.sh "${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log" )            
+              echo ; } ;
             echo ; } ;
             _clock
             echo -n ":past:buildx_multiarch"|green|whiteb;echo ;tail -n6 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -v "exporting config sha256" |yellow
@@ -446,7 +455,7 @@ echo "uploading multiarch with buildx"
 ### docker build native start
         ##  "buildx docker failure" > possible errors often arise from missing qemu / buildkit runs only on x86_64 ( 2020 Q1 )
         _clock
-        echo "BUILDING NATIVE SINCE (tests say)  BUILDX FAILED --   DOING MY ARCHITECURE ONLY"
+        echo "BUILDING NATIVE SINCE BUILDX FAILED (tests say)   --   DOING MY ARCHITECURE ONLY"
         if $(echo ${TARGETARCH}|grep -q $(_buildx_arch) );then ## native build only works on current arch
             ## DO WE HAVE BUILDX
             if $(docker buildx 2>&1 |grep -q "imagetools" ) ;then
@@ -459,7 +468,7 @@ echo "uploading multiarch with buildx"
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log \e[0m"
 ## :NATIVE: BUILDX RUN
         _clock
-        echo "::BUILDX:native:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log"
+            echo "::BUILDX:native:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log"
             time docker buildx build  --output=type=image                     --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch)  --cache-from=type=registry,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}  $buildstring -f "${DFILENAME}"  .  2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log" |awk '!x[$0]++'|green
             else
                 echo -n "::build: NO buildx: "; do_native_build=yes;
