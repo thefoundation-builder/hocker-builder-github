@@ -615,7 +615,7 @@ FEATURESET_MAXI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =    |sed 's/ARG \+//g
 FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e MARIADB -e mariadb|grep ^ARG|grep =|sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 
 test -e /tmp/buildcache_persist || (
-    CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+    CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
     echo "GETTING $CICACHETAG"
     docker pull $CICACHETAG &&             (
         cd /tmp/;docker save $CICACHETAG > /tmp/.importCI ; 
@@ -624,7 +624,7 @@ test -e /tmp/buildcache_persist || (
 )
 echo "finding or starting apt proxy"|yellow 
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
-    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-n
+    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 )
 echo "finding or starting docker registry localcache"|yellow 
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
