@@ -13,8 +13,8 @@ on:
       - 'dev'
       - 'testing'
   schedule:
-    - cron: '0 0 1 * *'
-# Run monthly, at 00:00 on the 1st day of month.
+    - cron: '0 0 * * 0'
+# Run sunday, at 00:00
 ##########################
 
 # permissions are needed if pushing to ghcr.io
@@ -83,7 +83,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh base-focal "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh base-focal "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -115,11 +115,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:base-focal;docker image ls "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:base-focal;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:base-focal'
+          image-ref: 'quay.io/thefoundation/hocker:base-focal'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -151,7 +151,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }};echo "$REGISTRY_USER"|base64 -w0 ;bash _build_hocker.sh base-bionic "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;echo "$REGISTRY_USER"|base64 -w0 ;bash _build_hocker.sh base-bionic "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -182,11 +182,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:base-bionic;docker image ls "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:base-bionic;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-bionic
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:base-bionic'
+          image-ref: 'quay.io/thefoundation/hocker:base-bionic'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -221,7 +221,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php80-nomysql-alpine"
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php80-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -256,7 +256,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php80-alpine "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php80-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -287,11 +287,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm'
+          image-ref: 'quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -325,7 +325,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php81-nomysql-alpine"
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php81-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -360,7 +360,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php81-alpine "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php81-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -391,11 +391,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm'
+          image-ref: 'quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -429,7 +429,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php81-nomysql "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php81-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -463,7 +463,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php81-mini "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php81-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -496,7 +496,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php81-maxi "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php81-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -527,11 +527,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          image-ref: 'quay.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -565,7 +565,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php80-nomysql "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php80-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -599,7 +599,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php80-mini "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php80-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -632,7 +632,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php80-maxi "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php80-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -663,11 +663,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          image-ref: 'quay.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -701,7 +701,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php74-nomysql "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php74-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -735,7 +735,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php74-mini "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php74-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -768,7 +768,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php74-maxi "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php74-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -799,11 +799,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          image-ref: 'quay.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -837,7 +837,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php72-nomysql "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php72-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -871,7 +871,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php72-mini "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php72-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -904,7 +904,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php72-maxi "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php72-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -935,11 +935,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          image-ref: 'quay.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
@@ -974,7 +974,7 @@ jobs:
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
-        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh php5 "
+        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASSWORD;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=$QUAY_USER;bash _build_hocker.sh php5 "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1005,11 +1005,11 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: bash -c "docker pull docker.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
+        run: bash -c "docker pull quay.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
+          image-ref: 'quay.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq'
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
