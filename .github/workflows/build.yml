@@ -134,6 +134,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -203,6 +205,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -238,6 +242,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -307,6 +313,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -342,6 +350,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -411,6 +421,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -445,6 +457,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -478,6 +492,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -547,6 +563,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -581,6 +599,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -614,6 +634,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -683,6 +705,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -717,6 +741,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -750,6 +776,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -819,6 +847,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -853,6 +883,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -886,6 +918,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -956,6 +990,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
     environment: push-dockerhub
     permissions:
       packages: write
