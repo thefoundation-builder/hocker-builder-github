@@ -27,6 +27,7 @@ env:
   GH_IMAGE_NAME: ${{ github.repository }}
   QUAY_PASS: ${{ secrets.QUAY_PASS }}
   QUAY_USER: ${{ secrets.QUAY_USER }}
+  
 
 jobs:
   # Push image to GitHub Packages.
@@ -65,6 +66,8 @@ jobs:
     env:
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
 
     environment: push-dockerhub
     permissions:
