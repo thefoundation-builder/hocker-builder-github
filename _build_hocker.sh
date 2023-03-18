@@ -3,7 +3,7 @@
 #limit datasize 1000M || ulimit -v 1048576 -u 1048576 -d 1048576 -s 1048576 || true
 
 
-[[ -z "$CACHEPROJECT_NAME" ]] && CACHEPROJECT_NAME=buildcache
+[[ -z "$CACHEPROJECT_NAME" ]] && CACHEPROJECT_NAME=buildcache_thefoundation
 
 #BUILDER_TOK=$(cat /dev/urandom |tr -cd '[:alnum:]' 2>/dev/null |head -c 10 2>/dev/null )
 BUILDER_TOK=$(echo "$@"|md5sum|cut -d" " -f1)
@@ -22,16 +22,38 @@ export ALLOW_SINGLE_ARCH_UPLOAD=NO
 PROJECT_NAME=hocker
 export PROJECT_NAME=hocker
 
-export CI_REGISTRY=docker.io
-CI_REGISTRY=docker.io
+#export CI_REGISTRY=docker.io
+#CI_REGISTRY=docker.io
 
-export REGISTRY_HOST=docker.io
-REGISTRY_HOST=docker.io
 
-export REGISTRY_PROJECT=thefoundation
-REGISTRY_PROJECT=thefoundation
+_ping_docker_registry_v2() {
+    res=$(curl $1"/v2/_catalog" 2>/dev/null)
+    echo "$res"|grep repositories -q && echo "OK"
+    echo "$res"|grep repositories -q || echo "FAIL"
+}
+_ping_localhost_registry() {
+    _ping_docker_registry_v2 127.0.0.1:5000
+}
+_get_docker_localhost_registry_ip() {
+         docker inspect registry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do 
+         _ping_docker_registry_v2 $testip:5000|grep -q OK && echo $testip:5000 ;done|head -n1
 
-[[ "" = "$BUILD_TARGET_PLATFORMS" ]] && {
+}
+
+[[ -z "$LOCAL_REGISTRY_CACHE" ]] && LOCAL_REGISTRY_CACHE=/tmp/buildcache_persist/registry
+
+
+[[ -z "$REGISTRY_HOST" ]] && export REGISTRY_HOST=docker.io
+[[ -z "$REGISTRY_HOST" ]] && REGISTRY_HOST=docker.io
+
+[[ -z "$CI_REGISTRY" ]] && export REGISTRY_HOST=$REGISTRY_HOST
+[[ -z "$CI_REGISTRY" ]] && REGISTRY_HOST=$REGISTRY_HOST
+
+
+[[ -z "$REGISTRY_PROJECT" ]] && export REGISTRY_PROJECT=thefoundation
+[[ -z "$REGISTRY_PROJECT" ]] && REGISTRY_PROJECT=thefoundation
+
+[[ -z "$BUILD_TARGET_PLATFORMS" ]] && {
 
 #BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,darwin"
 #BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
@@ -47,15 +69,11 @@ MODE=onefullimage
 ## BUILD SINGLE LAYER IMAGE
 MERGE_LAYERS=NO
 export MERGE_LAYERS=NO
-
 #MERGE_LAYERS=YES
-
 #export DOCKER_BUILDKIT=1
 
 _diskfree() {  df -m / ;cat /etc/mtab |cut -d" " -f2|grep -v -e /proc -e /sys -e /dev |grep -v '^/$'|while read testme;do test -d $testme && df -m  $testme|tail -n+2;done ; } ;
-
 _oneline() { tr -d '\n' ; } ;
-
 _buildx_arch() {
     case "$(uname -m)" in
     aarch64) echo linux/arm64;;
@@ -63,7 +81,6 @@ _buildx_arch() {
     armv7l|armv7*) echo linux/arm/v7;;
     armv6l|armv6*) echo linux/arm/v6;;
     esac ; } ;
-
 _reformat_docker_purge() { sed 's/^deleted: .\+:\([[:alnum:]].\{2\}\).\+\([[:alnum:]].\{2\}\)/\1..\2|/g;s/^\(.\)[[:alnum:]].\{61\}\(.\)/\1.\2|/g' |tr -d '\n' ; } ;
 
 ## Colors ;
@@ -244,7 +261,8 @@ _docker_push() {
 
 
 _docker_build() {
-        echo  "::builder::main( $@ ) ";_clock
+        echo  "::builder::main( $@ ) "|blue ;_clock
+        echo "_docker_build called with $@"|red
         buildstring="" ## rebuilt from features
         IMAGETAG_SHORT="$1"
         IMAGETAG="$2"
@@ -257,15 +275,52 @@ _docker_build() {
         echo $TARGETARCH|tr -d '\n'|wc -c |grep -q ^0$ && TARGETARCH=$(_buildx_arch)
         TARGETARCH_NOSLASH=${TARGETARCH//\//_};
         TARGETARCH_NOSLASH=${TARGETARCH_NOSLASH//,/_}
-        echo "_docker_build called with $@"
+        [[ -z "$CACHE_REGISTRY_HOST" ]] && CACHE_REGISTRY_HOST=$REGISTRY_HOST
+        [[ -z "$CACHE_REGISTRY_PROJECT" ]] && CACHE_REGISTRY_HOST=docker.io
+        [[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=$PROJECT_NAME
+        CICACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+
+        echo "_docker_build loaded AGS AND ENV"|green
+        echo "ARGS:"|yellow
+        echo TARGETARCH_NOSLASH=$TARGETARCH_NOSLASH |blue
+        echo IMAGETAG=$IMAGETAG
+        echo IMAGETAG_SHORT=$IMAGETAG_SHORT
+        echo DFILENAME=$DFILENAME
+        echo CICACHETAG=$CICACHETAG
+        test -e /tmp/buildcache_persist || (
+            docker pull $CICACHETAG &&             (
+                cd /tmp/;docker save $CICACHETAG > /tmp/.importCI ; 
+                                               cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv)
+        )
+        echo "finding or starting apt proxy"|yellow 
+        docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
+            docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+
+        )
+        echo "finding or starting docker registry localcache"|yellow 
+        docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
+            docker ps -a |grep registry:2|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2
+
+        )
+        LOCALREGISTRY=""
+        LOCALREGISTRY=$(_get_docker_localhost_registry_ip)
+        echo "LOCAL_REGISTRY: "$( [[ -z "$LOCALREGISTRY" ]] && echo "NOT FOUND";[[ -z "$LOCALREGISTRY" ]] && echo "$LOCALREGISTRY";)
+
     ##### DETECT APT PROXY
             echo -n ":searching proxy..."|red
         ### if somebody/someone/(CI)  was so nice and set up an docker-container named "apt-cacher-ng" which uses standard exposed port 3142 , use it
         #if echo $(docker inspect --format='{{(index (index .NetworkSettings.Ports "3142/tcp") 0).HostPort}}' apt-cacher-ng || true ) |grep "3142"  ; then
     ## APT CACHE DOCKER
-        if echo $(docker ps -a |grep apt-cacher-ng)|grep "3142/tcp";then
+        if echo $(docker ps -a |grep -e apt-cacher-ng -e ultra-apt-cacher )|grep -e  "80/tcp" -e "3142/tcp";then
+            proxyaddr=$(
+                (
+                docker inspect ultra-apt-cacher |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep apt|grep -q cache && echo $testip:80 ;done|head -n1
+                 docker inspect apt-cacher-ng|grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
+                ) |head -n1 
+            )
             if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
-             BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
+             #BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
+             BUILDER_APT_HTTP_PROXY_LINE='http://'$proxyaddr'/' ;
              else
             ## last fail: Connection failure: Address family not supported by protocol [IP: 172.20.0.5 3142]
              ###BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
