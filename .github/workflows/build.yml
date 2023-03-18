@@ -84,7 +84,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -159,7 +159,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -236,7 +236,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -278,7 +278,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -354,7 +354,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -396,7 +396,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -472,7 +472,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -513,7 +513,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -553,7 +553,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -629,7 +629,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -670,7 +670,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -710,7 +710,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -786,7 +786,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -827,7 +827,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -867,7 +867,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -943,7 +943,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -984,7 +984,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -1024,7 +1024,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -1101,7 +1101,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker images  ls --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
