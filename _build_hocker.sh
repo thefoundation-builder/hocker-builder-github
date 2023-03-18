@@ -560,7 +560,13 @@ echo "uploading multiarch with buildx"
         echo -n "|" ;
         test -f ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log" && echo there is a log in ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
         echo -n "|::END BUILDER::|" ;_clock
-        tail -n 10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log" 2>/dev/null| grep -i -e "failed" -e "did not terminate sucessfully" -q || return 0 && return 23 ; } ;
+        tail -n 10 ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log" 2>/dev/null| grep -i -e "failed" -e "did not terminate sucessfully" -q || return 0 && return 23 
+        
+( cd /tmp/;test -e /tmp/buildcache_persist &&  (
+CICACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHEPROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+sudo tar cv buildcache_persist |docker import - "$CICACHETAG" && docker push "$CICACHETAG"  )
+)
+echo -n ; } ;
 ## END docker_build
 
 
@@ -1253,6 +1259,7 @@ case $1 in
 esac
 
 docker buildx rm mybuilder_${BUILDER_TOK}|red
+
 docker logout 2>&1 | _oneline
 test -f Dockerfile && rm Dockerfile
 echo "#############################"|blue
