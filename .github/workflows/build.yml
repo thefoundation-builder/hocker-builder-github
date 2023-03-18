@@ -87,11 +87,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh base-focal 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh base-focal "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -162,11 +162,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh base-bionic 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh base-bionic "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -239,11 +239,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php80-nomysql-alpine
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php80-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -281,11 +281,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php80-alpine 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php80-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -357,11 +357,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php81-nomysql-alpine
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php81-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -399,11 +399,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php81-alpine 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php81-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -475,11 +475,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php81-nomysql 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php81-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -516,11 +516,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php81-mini 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php81-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -556,11 +556,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php81-maxi 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php81-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -632,11 +632,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php80-nomysql 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php80-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -673,11 +673,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php80-mini 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php80-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -713,11 +713,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php80-maxi 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php80-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -789,11 +789,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php74-nomysql 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php74-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -830,11 +830,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php74-mini 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php74-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -870,11 +870,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php74-maxi 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php74-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -946,11 +946,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php72-nomysql 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php72-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -987,11 +987,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php72-mini 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php72-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1027,11 +1027,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php72-maxi 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php72-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1104,11 +1104,11 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker images --filter=reference="node:*" |grep -v  " ") ;docker image ls '
       - name: build images
         run: |
-             export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}";
+             echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
              export REGISTRY_HOST=quay.io;
              export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;
-             export REGISTRY_USER=${{ secrets.QUAY_USER }} ; 
-             /bin/bash -c bash _build_hocker.sh php5 
+             echo  export=REGISTRY_="${{ secrets.QUAY_USER }}" >> .buildenv ; 
+             /bin/bash -c "source .buildenv;bash _build_hocker.sh php5 "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
