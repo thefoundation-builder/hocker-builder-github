@@ -165,7 +165,7 @@ if [ "$(date -u +%s)" -ge  "$(($(cat /tmp/.dockerbuildenvlastsysupgrade|sed 's/^
   echo "max_threads_per_process = 4" >> /etc/libvirt/qemu.conf
 
 
-( echo -n ":REG_LOGIN[test:init]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; docker logout 2>&1  ) |grep -i -v warning |blue  | _oneline
+( echo -n ":REG_LOGIN[test:init]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ; docker logout 2>&1  ) |grep -i -v warning |blue  | _oneline
 else
   echo " → no upgr (1h threshold)→"|green
 fi
@@ -191,14 +191,14 @@ _build_docker_buildx() {
         PROJECT_NAME=hocker
         export PROJECT_NAME=hocker
         pwd |green
-        echo -n ":REG_LOGIN[buildx]:"|blue;( docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1  || true |grep -v -i -e assword -e  redential| _oneline ) ; ( (docker logout 2>&1 || true ) | grep emoving)| _oneline
+        echo -n ":REG_LOGIN[buildx]:"|blue;( docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1  || true |grep -v -i -e assword -e  redential| _oneline ) ; ( (docker logout 2>&1 || true ) | grep emoving)| _oneline
         which apk |grep "/apk" -q && apk add git bash
         #export DOCKER_BUILDKIT=1
         git clone git://github.com/docker/buildx ./docker-buildx
         buildx_dir=$(pwd)"/docker-buildx"
         ##  --platform=local needs experimental docker scope
 
-        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; } |_oneline ;
+        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ; } |_oneline ;
         [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline
         echo daemon settings
         cat /etc/docker/daemon.json|green
@@ -220,9 +220,9 @@ _build_docker_buildx() {
         echo "BUILDX missing-pulling from hub and recreating too old or not executable"
           docker build -t ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx ${buildx_dir}
           _diskfree|blue;docker system df|red;docker image ls|grep buildx|blue |_oneline;echo
-          ( echo -n ":REG_LOGIN[push:buildx]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;  ) |grep -i -v warning |blue  | _oneline
-          echo -n ":DOCKER:PUSH@"${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx":"
-          (docker push ${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx |grep -v -e Waiting$ -e Preparing$ -e "Layer already exists$";docker logout 2>&1 | _oneline |grep -v -e emov -e redential)  |sed 's/$/ →→ /g;s/Pushed/+/g' |tr -d '\n'
+          ( echo -n ":REG_LOGIN[push:buildx]:" |blue; sleep $(($RANDOM%2));sleep $(($RANDOM%3));docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ;  ) |grep -i -v warning |blue  | _oneline
+          echo -n ":DOCKER:PUSH@"${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx":"
+          (docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:buildhelper_buildx |grep -v -e Waiting$ -e Preparing$ -e "Layer already exists$";docker logout 2>&1 | _oneline |grep -v -e emov -e redential)  |sed 's/$/ →→ /g;s/Pushed/+/g' |tr -d '\n'
           docker build -o . ${buildx_dir}
           echo "after build"|blue
           cp buildx ${startdir}
@@ -242,7 +242,7 @@ _docker_pull_multiarch() {
     #for curtag in ${PULLTAG} $(DOCKER_CLI_EXPERIMENTAL=enabled  docker buildx imagetools inspect "${PULLTAG}" 2>&1 |grep Name|cut -d: -f2- |sed 's/ //g'|grep @) ;do
     #curtag=${PULLTAG}
     for curtag in $([[ -z "$LOCAL_REGISTRY"  ]] || echo "$LOCAL_REGISTRY"/${PULLTAG}) ${PULLTAG} ;do
-       [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ; } |_oneline;echo ;
+       [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ; } |_oneline;echo ;
        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline;echo
     for current_target in $(echo ${BUILD_TARGET_PLATFORMS}|sed 's/,/ /g');do
         echo ;echo -n "docker pull  (native)                     ${curtag} | :: |" | blue
@@ -267,13 +267,13 @@ _docker_push() {
     ##docker buildx 2>&1 |grep -q "imagetools" || ( )
     IMAGETAG_SHORT=$1
     export DOCKER_BUILDKIT=0
-    docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;
+    docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ;
     echo -n "↑↑↑UPLOAD↑↑↑ "|yellow;_clock
     docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
     echo -n ":REG_LOGIN[push]:"
-    sleep $(($RANDOM%2));sleep  $(($RANDOM%3));docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
-    echo -n ":DOCKER:PUSH@"${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}":"|blue
-    (docker push ${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} |grep -v -e Waiting$ -e Preparing$ -e "Layer already exists$";docker logout 2>&1 | _oneline)  |sed 's/$/ →→ /g;s/Pushed/+/g' |tr -d '\n'|yellow
+    sleep $(($RANDOM%2));sleep  $(($RANDOM%3));docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}"
+    echo -n ":DOCKER:PUSH@"${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}":"|blue
+    (docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} |grep -v -e Waiting$ -e Preparing$ -e "Layer already exists$";docker logout 2>&1 | _oneline)  |sed 's/$/ →→ /g;s/Pushed/+/g' |tr -d '\n'|yellow
     echo -n "|" ; } ;
 
 
@@ -408,7 +408,7 @@ _docker_build() {
                 echo "WAITING $rsleepa + $rsleepb"|green
                 sleep $rsleepa;sleep $rsleepb ;
                 echo -n "docker:login:( ${REGISTRY_USER}@${REGISTRY_HOST} )"|blue
-                loginresult=$(docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 |grep -v  "WARN" |_oneline)
+                loginresult=$(docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 |grep -v  "WARN" |_oneline)
                 echo "$loginresult" | red
                 if echo "$loginresult"|grep -i  "unauthorized" ; then
                  echo "could not login . would never push .." |red
@@ -530,7 +530,7 @@ echo "uploading multiarch with buildx"
             if $(docker buildx 2>&1 |grep -q "imagetools" ) ;then
                 echo -n "::build::x" ;
                 echo -ne "d0ck³r buildX , running the following command ( to daemon):"|yellow|blueb;echo -ne "\e[1;31m"
-                docker login  -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST} 2>&1 || exit 235 ;
+                docker login  -u "${REGISTRY_USER}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}" 2>&1 || exit 235 ;
 
                 docker pull ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}  2>&1  | _oneline
                 echo docker buildx build  --output=type=image --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch)  --cache-from=type=registry,ref=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  . | yellowb
@@ -727,7 +727,7 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
       echo "$DFILENAME"|grep -q "alpine"  && doreplace="no"
       [[ "$doreplace" = "no" ]] || {
       echo "REPLACING FROM TAG";echo "BEFORE:"$(grep "^FROM" ${DFILENAME} )
-      sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i
+      sed 's~^FROM.\+~FROM '${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}_NOMYSQL'~g' -i ${DFILENAME} -i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
       }
 
@@ -821,7 +821,7 @@ else
           myIMAGETAG="${myIMAGETAG}_NOMYSQL"
 
 
-      sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
+      sed 's~^FROM.\+~FROM '${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
       }
 
@@ -887,7 +887,7 @@ echo MYSQL
           myIMAGETAG=$(echo ${DFILENAME}|sed 's/Dockerfile-//g' |awk '{print tolower($0)}')"-"$cleantags"_"$(date -u +%Y-%m-%d_%H.%M)"_"$(echo $CI_COMMIT_SHA|head -c8);
           myIMAGETAG=$(echo "$myIMAGETAG"|sed 's/_\+/_/g;s/_$//g');myIMAGETAG=${myIMAGETAG/-_/_};myIMAGETAG_SHORT=${IMAGETAG/_*/}
           myIMAGETAG="${myIMAGETAG}_NOMYSQL"
-      sed 's~^FROM.\+~FROM '${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
+      sed 's~^FROM.\+~FROM '${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${myIMAGETAG}'~g'  ${DFILENAME} |grep  FROM #-i
       echo "AFTER:"$(grep "^FROM" ${DFILENAME} )
 
     echo "::BUILD:PLATFORM:"$realtarget"::BUILDING...$DFILENAME.."|red
