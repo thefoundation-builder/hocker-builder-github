@@ -28,7 +28,7 @@ env:
   GH_IMAGE_NAME: ${{ github.repository }}
   QUAY_PASS: ${{ secrets.QUAY_PASS }}
   QUAY_USER: ${{ secrets.QUAY_USER }}
-  REGISTRY_PASSWORD: ${{ secrets.QUAY_PASS }}
+  REGISTRY_PASSWORD: ${{ secrets.QUAY_USER }}
   REGISTRY_USER: ${{ secrets.QUAY_USER }}
   CICACHETAG: quay.io/buildcache_thefoundation/cicache
 

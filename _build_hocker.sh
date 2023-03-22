@@ -38,6 +38,9 @@ _get_docker_localhost_registry_ip() {
 
 }
 
+echo "INIT:DUMPING ENV"
+env|grep -e REGISTRY -e CACHE |grep -v PASS
+
 [[ -z "$REGISTRY_USER" ]] && echo "REGISTRY_USER NOT SET"
 [[ -z "$REGISTRY_USER" ]] && exit 1
 
