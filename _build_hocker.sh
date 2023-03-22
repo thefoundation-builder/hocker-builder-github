@@ -38,6 +38,12 @@ _get_docker_localhost_registry_ip() {
 
 }
 
+[[ -z "$REGISTRY_USER" ]] && echo "REGISTRY_USER NOT SET"
+[[ -z "$REGISTRY_USER" ]] && exit 1
+
+[[ -z "$REGISTRY_PASSWORD" ]] && echo "REGISTRY_PASSWORD NOT SET"
+[[ -z "$REGISTRY_PASSWORD" ]] && exit 1
+
 [[ -z "$LOCAL_REGISTRY_CACHE" ]] && LOCAL_REGISTRY_CACHE=/tmp/buildcache_persist/registry
 
 [[ -z "$REGISTRY_HOST" ]] && echo "DEFAUL_VAL_USED REGISTRY_HOST=docker.io "
