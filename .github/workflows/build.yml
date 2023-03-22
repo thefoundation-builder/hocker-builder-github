@@ -88,7 +88,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -164,7 +164,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -242,7 +242,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -284,7 +284,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -361,7 +361,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -403,7 +403,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -480,7 +480,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -521,7 +521,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -561,7 +561,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -638,7 +638,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -679,7 +679,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -719,7 +719,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -796,7 +796,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -837,7 +837,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -877,7 +877,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -954,7 +954,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -995,7 +995,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -1035,7 +1035,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c '( (docker image  ls --filter=reference="node:*" |grep -v  " ") ;(docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3) )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done ) && docker image ls
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
