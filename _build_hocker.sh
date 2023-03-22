@@ -8,6 +8,9 @@ BUILDER_TOK=$(echo "$@"|md5sum|cut -d" " -f1)
 echo "::BUILDER:INIT ::"$(date +%F_%T)
 echo "::BUILDER:ARGS ::"$@
 
+test -e .buildenv && echo "FOUND .ENV ..loading "
+test -e .buildenv && source .buildenv
+
 ## pull request rate:
 ## if you do docker login before pull , your account might be rate limited quickly
 ## when using proxy registry in your daemon you might skip the login
