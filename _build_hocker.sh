@@ -624,11 +624,13 @@ FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e 
 test -e /tmp/buildcache_persist || (
     CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
     echo "GETTING $CICACHETAG"
-    docker pull $CICACHETAG &&             (
-        cd /tmp/;docker save $CICACHETAG > /tmp/.importCI ;
-                                       cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv)
-    docker rmi $CICACHETAG
-)
+    [[ -z "$CICACHETAG" ]] || (
+       docker pull $CICACHETAG &&  (
+        cd /tmp/;docker save "$CICACHETAG" > /tmp/.importCI ;
+                                         cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv)
+    docker rmi "$CICACHETAG"
+) ) |red
+
 echo "finding or starting apt proxy"|yellow
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
     docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
@@ -638,8 +640,7 @@ docker ps -a |grep -e registry -e harbor  || (
     docker ps -a |grep registry:2|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
-
-echo " #### "
+echo " #### "|uncolored
 echo "BUILDMODE:" $MODE
 
 
