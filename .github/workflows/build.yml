@@ -28,7 +28,7 @@ env:
   GH_IMAGE_NAME: ${{ github.repository }}
   QUAY_PASS: ${{ secrets.QUAY_PASS }}
   QUAY_USER: ${{ secrets.QUAY_USER }}
-  REGISTRY_PASSWORD: ${{ secrets.QUAY_PASS }}
+  REGISTRY_PASSWORD: ${{ secrets.QUAY_USER }}
   REGISTRY_USER: ${{ secrets.QUAY_USER }}
   CICACHETAG: quay.io/buildcache_thefoundation/cicache
 
@@ -69,10 +69,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
 
     environment: push-dockerhub
     permissions:
@@ -89,7 +88,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )'  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -147,10 +146,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -166,7 +164,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -225,10 +223,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -245,7 +242,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -268,10 +265,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -288,7 +284,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -346,10 +342,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -366,7 +361,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -389,10 +384,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -409,7 +403,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -467,10 +461,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -487,7 +480,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -509,10 +502,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -529,7 +521,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -550,10 +542,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -570,7 +561,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -628,10 +619,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -648,7 +638,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -670,10 +660,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -690,7 +679,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -711,10 +700,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -731,7 +719,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -789,10 +777,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -809,7 +796,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -831,10 +818,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -851,7 +837,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -872,10 +858,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -892,7 +877,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -950,10 +935,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -970,7 +954,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -992,10 +976,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -1012,7 +995,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -1033,10 +1016,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
@@ -1053,7 +1035,7 @@ jobs:
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1)  ;docker image ls '
+        run: /bin/bash -c '$(docker image  ls --filter=reference="node:*" |grep -v  " ") '$(docker image ls |grep ^node|awk  '{ print $3 }' )' |while read img;do docker rmi $img & done ;wait   ;docker image ls '
       - name: build images
         run: |
              echo  export REGISTRY_PASSWORD="${{ secrets.QUAY_PASS }}" > .buildenv;
@@ -1112,10 +1094,9 @@ jobs:
     runs-on: ubuntu-latest
     container: quay.io/thefoundation/library:docker-with-buildx
     env:
-      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      QUAY_USER: ${{ secrets.QUAY_USER }}
-      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
     environment: push-dockerhub
     permissions:
       packages: write
