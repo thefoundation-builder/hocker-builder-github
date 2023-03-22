@@ -94,7 +94,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-focal "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -170,7 +170,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-bionic "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -248,7 +248,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -290,7 +290,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -367,7 +367,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql-alpine"
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -409,7 +409,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-alpine "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -486,7 +486,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -527,7 +527,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -567,7 +567,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -644,7 +644,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -685,7 +685,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -725,7 +725,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -802,7 +802,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -843,7 +843,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -883,7 +883,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -960,7 +960,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-nomysql "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -1001,7 +1001,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-mini "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -1041,7 +1041,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-maxi "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
@@ -1119,7 +1119,7 @@ jobs:
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export=REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
-             echo  export=REGISTRY_USER="${{ secrets.QUAY_USER }}" >> .buildenv ;
+             echo  export=REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php5 "
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
