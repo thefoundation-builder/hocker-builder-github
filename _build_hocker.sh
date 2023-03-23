@@ -52,29 +52,29 @@ env|grep -e REGISTRY -e CACHE |grep -v PASS
 
 [[ -z "$LOCAL_REGISTRY_CACHE" ]] && LOCAL_REGISTRY_CACHE=/tmp/buildcache_persist/registry
 
-[[ -z "$REGISTRY_HOST" ]] && echo "DEFAUL_VAL_USED REGISTRY_HOST=docker.io "
+[[ -z "$REGISTRY_HOST" ]] && echo "DEFAULT_VAL_USED REGISTRY_HOST=docker.io "
 [[ -z "$REGISTRY_HOST" ]] && export REGISTRY_HOST=docker.io
 [[ -z "$REGISTRY_HOST" ]] && REGISTRY_HOST=docker.io
 
-[[ -z "$CI_REGISTRY" ]] && echo "DEFAUL_VAL_USED CI_REGISTRY=$REGISTRY_HOST "
+[[ -z "$CI_REGISTRY" ]] && echo "DEFAULT_VAL_USED CI_REGISTRY=$REGISTRY_HOST "
 [[ -z "$CI_REGISTRY" ]] && export CI_REGISTRY=$REGISTRY_HOST
 [[ -z "$CI_REGISTRY" ]] && CI_REGISTRY=$REGISTRY_HOST
 
-[[ -z "$REGISTRY_PROJECT" ]] && echo "DEFAUL_VAL_USED REGISTRY_PROJECT=thefoundation "
+[[ -z "$REGISTRY_PROJECT" ]] && echo "DEFAULT_VAL_USED REGISTRY_PROJECT=thefoundation "
 [[ -z "$REGISTRY_PROJECT" ]] && export REGISTRY_PROJECT=thefoundation
 [[ -z "$REGISTRY_PROJECT" ]] && REGISTRY_PROJECT=thefoundation
 
-[[ -z "$CACHE_PROJECT_NAME" ]] && echo "DEFAUL_VAL_USED CACHE_PROJECT_NAME=buildcache_thefoundation "
+[[ -z "$CACHE_PROJECT_NAME" ]] && echo "DEFAULT_VAL_USED CACHE_PROJECT_NAME=buildcache_thefoundation "
 [[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=buildcache_thefoundation
 [[ -z "$CACHE_PROJECT_NAME" ]] && export CACHE_PROJECT_NAME=buildcache_thefoundation
 
 
-[[ -z "$CACHE_REGISTRY_HOST" ]] && echo "DEFAUL_VAL_USED CACHE_REGISTRY_HOST=$REGISTRY_HOST "
+[[ -z "$CACHE_REGISTRY_HOST" ]] && echo "DEFAULT_VAL_USED CACHE_REGISTRY_HOST=$REGISTRY_HOST "
 [[ -z "$CACHE_REGISTRY_HOST" ]]    && CACHE_REGISTRY_HOST=$REGISTRY_HOST
 [[ -z "$CACHE_REGISTRY_PROJECT" ]] && CACHE_REGISTRY_PROJECT=$REGISTRY_PROJECT
 [[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=$PROJECT_NAME
 
-[[ -z "$FINAL_CACHE_REGISTRY_HOST" ]] && echo "DEFAUL_VAL_USED FINAL_CACHE_REGISTRY_HOST=$REGISTRY_HOST "
+[[ -z "$FINAL_CACHE_REGISTRY_HOST" ]] && echo "DEFAULT_VAL_USED FINAL_CACHE_REGISTRY_HOST=$REGISTRY_HOST "
 [[ -z "$FINAL_CACHE_REGISTRY_HOST" ]]    && FINAL_CACHE_REGISTRY_HOST=$REGISTRY_HOST
 
 
@@ -342,8 +342,8 @@ _docker_build() {
         if echo $(docker ps -a |grep -e apt-cacher-ng -e ultra-apt-cacher )|grep -e  "80/tcp" -e "3142/tcp" -e ultra-apt ;then
             proxyaddr=$(
                 (
-                docker inspect ultra-apt-cacher |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep apt|grep -q cache && echo $testip:80 ;done|head -n1
-                docker inspect apt-cacher-ng|grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
+                docker inspect ultra-apt-cacher 2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep apt|grep -q cache && echo $testip:80 ;done|head -n1
+                docker inspect apt-cacher-ng    2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
                 ) |head -n1
             )
             if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
@@ -647,13 +647,13 @@ test -e /tmp/buildcache_persist || (
 
 echo "finding or starting apt proxy"|yellow
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
-    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
 echo
 echo "finding or starting docker registry localcache"|yellow
 docker ps -a |grep -e registry -e harbor  || (
-    docker ps -a |grep registry:2|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+    docker ps -a |grep registry|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
 #echo " #### "|uncolored
