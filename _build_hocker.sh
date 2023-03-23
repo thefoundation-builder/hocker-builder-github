@@ -652,8 +652,8 @@ docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
 
 echo
 echo "finding or starting docker registry localcache"|yellow
-docker ps -a |grep -e registry -e harbor  || (
-    docker ps -a |grep registry|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+docker ps -a |grep -v apt-cacher |grep -e buildregistry -e harbor  || (
+    docker ps -a |grep registry|grep -v Exited|grep registry|| docker run -d  --restart=always   --name buildregistry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
 #echo " #### "|uncolored
