@@ -318,7 +318,7 @@ _docker_build() {
         echo IMAGETAG=$IMAGETAG
         echo IMAGETAG_SHORT=$IMAGETAG_SHORT
         echo DFILENAME=${DFILENAME}
-        echo CICACHETAG=$CICACHETAG
+        echo CICACHETAG=${CICACHETAG}
         LOCAL_REGISTRY=""
         LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
         [[ -z "$LOCAL_REGISTRY" ]] || $CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
@@ -330,7 +330,7 @@ _docker_build() {
         echo "LOCAL_REGISTRY: "$( [[ -z "$LOCAL_REGISTRY" ]] && echo "NOT FOUND";[[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
         echo " #### "
         echo "BUILDCACHETAG=$BUILDCACHETAG"
-        echo "CICACHETAG=$CICACHETAG"
+        echo "CICACHETAG=${CICACHETAG}"
         echo " #### "
         echo "PUSHCACHETAG=$PUSHCACHETAG"
     ##### DETECT APT PROXY
@@ -634,14 +634,16 @@ FEATURESET_MINI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =true|sed 's/ARG \+//g
 FEATURESET_MAXI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =    |sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e MARIADB -e mariadb|grep ^ARG|grep =|sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 
-test -e /tmp/buildcache_persist || (
+( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
     CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
-    echo "GETTING $CICACHETAG"
-    [[ -z "$CICACHETAG" ]] || (
-       docker pull $CICACHETAG &&  (
-        cd /tmp/;docker save "$CICACHETAG" > /tmp/.importCI ;
-                                         cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv)
-    docker rmi "$CICACHETAG"
+    echo "GETTING CICACHE ${CICACHETAG}"
+    [[ -z "${CICACHETAG}" ]] || (
+       docker pull ${CICACHETAG} &&  (
+        cd /tmp/;docker save "${CICACHETAG}" > /tmp/.importCI ;
+                                           cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv
+        rm /tmp/.importCI
+        )
+    docker rmi "${CICACHETAG}"
 ) ) |red
 
 echo "finding or starting apt proxy"|yellow
@@ -952,19 +954,21 @@ done # end for current_target in ${BUILD_TARGET_PLATFORMS//,/ };do
 
 ## write-back registry + apt-cacher
 ( cd /tmp/;env|grep -e "COMMIT_SHA" -e "GITLAB" -e "GITHUB" && test -e /tmp/buildcache_persist &&  (
-
-    (docker stop registry;docker rm registry) &
+    echo "CICACHE_WRITE_BACK"
+    (docker stop buildregistry;docker rm buildregistry) &
     (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
     (docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
     CICACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
-    echo "REMOVING AND GETTING $CICACHETAG AGAIN ( MERGE )"
-    docker rmi $CICACHETAG
-    docker pull $CICACHETAG &&             (
-        cd /tmp/;docker save $CICACHETAG > /tmp/.importCI ;
-                                       cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv)
-    echo "SAVING $CICACHETAG"
-    cd /tmp/;sudo tar cv buildcache_persist |docker import - "$CICACHETAG" && docker push "$CICACHETAG"  )
+    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
+    docker rmi ${CICACHETAG}
+    docker pull ${CICACHETAG} &&             (
+        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
+                                       cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv
+    rm /tmp/.importCI
+    )
+    echo "SAVING ${CICACHETAG}"
+    cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
 )
 
 _docker_purge|_reformat_docker_purge|red
