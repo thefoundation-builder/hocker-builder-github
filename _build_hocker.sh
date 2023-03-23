@@ -342,10 +342,11 @@ _docker_build() {
         if echo $(docker ps -a |grep -e apt-cacher-ng -e ultra-apt-cacher )|grep -e  "80/tcp" -e "3142/tcp" -e ultra-apt ;then
             proxyaddr=$(
                 (
-                docker inspect ultra-apt-cacher 2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep apt|grep -q cache && echo $testip:80 ;done|head -n1
+                docker inspect ultra-apt-cacher 2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep -i apt|grep -i -q cache && echo $testip:80 ;done|head -n1
                 docker inspect apt-cacher-ng    2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
                 ) |head -n1
             )
+            echo "DETECTED PROXY: $proxyaddr"
             if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
              #BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
              BUILDER_APT_HTTP_PROXY_LINE='http://'$proxyaddr'/' ;
@@ -436,6 +437,8 @@ _docker_build() {
                 echo -ne "d0ck³r buildX , running the following command ( first to daemon , then Registry , cache source and target may vary ):"|yellow|blueb;echo -ne "\e[1;31m"
                 echo "docker buildx build  --output=type=image                --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH} --cache-from=type=registry,ref=${PUSHCACHETAG} --cache-to=type=registry,mode=max,ref=${BUILDCACHETAG} -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f ${DFILENAME}"  . | yellowb
                 echo "IMAGE FROM TAG IS :"|blue;grep "FROM" ${DFILENAME}|grep -v "#FROM"
+                echo "ON THIS MACHINE THERE ARE THE FOLLOWING CACHES AND REGISTRY RUNNING:"
+                docker ps -a |grep -e apt-cache -e registry              
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log \e[0m"
                 ##docker buildx build --platform=linux/amd64,linux/arm64,linux/arm/v7,darwin --cache-from ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} -o type=registry $buildstring -f "${DFILENAME}"  .  &> ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
                 #docker buildx build  --pull --progress plain --platform=linux/amd64,linux/arm64,linux/arm/v7  --cache-from=type=registry,ref=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} --cache-to=type=registry,mode=max,ref=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:zzz_buildcache_${IMAGETAG_SHORT} -o type=local,dest=./dockeroutput $buildstring -f "${DFILENAME}"  .  &> ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
