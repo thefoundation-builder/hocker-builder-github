@@ -89,12 +89,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-focal " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-focal " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -166,12 +168,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-bionic " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-bionic " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -245,12 +249,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql-alpine" 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql-alpine" 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -288,12 +294,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-alpine " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-alpine " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -366,12 +374,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql-alpine" 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql-alpine" 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -409,12 +419,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-alpine " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-alpine " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -487,12 +499,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -529,12 +543,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-mini " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -570,12 +586,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-maxi " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -648,12 +666,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -690,12 +710,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-mini " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -731,12 +753,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-maxi " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -809,12 +833,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-nomysql " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -851,12 +877,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-mini " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -892,12 +920,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-maxi " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -970,12 +1000,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-nomysql " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1012,12 +1044,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-mini " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1053,12 +1087,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-maxi " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
@@ -1132,12 +1168,14 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1) ;docker image ls '
       - name: build images
         run: |
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/logger
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php5 " 2>&1 | tee /dev/stdout | bash /tmp/logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" info "${{ github.job }}"
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php5 " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             grep ^0$ /tmp/hocker.build.result
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts

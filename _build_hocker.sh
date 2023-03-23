@@ -310,6 +310,7 @@ _docker_build() {
         [[ -z "$CACHE_REGISTRY_PROJECT" ]] && CACHE_REGISTRY_HOST=docker.io
         [[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=$PROJECT_NAME
 
+        [[ -z "$CICACHETAG" ]] && export CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
 
 
         echo "_docker_build loaded AGS AND ENV"|green
@@ -635,7 +636,6 @@ FEATURESET_MAXI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =    |sed 's/ARG \+//g
 FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e MARIADB -e mariadb|grep ^ARG|grep =|sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 
 ( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
-    CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
     echo "GETTING CICACHE ${CICACHETAG}"
     [[ -z "${CICACHETAG}" ]] || (
        docker pull ${CICACHETAG} &&  (
@@ -805,7 +805,7 @@ echo -n "FULL"
 ##LOGIC overwrite## nomysql jobs timed out
 if [[ "$2" == "NOMYSQL"  ]];then
 
-echo "NOMYSQL not trigered by inverse logix for nomysql/maxi builds"
+echo "NOMYSQL not trigered by inverse logic for nomysql/maxi builds"
 else
 
 ###2.1 maxi nomysql
@@ -959,7 +959,6 @@ done # end for current_target in ${BUILD_TARGET_PLATFORMS//,/ };do
     (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
     (docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
-    CICACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
     echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
     docker pull ${CICACHETAG} &&             (
@@ -1324,6 +1323,28 @@ case $1 in
 
 esac
 
+[[ -z "$CICACHETAG" ]] && export CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
+
+
+## write-back registry + apt-cacher
+( cd /tmp/;env|grep -e "COMMIT_SHA" -e "GITLAB" -e "GITHUB" && test -e /tmp/buildcache_persist &&  (
+    echo "CICACHE_WRITE_BACK"
+    (docker stop buildregistry;docker rm buildregistry) &
+    (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
+    (docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
+    wait
+    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
+    docker rmi ${CICACHETAG}
+    docker pull ${CICACHETAG} &&             (
+        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
+                                       cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv
+    rm /tmp/.importCI
+    )
+    echo "SAVING ${CICACHETAG}"
+    cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
+)
+
+
 docker buildx rm mybuilder_${BUILDER_TOK}|red
 
 docker logout 2>&1 | _oneline
@@ -1331,5 +1352,6 @@ test -f Dockerfile && rm Dockerfile
 echo "#############################"|blue
 echo -n "exiting with:"|yellow ;echo ${buildfail}
 echo "##############################"|blue
+echo "${buildfail}" > /tmp/hocker.build.result
 [[ "$FORCE_UPLOAD" = "true" ]] || exit ${buildfail}
-[[ "$FORCE_UPLOAD" = "true" ]] && { echo "FORCE_UPLOAD set , pretending everything went well ..." ; exit 0 ; } ;
+[[ "$FORCE_UPLOAD" = "true" ]] && { echo "FORCE_UPLOAD set , pretending everything went well ..." ;echo 0 >  > /tmp/hocker.build.result; exit 0 ; } ;
