@@ -349,7 +349,7 @@ _docker_build() {
                 ) |head -n1
             )
             echo "DETECTED PROXY: $proxyaddr"
-            if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
+            [[ -z "$proxyaddr" ]] || if [ "${CI_COMMIT_SHA}" = "00000000" ] ; then ### fails on github/gitlab-runners
              #BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
              BUILDER_APT_HTTP_PROXY_LINE='http://'$proxyaddr'/' ;
              else
