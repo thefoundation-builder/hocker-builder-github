@@ -36,7 +36,7 @@ _ping_localhost_registry() {
     _ping_docker_registry_v2 127.0.0.1:5000
 }
 _get_docker_localhost_registry_ip() {
-         docker inspect registry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do
+         docker inspect buildregistry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do
          _ping_docker_registry_v2 $testip:5000|grep -q OK && echo $testip:5000 ;done|head -n1
 
 }
@@ -76,7 +76,6 @@ env|grep -e REGISTRY -e CACHE |grep -v PASS
 
 [[ -z "$FINAL_CACHE_REGISTRY_HOST" ]] && echo "DEFAULT_VAL_USED FINAL_CACHE_REGISTRY_HOST=$REGISTRY_HOST "
 [[ -z "$FINAL_CACHE_REGISTRY_HOST" ]]    && FINAL_CACHE_REGISTRY_HOST=$REGISTRY_HOST
-
 
 echo "$CACHE_REGISTRY_HOST"|grep  -q docker.io &&  (echo "$REGISTRY_PROJECT" |grep -q thefoundation) && CACHE_PROJECT_NAME=buildcache
 
