@@ -94,7 +94,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-focal " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-focal " 2>&1
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -173,7 +175,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-bionic " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh base-bionic " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -254,7 +258,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql-alpine" 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql-alpine" 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -299,7 +305,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-alpine " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-alpine " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -379,7 +387,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql-alpine" 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql-alpine" 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -424,7 +434,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-alpine " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-alpine " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -504,7 +516,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-nomysql " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -548,7 +562,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-mini " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -591,7 +607,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php81-maxi " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -671,7 +689,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-nomysql " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -715,7 +735,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-mini " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -758,7 +780,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php80-maxi " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -838,7 +862,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-nomysql " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -882,7 +908,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-mini " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -925,7 +953,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php74-maxi " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -1005,7 +1035,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-nomysql " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-nomysql " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -1049,7 +1081,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-mini " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-mini " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -1092,7 +1126,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-maxi " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php72-maxi " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -1173,7 +1209,9 @@ jobs:
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php5 " 2>&1 | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info
+             mkfifo /tmp/logpipe
+             cat /tmp/logpipe | while read line;do echo "$line" | tee /dev/stdout ;done | sed -u  's/\r/\n/g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE "${{ github.job }}" "${{ secrets.LOGTOINFLUXTOKEN }}" "${{ github.job }}" info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; source .buildenv;bash _build_hocker.sh php5 " 2>&1 |tee /tmp/logpipe
              grep ^0$ /tmp/hocker.build.result
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
