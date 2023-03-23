@@ -353,7 +353,9 @@ _docker_build() {
             ## last fail: Connection failure: Address family not supported by protocol [IP: 172.20.0.5 3142]
              ###BUILDER_APT_HTTP_PROXY_LINE='http://'$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' apt-cacher-ng |head -n1)':3142/' ;
              #
-             echo "NOT USING PROXY BECAUSE WE ARE ON GITLAB RUNNER , set CI_COMMIT_SHA=00000000 to use anyway"
+#             echo "NOT USING PROXY BECAUSE WE ARE ON GITLAB RUNNER , set CI_COMMIT_SHA=00000000 to use anyway"
+            echo "DANGER , I SEEM TO RUN ON GITHUB/GITLAB etc. RUNNER , apt-caching might fail"
+            BUILDER_APT_HTTP_PROXY_LINE='http://'$proxyaddr'/' ;
             fi
         fi
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
@@ -647,12 +649,14 @@ echo "finding or starting apt proxy"|yellow
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
     docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
+
+echo
 echo "finding or starting docker registry localcache"|yellow
 docker ps -a |grep -e registry -e harbor  || (
     docker ps -a |grep registry:2|grep -v Exited|grep registry|| docker run -d  --restart=always   --name registry   -v $LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
-echo " #### "|uncolored
+#echo " #### "|uncolored
 echo "BUILDMODE:" $MODE
 
 
