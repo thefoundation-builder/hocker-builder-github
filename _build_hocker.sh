@@ -65,8 +65,8 @@ env|grep -e REGISTRY -e CACHE |grep -v PASS
 [[ -z "$REGISTRY_PROJECT" ]] && REGISTRY_PROJECT=thefoundation
 
 [[ -z "$CACHE_PROJECT_NAME" ]] && echo "DEFAULT_VAL_USED CACHE_PROJECT_NAME=buildcache_thefoundation "
-[[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=buildcache_thefoundation
-[[ -z "$CACHE_PROJECT_NAME" ]] && export CACHE_PROJECT_NAME=buildcache_thefoundation
+[[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=buildcache
+[[ -z "$CACHE_PROJECT_NAME" ]] && export CACHE_PROJECT_NAME=buildcache
 
 
 [[ -z "$CACHE_REGISTRY_HOST" ]] && echo "DEFAULT_VAL_USED CACHE_REGISTRY_HOST=$REGISTRY_HOST "
