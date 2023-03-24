@@ -435,7 +435,7 @@ _docker_build() {
   [registry."'$LOCAL_REGISTRY'"]
     http = true
     insecure = true
-                  ' > /etc/buildkit/buildkitd.toml
+                  ' >> /etc/buildkit/buildkitd.toml
                 }
 
                 docker buildx create --config /etc/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
