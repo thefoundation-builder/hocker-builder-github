@@ -322,9 +322,9 @@ _docker_build() {
         echo DFILENAME=${DFILENAME}
         echo CICACHETAG=${CICACHETAG}
         LOCAL_REGISTRY=""
-        LOCAL_REGISTRY=http://$(_get_docker_localhost_registry_ip)
-        [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
-        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && LOCAL_REGISTRY=http://127.0.0.1:5000
+        LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
+#        [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
+        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && LOCAL_REGISTRY=127.0.0.1:5000
         [[ -z "$LOCAL_REGISTRY" ]] || CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
         export LOCAL_REGISTRY="$LOCAL_REGISTRY"
 
@@ -421,7 +421,24 @@ _docker_build() {
                 echo -n "buildx:create:qemu" |yellow ;
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
                 echo -n "buildx:create:qemu" |yellow ;
-                docker buildx create  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
+                echo "GENERATING CONFIG FOR BUILDER"
+                echo '
+# optionally local registry.
+[registry."127.0.0.1:5000"]
+  http = true
+  insecure = true
+                ' > /etc/buildkit/buildkitd.toml
+                [[ "$LOCAL_REGISTRY" = "127.0.0.1:5000" ]] || {
+                  echo "ADDING $LOCAL_REGISTRY TO BUILDER CONFIG"
+                  echo '
+  # additional local reg
+  [registry."'$LOCAL_REGISTRY'"]
+    http = true
+    insecure = true
+                  ' > /etc/buildkit/buildkitd.toml
+                }
+
+                docker buildx create --config /etc/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
                 docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
