@@ -347,10 +347,11 @@ _docker_build() {
         foundcache=no
         echo $(docker ps -a |grep -e apt-cacher-ng -e ultra-apt-cacher )|grep -e  "80/tcp" -e "3142/tcp" -e ultra-apt && foundcache=yes
         if [ "$foundcache" = "yes" ]  ;then
+          echo "FOUND CACHE CONTAINER, GETTING IP:PORT"
             proxyaddr=$(
                 (
-                docker inspect ultra-apt-cacher 2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:80/|grep -i apt|grep -i -q cache && echo $testip:80 ;done|head -n1
-                docker inspect apt-cacher-ng    2>/dev/null |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do curl -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
+                docker inspect ultra-apt-cacher |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$|sort -u |while read testip;do curl --timeout 5 -s $testip:80/|grep -i apt|grep -i -q cache && echo $testip:80 ;done|head -n1
+                docker inspect apt-cacher-ng    |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$|sort -u |while read testip;do curl --timeout 5 -s $testip:3142/|grep -qi "apt-cacher" && echo $testip:3142 ;done|head -n1
                 ) |head -n1
             )
             echo "DETECTED PROXY: $proxyaddr"
@@ -372,7 +373,7 @@ _docker_build() {
 
         fi
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
-            echo "==NO OVERRIDE APT PROXYSET"
+            echo "==NO OVERRIDE APT PROXY SET"
         else
             echo "==USING APT PROXY STRING:"${BUILDER_APT_HTTP_PROXY_LINE} ; buildstring='--build-arg APT_HTTP_PROXY_URL='${BUILDER_APT_HTTP_PROXY_LINE}' ';
         fi
