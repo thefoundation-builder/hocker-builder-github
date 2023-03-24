@@ -37,7 +37,7 @@ _ping_localhost_registry() {
 }
 _get_docker_localhost_registry_ip() {
          docker inspect buildregistry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do
-           echo "testing registry IP "$testip > &2
+           echo "testing registry IP "$testip 1>&2
          _ping_docker_registry_v2 $testip:5000|grep -q OK && echo $testip:5000 ;done|head -n1
 
 }
