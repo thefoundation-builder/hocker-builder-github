@@ -75,6 +75,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -153,7 +158,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -192,6 +197,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -269,7 +279,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -310,6 +320,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -362,6 +377,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -409,7 +429,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -449,6 +469,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -501,6 +526,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -548,7 +578,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -588,6 +618,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -639,6 +674,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -689,6 +729,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -736,7 +781,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -776,6 +821,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -827,6 +877,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php80-nomysql ]
     steps:
@@ -877,6 +932,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -924,7 +984,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -964,6 +1024,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1015,6 +1080,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1065,6 +1135,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1112,7 +1187,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -1152,6 +1227,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1203,6 +1283,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1253,6 +1338,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1300,7 +1390,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
@@ -1341,6 +1431,11 @@ jobs:
     permissions:
       packages: write
       contents: read
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1387,7 +1482,7 @@ jobs:
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
     environment: push-dockerhub
     permissions:
-      packages: write
+      packages: read
       contents: read
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
