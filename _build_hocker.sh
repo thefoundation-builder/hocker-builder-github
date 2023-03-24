@@ -940,6 +940,9 @@ fi # end if mode
 fi ## if NOMYSQL
 done # end for current_target in ${BUILD_TARGET_PLATFORMS//,/ };do
 
+test -e /tmp/buildcache_persist  && (
+echo "CACHE SIZE"
+du -m -s /tmp/buildcache_persist )
 
 ## write-back registry + apt-cacher
 ( cd /tmp/; test -e /tmp/buildcache_persist &&  (
