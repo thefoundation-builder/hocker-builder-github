@@ -28,7 +28,7 @@ export PROJECT_NAME=hocker
 
 
 _ping_docker_registry_v2() {
-    res=$(curl $1"/v2/_catalog" 2>/dev/null)
+    res=$(curl --connect-timeout 10 $1"/v2/_catalog" 2>/dev/null)
     echo "$res"|grep repositories -q && echo "OK"
     echo "$res"|grep repositories -q || echo "FAIL"
 }
