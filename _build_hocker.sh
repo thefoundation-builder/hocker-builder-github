@@ -329,7 +329,7 @@ _docker_build() {
         PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "LOCAL_REGISTRY: "$(
-                                 [[ -z "$LOCAL_REGISTRY" ]] && echo "NOT FOUND";
+                                 [[ -z "$LOCAL_REGISTRY" ]] && ( echo "NOT FOUND";docker ps -a |grep registry)
                                  [[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
         echo " #### "
         echo "BUILDCACHETAG=$BUILDCACHETAG"
@@ -1291,7 +1291,7 @@ docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
 echo
 echo "finding or starting docker registry localcache"|yellow
 docker ps -a |grep -v apt-cacher |grep -e buildregistry -e harbor  || (
-    docker ps -a |grep buildregistry|grep -v Exited|grep registry|| docker run -d  --restart=always  -p 5000:5000 --name buildregistry   -v "/"$LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+    docker ps -a |grep buildregistry|grep -v Exited|grep buildregistry|| docker run -d  --restart=always  -p 5000:5000 --name buildregistry   -v "/"$LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
 )
 
 
