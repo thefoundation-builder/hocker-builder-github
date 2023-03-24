@@ -313,7 +313,7 @@ _docker_build() {
         [[ -z "$CICACHETAG" ]] && export CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
 
 
-        echo "_docker_build loaded AGS AND ENV"|green
+        echo "_docker_build loaded ARGS AND ENV"|green
         echo "ARGS:"|yellow
         echo TARGETARCH_NOSLASH=$TARGETARCH_NOSLASH |blue
         echo IMAGETAG=$IMAGETAG
@@ -328,7 +328,9 @@ _docker_build() {
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
-        echo "LOCAL_REGISTRY: "$( [[ -z "$LOCAL_REGISTRY" ]] && echo "NOT FOUND";[[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
+        echo "LOCAL_REGISTRY: "$(
+                                 [[ -z "$LOCAL_REGISTRY" ]] && echo "NOT FOUND";
+                                 [[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
         echo " #### "
         echo "BUILDCACHETAG=$BUILDCACHETAG"
         echo "CICACHETAG=${CICACHETAG}"
@@ -640,27 +642,6 @@ FEATURESET_MINI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =true|sed 's/ARG \+//g
 FEATURESET_MAXI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =    |sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e MARIADB -e mariadb|grep ^ARG|grep =|sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 
-( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
-    echo "GETTING CICACHE ${CICACHETAG}"
-    [[ -z "${CICACHETAG}" ]] || (
-       docker pull ${CICACHETAG} &&  (
-        cd /tmp/;docker save "${CICACHETAG}" > /tmp/.importCI ;
-                                           cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv
-        rm /tmp/.importCI
-        )
-    docker rmi "${CICACHETAG}"
-) ) |red
-
-echo "finding or starting apt proxy"|yellow
-docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
-    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
-)
-
-echo
-echo "finding or starting docker registry localcache"|yellow
-docker ps -a |grep -v apt-cacher |grep -e buildregistry -e harbor  || (
-    docker ps -a |grep buildregistry|grep -v Exited|grep registry|| docker run -d  --restart=always  -p 5000:5000 --name buildregistry   -v "/"$LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
-)
 
 #echo " #### "|uncolored
 echo "BUILDMODE:" $MODE
@@ -1288,6 +1269,31 @@ return ${localbuildfail} ; } ;
 echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 (echo '|||+++>> SYS: '$(uname -a|yellow)" | binfmt count: "$(ls /proc/sys/fs/binfmt_misc/ |wc -l |blue) " | BUILDX: "$(docker buildx 2>&1 |grep -q "imagetools"  && echo OK || echo NO )" |";echo "| Docker vers. : "$(docker --version|yellow)"| IDentity :  "$(id -u|blue) " == "$(id -un|yellow)"@"$(hostname -f|red)' | ARGZ : '"$@"' <<+++|||' )|green
 #test -f Dockerfile.current && rm Dockerfile.current
+
+## CACHES INIT
+
+( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
+    echo "GETTING CICACHE ${CICACHETAG}"
+    [[ -z "${CICACHETAG}" ]] || (
+       docker pull ${CICACHETAG} &&  (
+        cd /tmp/;docker save "${CICACHETAG}" > /tmp/.importCI ;
+                                           cat /tmp/.importCI |tar xv --to-stdout  $(cat /tmp/.importCI|tar t|grep layer.tar) |tar xv
+        rm /tmp/.importCI
+        )
+    docker rmi "${CICACHETAG}"
+) ) |red
+
+echo "finding or starting apt proxy"|yellow
+docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
+    docker run  -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+)
+
+echo
+echo "finding or starting docker registry localcache"|yellow
+docker ps -a |grep -v apt-cacher |grep -e buildregistry -e harbor  || (
+    docker ps -a |grep buildregistry|grep -v Exited|grep registry|| docker run -d  --restart=always  -p 5000:5000 --name buildregistry   -v "/"$LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
+)
+
 
 buildfail=0
 
