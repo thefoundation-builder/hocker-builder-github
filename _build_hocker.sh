@@ -39,6 +39,7 @@ _get_docker_localhost_registry_ip() {
         (
          docker inspect      registry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
          docker inspect buildregistry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
+         ip a|grep "inet "|cut -dt -f2-|cut -d/ -f1
              )|sort -u |while read testip;do
                             echo "testing registry IP "$testip 1>&2
                             _ping_docker_registry_v2 $testip:5000|grep -q OK && (echo $testip:5000; echo registry::detected "$testip:5000" >&2)  ;
