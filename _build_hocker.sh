@@ -28,7 +28,7 @@ export PROJECT_NAME=hocker
 
 
 _ping_docker_registry_v2() {
-    res=$(curl --connect-timeout 5 $1"/v2/_catalog" -v)
+    res=$(curl --connect-timeout 5 $1"/v2/_catalog" )
     echo "$res"|grep repositories -q && echo "OK"
     echo "$res"|grep repositories -q || echo "FAIL"
 }
@@ -37,6 +37,8 @@ _ping_localhost_registry() {
 }
 _get_docker_localhost_registry_ip() {
         (
+         # github ci DIND sees only the hostname ( running with docker rm does connect )
+         echo "registry"
          docker inspect      registry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
          docker inspect buildregistry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
          ip a|grep "inet "|cut -dt -f2-|cut -d/ -f1
