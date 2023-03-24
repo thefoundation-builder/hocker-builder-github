@@ -28,7 +28,7 @@ export PROJECT_NAME=hocker
 
 
 _ping_docker_registry_v2() {
-    res=$(curl --connect-timeout 10 $1"/v2/_catalog" 2>/dev/null)
+    res=$(curl --connect-timeout 5 $1"/v2/_catalog" 2>/dev/null)
     echo "$res"|grep repositories -q && echo "OK"
     echo "$res"|grep repositories -q || echo "FAIL"
 }
@@ -256,7 +256,7 @@ _docker_pull_multiarch() {
 
     #for curtag in ${PULLTAG} $(DOCKER_CLI_EXPERIMENTAL=enabled  docker buildx imagetools inspect "${PULLTAG}" 2>&1 |grep Name|cut -d: -f2- |sed 's/ //g'|grep @) ;do
     #curtag=${PULLTAG}
-    for curtag in $([[ -z "$LOCAL_REGISTRY"  ]] || echo "$LOCAL_REGISTRY"/${PULLTAG}) ${PULLTAG} ;do
+    for curtag in $([[ -z "$LOCAL_REGISTRY"  ]] || echo "$LOCAL_REGISTRY"/${PULLTAG} ) ${PULLTAG} ;do
        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}" 2>&1 || exit 235 ; } |_oneline;echo ;
        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline;echo
     for current_target in $(echo ${BUILD_TARGET_PLATFORMS}|sed 's/,/ /g');do
@@ -322,9 +322,10 @@ _docker_build() {
         echo DFILENAME=${DFILENAME}
         echo CICACHETAG=${CICACHETAG}
         LOCAL_REGISTRY=""
-        LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
-        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && LOCAL_REGISTRY=127.0.0.1:5000
-        [[ -z "$LOCAL_REGISTRY" ]] || $CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
+        LOCAL_REGISTRY=http://$(_get_docker_localhost_registry_ip)
+        [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
+        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && LOCAL_REGISTRY=http://127.0.0.1:5000
+        [[ -z "$LOCAL_REGISTRY" ]] || CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
         export LOCAL_REGISTRY="$LOCAL_REGISTRY"
 
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
