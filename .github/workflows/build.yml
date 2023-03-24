@@ -80,6 +80,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -202,6 +206,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -325,6 +333,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -382,6 +394,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -474,6 +490,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -531,6 +551,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -623,6 +647,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -679,6 +707,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -734,6 +766,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -826,6 +862,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -882,6 +922,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php80-nomysql ]
     steps:
@@ -937,6 +981,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1029,6 +1077,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1085,6 +1137,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1140,6 +1196,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1232,6 +1292,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1288,6 +1352,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1343,6 +1411,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1436,6 +1508,10 @@ jobs:
         image: registry:2
         ports:
           - 5000:5000
+      ultra-apt-cacher:
+        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+        ports:
+          - 3142:3142
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
