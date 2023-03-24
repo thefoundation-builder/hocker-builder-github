@@ -366,8 +366,8 @@ _docker_build() {
           echo "FOUND CACHE CONTAINER, GETTING IP:PORT"
             proxyaddr=$(
                 (
-                (echo ultra-apt-cacher;                            docker inspect ultra-apt-cacher 2>/dev/null|jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output)|grep -v ^$|sort -u |while read testip;do echo "testing apt-cache IP $testip:80  "  >&2 ;  curl --timeout 5 -s http://$testip:80/   |grep -i apt|grep -i -q cache && echo $testip:80 ;done|head -n1
-                (echo apt-cacher;echo apt-cache;echo apt-cacher-ng;docker inspect apt-cacher-ng    2>/dev/null|jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output)|grep -v ^$|sort -u |while read testip;do echo "testing apt-cache IP $testip:3142"  >&2 ;  curl --timeout 5 -s http://$testip:3142/ |grep -qi "apt-cacher" && echo $testip:3142     ;done|head -n1
+                (echo ultra-apt-cacher;                            docker inspect ultra-apt-cacher 2>/dev/null|jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output)|grep -v ^$|sort -u |while read testip;do echo "testing apt-cache IP $testip:80  "  >&2 ;  curl --connect-timeout 5 -s http://$testip:80/   |grep -i apt|grep -i -q cache && echo $testip:80 ;done|head -n1
+                (echo apt-cacher;echo apt-cache;echo apt-cacher-ng;docker inspect apt-cacher-ng    2>/dev/null|jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output)|grep -v ^$|sort -u |while read testip;do echo "testing apt-cache IP $testip:3142"  >&2 ;  curl --connect-timeout 5 -s http://$testip:3142/ |grep -qi "apt-cacher" && echo $testip:3142     ;done|head -n1
                 ) |head -n1
             )
             echo "DETECTED PROXY: $proxyaddr"
