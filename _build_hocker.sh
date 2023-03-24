@@ -307,9 +307,9 @@ _docker_build() {
         echo $TARGETARCH|tr -d '\n'|wc -c |grep -q ^0$ && TARGETARCH=$(_buildx_arch)
         TARGETARCH_NOSLASH=${TARGETARCH//\//_};
         TARGETARCH_NOSLASH=${TARGETARCH_NOSLASH//,/_}
-        [[ -z "$CACHE_REGISTRY_HOST" ]] && CACHE_REGISTRY_HOST=$REGISTRY_HOST
+        [[ -z "$CACHE_REGISTRY_HOST" ]]    && CACHE_REGISTRY_HOST=$REGISTRY_HOST
         [[ -z "$CACHE_REGISTRY_PROJECT" ]] && CACHE_REGISTRY_PROJECT=$CACHE_REGISTRY_PROJECT
-        [[ -z "$CACHE_PROJECT_NAME" ]] && CACHE_PROJECT_NAME=$PROJECT_NAME
+        [[ -z "$CACHE_PROJECT_NAME" ]]     && CACHE_PROJECT_NAME=$PROJECT_NAME
         echo "$CACHE_REGISTRY_HOST" | grep  -q -i quay.io && export CACHE_REGISTRY_HOST=127.0.0.1:5000
         [[ -z "$CICACHETAG" ]] && export CICACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:cicache_${REGISTRY_PROJECT}_${PROJECT_NAME}
 
@@ -942,7 +942,7 @@ done # end for current_target in ${BUILD_TARGET_PLATFORMS//,/ };do
 
 
 ## write-back registry + apt-cacher
-( cd /tmp/;env|grep -e "COMMIT_SHA" -e "GITLAB" -e "GITHUB" && test -e /tmp/buildcache_persist &&  (
+( cd /tmp/; test -e /tmp/buildcache_persist &&  (
     echo "CICACHE_WRITE_BACK"
     (docker stop buildregistry;docker rm buildregistry) &
     (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
@@ -1341,7 +1341,7 @@ esac
 
 
 ## write-back registry + apt-cacher
-( cd /tmp/;env|grep -e "COMMIT_SHA" -e "GITLAB" -e "GITHUB" && test -e /tmp/buildcache_persist &&  (
+( cd /tmp/;test -e /tmp/buildcache_persist &&  (
     echo "CICACHE_WRITE_BACK"
     (docker stop buildregistry;docker rm buildregistry) &
     (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
