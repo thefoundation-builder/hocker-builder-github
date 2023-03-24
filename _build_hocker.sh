@@ -36,10 +36,13 @@ _ping_localhost_registry() {
     _ping_docker_registry_v2 127.0.0.1:5000
 }
 _get_docker_localhost_registry_ip() {
-         docker inspect buildregistry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do
-           echo "testing registry IP "$testip 1>&2
-         _ping_docker_registry_v2 $testip:5000|grep -q OK && echo $testip:5000 ;done|head -n1
-
+        (
+         docker inspect      registry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
+         docker inspect buildregistry 2>/dev/null |jq .[].NetworkSettings.Networks -c|jq .[].IPAddress --raw-output|grep -v ^$;
+             )|sort -u |while read testip;do
+                            echo "testing registry IP "$testip 1>&2
+                            _ping_docker_registry_v2 $testip:5000|grep -q OK && (echo $testip:5000; echo registry::detected "$testip:5000" >&2)  ;
+                        done|head -n1
 }
 
 echo "INIT:DUMPING ENV"
@@ -980,11 +983,13 @@ test -e /tmp/buildcache_persist  && (
     wait
     echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
-    docker pull ${CICACHETAG} &&             (
-        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
-                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
-    rm /tmp/.importCI
-    )
+#    docker pull ${CICACHETAG} &&             (
+#        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
+#                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
+#    rm /tmp/.importCI
+#    )
+    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
+
     echo "SAVING ${CICACHETAG}"
     cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
 )
@@ -1308,11 +1313,13 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 ( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
     echo "GETTING CICACHE ${CICACHETAG}"
     [[ -z "${CICACHETAG}" ]] || (
-       docker pull ${CICACHETAG} &&  (
-        cd /tmp/;docker save "${CICACHETAG}" > /tmp/.importCI ;
-                                            tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
-        rm /tmp/.importCI
-        )
+#    docker pull ${CICACHETAG} &&             (
+#        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
+#                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
+#    rm /tmp/.importCI
+#    )
+    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
+
     docker rmi "${CICACHETAG}"
 ) ) |red
 
@@ -1382,11 +1389,13 @@ esac
     wait
     echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
-    docker pull ${CICACHETAG} &&             (
-        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
-                                         tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
-    rm /tmp/.importCI
-    )
+#    docker pull ${CICACHETAG} &&             (
+#        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
+#                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
+#    rm /tmp/.importCI
+#    )
+    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
+
     echo "SAVING CICACHE ${CICACHETAG}"
     cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
 )
