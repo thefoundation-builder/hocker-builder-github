@@ -479,7 +479,7 @@ echo -n ; } ;
             ## in workers of GitLab-Runners/GH-Actions mounts are empty.. create a dockerfile
             #echo "FROM ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}" > "${DFILENAME}.imagetest"
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
-            cp "$imagetester" image-tester.sh
+            cp -auv "$imagetester" image-tester.sh
             wget -c https://the-foundation.gitlab.io/static-testing-assets/ssl/dhparam-8192.pem -O dhparam.pem
 
             ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK|grep -v ^CMD
@@ -524,7 +524,7 @@ echo -n ; } ;
 ###   upload    multiarch withbuildx
 echo "uploading multiarch with buildx"
             _clock;
-            test -e /tmp/multisquash|| git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash  &> ${startdir}/buildlogs/install_multisquash.log &
+            test -e /tmp/multisquash || git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash  &> ${startdir}/buildlogs/install_multisquash.log &
             echo "::BUILDX:2reg PUSHING MULTIARCH TO REGISTRY AS ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
             time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=registry,ref=${BUILDCACHETAG} --cache-to=type=registry,mode=max,ref=${PUSHCACHETAG}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
             _clock
