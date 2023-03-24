@@ -440,7 +440,7 @@ _docker_build() {
                   ' >> /tmp/buildkit/buildkitd.toml
                 }
 
-                docker buildx create --config /etc/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
+                docker buildx create --config /tmp/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
                 docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
