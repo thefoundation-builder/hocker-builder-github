@@ -423,12 +423,13 @@ _docker_build() {
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
                 echo -n "buildx:create:qemu" |yellow ;
                 echo "GENERATING CONFIG FOR BUILDER"
+                test -e /tmp/buildkit || mkdir /tmp/buildkit
                 echo '
 # optionally local registry.
 [registry."127.0.0.1:5000"]
   http = true
   insecure = true
-                ' > /etc/buildkit/buildkitd.toml
+                ' > /tmp/buildkit/buildkitd.toml
                 [[ "$LOCAL_REGISTRY" = "127.0.0.1:5000" ]] || {
                   echo "ADDING $LOCAL_REGISTRY TO BUILDER CONFIG"
                   echo '
@@ -436,7 +437,7 @@ _docker_build() {
   [registry."'$LOCAL_REGISTRY'"]
     http = true
     insecure = true
-                  ' >> /etc/buildkit/buildkitd.toml
+                  ' >> /tmp/buildkit/buildkitd.toml
                 }
 
                 docker buildx create --config /etc/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
