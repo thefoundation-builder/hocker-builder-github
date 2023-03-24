@@ -37,6 +37,7 @@ _ping_localhost_registry() {
 }
 _get_docker_localhost_registry_ip() {
          docker inspect buildregistry |grep IPAddress|cut -d'"' -f4|grep -v ^$|sort -u |while read testip;do
+           echo "testing registry IP "$testip > &2
          _ping_docker_registry_v2 $testip:5000|grep -q OK && echo $testip:5000 ;done|head -n1
 
 }
@@ -322,14 +323,15 @@ _docker_build() {
         echo CICACHETAG=${CICACHETAG}
         LOCAL_REGISTRY=""
         LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
+        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && LOCAL_REGISTRY=127.0.0.1:5000
         [[ -z "$LOCAL_REGISTRY" ]] || $CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
-        [[ -z "$LOCAL_REGISTRY" ]] || export LOCAL_REGISTRY="$LOCAL_REGISTRY"
+        export LOCAL_REGISTRY="$LOCAL_REGISTRY"
 
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "LOCAL_REGISTRY: "$(
-                                 [[ -z "$LOCAL_REGISTRY" ]] && ( echo "NOT FOUND";docker ps -a |grep registry)
+                                 [[ -z "$LOCAL_REGISTRY" ]] && ( echo "NOT FOUND";docker ps -a |grep buildregistry)
                                  [[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
         echo " #### "
         echo "BUILDCACHETAG=$BUILDCACHETAG"
