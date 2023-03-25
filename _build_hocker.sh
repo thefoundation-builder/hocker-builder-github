@@ -1326,16 +1326,16 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
     docker rmi "${CICACHETAG}"
 ) ) |red
 
-echo "finding or starting apt proxy"|yellow
+[[ "$START_APT_CACHE" = "true" ]] && (echo "finding or starting apt proxy"|yellow
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
     docker run --network host -d --restart unless-stopped --name ultra-apt-cacher  -v /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng registry.gitlab.com/the-foundation/ultra-apt-cacher-ng 2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
-)
+))
 
 echo
-echo "finding or starting docker registry localcache"|yellow
+[[ "$START_REGISTRY" = "true" ]] && (echo "finding or starting docker registry localcache"|yellow
 docker ps -a |grep -v apt-cacher |grep -e buildregistry -e harbor  || (
     docker ps -a |grep buildregistry|grep -v Exited|grep buildregistry|| docker run -d  --restart unless-stopped  --network host --name buildregistry   -v "/"$LOCAL_REGISTRY_CACHE:/var/lib/registry   registry:2  2>&1 |grep -v -e "Already exists" -e "Pulling fs layer" -e "Waiting$" -e "Verifying Checksum" -e "Download complete" -e ^Digest: |tr -d '\n'
-)
+))
 
 docker ps -a |grep -e apt-cache -e buildregistry
 docker logs buildregistry
