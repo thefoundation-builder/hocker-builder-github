@@ -384,7 +384,7 @@ _docker_build() {
             fi
         fi
         if [ "x" = "x${BUILDER_APT_HTTP_PROXY_LINE}" ] ; then
-        [[ -z "$APT_HTTP_PROXY_URL" ]] || USING APT_HTTP_PROXY_URL FROM SECRETS
+        [[ -z "$APT_HTTP_PROXY_URL" ]] || echo USING APT_HTTP_PROXY_URL FROM SECRETS
         [[ -z "$APT_HTTP_PROXY_URL" ]] || BUILDER_APT_HTTP_PROXY_LINE=$APT_HTTP_PROXY_URL
 
         fi
