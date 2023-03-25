@@ -253,7 +253,6 @@ _build_docker_buildx() {
 
     echo ; } ;
 
-
 _docker_pull_multiarch() {
     echo "docker_pull_multiarch called with $@"
      PULLTAG="$1"; echo -n "↓↓PULL(multiarch)→→"|green
