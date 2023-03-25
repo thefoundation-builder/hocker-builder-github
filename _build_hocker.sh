@@ -447,14 +447,11 @@ _docker_build() {
 # optionally local registry.
 [registry."127.0.0.1:5000"]
   http = true
-                ' > /tmp/buildkit/buildkitd.toml
-                [[ "$LOCAL_REGISTRY" = "127.0.0.1:5000" ]] || {
-                  echo "ADDING $LOCAL_REGISTRY TO BUILDER CONFIG"
-                  echo '
-# additional local reg
-[registry."'$LOCAL_REGISTRY'"]
+[registry."registry:5000"]
   http = true
-                  ' >> /tmp/buildkit/buildkitd.toml
+[registry."buildregistry:5000"]
+  http = true
+                                  ' > /tmp/buildkit/buildkitd.toml
 #    insecure = true
                 }
                 echo -n "buildx:create" |yellow ;
