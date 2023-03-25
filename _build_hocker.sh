@@ -491,10 +491,10 @@ _docker_build() {
                 test -e ${startdir}/buildlogs/ || mkdir ${startdir}/buildlogs/
                 echo "::BUILDX:2reg NOUPLOAD@singlearch"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
                 [[ -z "$CACHE_REGISTRY_USER" ]] || (
-                   echo "login to cache registry"
+                   echo "login to cache registry ${CACHE_REGISTRY_USER} @ ${CACHE_REGISTRY_HOST} "
                     echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
                 )
-                 docker
+                echo "starting build"
                 time docker buildx build  --output=type=registry,push=false   --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch) --cache-from=type=registry,ref=${PUSHCACHETAG} --cache-to=type=registry,mode=max,ref=${BUILDCACHETAG}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green |sed  -u 's/^/|REG-NOUPL |/g'
 ## if local docker daemon does not see buildx cache for whatever reasen ( running isolated )
                 docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
