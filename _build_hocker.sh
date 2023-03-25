@@ -344,12 +344,16 @@ _docker_build() {
         _ping_docker_registry_v2 "$CACHE_REGISTRY_HOST" 2>&1|grep OK -q || { echo "FAIL: CACHE REGISTRY NOT PRESENT";curl -kLv "$CACHE_REGISTRY_HOST" ;docker logs buildregistry ; exit 1 ; } ;
 
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
-        PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+        PUSHCACHETAG="$BUILDCACHETAG"
+        #PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+        CACHEIMAGETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:${IMAGETAG_SHORT}
+
         echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "LOCAL_REGISTRY: "$(
                                  [[ -z "$LOCAL_REGISTRY" ]] && ( echo "NOT FOUND";docker ps -a |grep buildregistry)
                                  [[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
         echo " #### "
+        echo "CACHEIMAGETAG=$CACHEIMAGETAG"
         echo "BUILDCACHETAG=$BUILDCACHETAG"
         echo "CICACHETAG=${CICACHETAG}"
         echo " #### "
@@ -486,6 +490,11 @@ _docker_build() {
                 #build2reg without uploading@singlearch
                 test -e ${startdir}/buildlogs/ || mkdir ${startdir}/buildlogs/
                 echo "::BUILDX:2reg NOUPLOAD@singlearch"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
+                [[ -z "$CACHE_REGISTRY_USER" ]] || (
+                   echo "login to cache registry"
+                    echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
+                )
+                 docker
                 time docker buildx build  --output=type=registry,push=false   --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch) --cache-from=type=registry,ref=${PUSHCACHETAG} --cache-to=type=registry,mode=max,ref=${BUILDCACHETAG}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green |sed  -u 's/^/|REG-NOUPL |/g'
 ## if local docker daemon does not see buildx cache for whatever reasen ( running isolated )
                 docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
@@ -563,7 +572,21 @@ echo "uploading multiarch with buildx"
             _clock;
             test -e /tmp/multisquash || git clone https://gitlab.com/the-foundation/docker-squash-multiarch.git /tmp/multisquash  &> ${startdir}/buildlogs/install_multisquash.log &
             echo "::BUILDX:2reg PUSHING MULTIARCH TO REGISTRY AS ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"   | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
-            time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=registry,ref=${BUILDCACHETAG} --cache-to=type=registry,mode=max,ref=${PUSHCACHETAG}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
+            # step thingy, build without push to cache registry , build without push to file cache , build with push to final reg
+            (
+                       [[ -z "$CACHE_REGISTRY_USER" ]] || (
+                          echo "login to cache registry"
+                           echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
+                       )
+              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=registry,ref=${BUILDCACHETAG} --cache-to=type=type=local,dest=/tmp/pushcache                -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
+              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/pushcache      --cache-to=type=registry,mode=max,ref=${PUSHCACHETAG}         -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
+                              loginresult=$( echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline)
+                              echo "$loginresult" | red
+                              if echo "$loginresult"|grep -i  "unauthorized" ; then
+                               echo "could not login . would never push .." |red
+                              exit 40
+                              fi
+              time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/pushcache                                                                    -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 )|tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
             _clock
             echo "${MERGE_LAYERS}" |grep -q "YES" && {
                 test -e /tmp/multisquash/docker-squash-multiarch.sh &&   echo "SQUASHing ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"|green | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
@@ -589,9 +612,12 @@ echo "uploading multiarch with buildx"
             if $(docker buildx 2>&1 |grep -q "imagetools" ) ;then
                 echo -n "::build::x" ;
                 echo -ne "d0ck³r buildX , running the following command ( to daemon):"|yellow|blueb;echo -ne "\e[1;31m"
-                 echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1 || exit 235 ;
-
-                docker pull ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}  2>&1  | _oneline
+                #echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1 || exit 235 ;
+                [[ -z "$CACHE_REGISTRY_USER" ]] || (
+                   echo "login to cache registry"
+                    echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
+                )
+                #docker pull ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}  2>&1  | _oneline
                 echo docker buildx build  --output=type=image --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch)  --cache-from=type=registry,ref=${BUILDCACHETAG}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  . | yellowb
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to: "${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log \e[0m"
 ## :NATIVE: BUILDX RUN
