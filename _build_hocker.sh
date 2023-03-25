@@ -449,8 +449,6 @@ _docker_build() {
   http = true
 [registry."registry:5000"]
   http = true
-[registry."buildregistry:5000"]
-  http = true
                                   ' > /tmp/buildkit/buildkitd.toml
 #    insecure = true
                 }
