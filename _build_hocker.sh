@@ -437,14 +437,12 @@ _docker_build() {
                 docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
                 echo -n "buildx:create:qemu" |yellow ;
                 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
-                echo -n "buildx:create:qemu" |yellow ;
                 echo "GENERATING CONFIG FOR BUILDER"
                 test -e /tmp/buildkit || mkdir /tmp/buildkit
                 echo '
 # optionally local registry.
 [registry."127.0.0.1:5000"]
   http = true
-  insecure = true
                 ' > /tmp/buildkit/buildkitd.toml
                 [[ "$LOCAL_REGISTRY" = "127.0.0.1:5000" ]] || {
                   echo "ADDING $LOCAL_REGISTRY TO BUILDER CONFIG"
@@ -452,10 +450,11 @@ _docker_build() {
   # additional local reg
   [registry."'$LOCAL_REGISTRY'"]
     http = true
-    insecure = true
                   ' >> /tmp/buildkit/buildkitd.toml
-                }
+#    insecure = true
 
+                }
+                echo -n "buildx:create" |yellow ;
                 docker buildx create --config /tmp/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
