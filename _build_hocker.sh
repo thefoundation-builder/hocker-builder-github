@@ -331,7 +331,7 @@ _docker_build() {
 
         LOCAL_REGISTRY=""
         ## only search for local registries when not on gitlab/github CI as buildx fails to  resolve the hostname
-        env |grep -q -e GITHUB -e CI_COMMIT_SHA -e GITLAB || LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
+        (env |grep -q -e GITHUB -e CI_COMMIT_SHA -e GITLAB )|| LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
 #        [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
         [[ -z "$LOCAL_REGISTRY" ]] && echo "NO LOCAL_REGISTRY FOUND VIA PING/curl"
         [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && { echo "FOUND REGISTRY ON 127.0.0.1"; LOCAL_REGISTRY=127.0.0.1:5000 ; } ;

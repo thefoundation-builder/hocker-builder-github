@@ -75,13 +75,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -209,13 +209,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -344,13 +344,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -410,13 +410,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -511,13 +511,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -577,13 +577,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -678,13 +678,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -743,13 +743,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -807,13 +807,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -908,13 +908,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -973,13 +973,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1037,13 +1037,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1138,13 +1138,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1203,13 +1203,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1267,13 +1267,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1368,13 +1368,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1433,13 +1433,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1497,13 +1497,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
@@ -1599,13 +1599,13 @@ jobs:
     permissions:
       packages: write
       contents: read
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-        volumes:
-          - /tmp/buildcache_persist/registry:/var/lib/registry
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
 #      ultra-apt-cacher:
 #        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
 #        ports:
