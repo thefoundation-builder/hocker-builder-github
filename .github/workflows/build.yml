@@ -82,12 +82,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -213,12 +213,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
@@ -345,12 +345,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -411,12 +411,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -512,12 +512,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -578,12 +578,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
@@ -679,12 +679,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -744,12 +744,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -808,12 +808,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -909,12 +909,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -974,12 +974,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php80-nomysql ]
     steps:
@@ -1038,12 +1038,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1139,12 +1139,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1204,12 +1204,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1268,12 +1268,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
@@ -1369,12 +1369,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1434,12 +1434,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1498,12 +1498,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
@@ -1600,12 +1600,12 @@ jobs:
           - 5000:5000
         volumes:
           - /tmp/buildcache_persist/registry:/var/lib/registry 
-      ultra-apt-cacher:
-        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-        ports:
-          - 3142:3142
-        volumes:
-          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
