@@ -447,9 +447,9 @@ _docker_build() {
                 [[ "$LOCAL_REGISTRY" = "127.0.0.1:5000" ]] || {
                   echo "ADDING $LOCAL_REGISTRY TO BUILDER CONFIG"
                   echo '
-  # additional local reg
-  [registry."'$LOCAL_REGISTRY'"]
-    http = true
+# additional local reg
+[registry."'$LOCAL_REGISTRY'"]
+  http = true
                   ' >> /tmp/buildkit/buildkitd.toml
 #    insecure = true
                 }
