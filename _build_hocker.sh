@@ -1227,7 +1227,7 @@ return ${localbuildfail} ; } ;
 
 
 _build_php81() {
-  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
+  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
   echo "building for ${DFILES}" >&2
   for FILENAME in ${DFILES};do
         echo "DOCKERFILE: ${FILENAME}"|yellow
@@ -1243,7 +1243,7 @@ return ${localbuildfail} ; } ;
 
 _build_php81_nomysql() {
     localbuildfail=0
-    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs);
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for ${DFILES}"
     for FILENAME in ${DFILES};do
         echo "DOCKERFILE: ${FILENAME}"|yellow
