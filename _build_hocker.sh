@@ -329,20 +329,20 @@ _docker_build() {
         echo DFILENAME=${DFILENAME}
         echo CICACHETAG=${CICACHETAG}
 
-        LOCAL_REGISTRY=""
-        ## only search for local registries when not on gitlab/github CI as buildx fails to  resolve the hostname
-        (env |grep -q -e GITHUB -e CI_COMMIT_SHA -e GITLAB )|| LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
-#        [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
-        [[ -z "$LOCAL_REGISTRY" ]] && echo "NO LOCAL_REGISTRY FOUND VIA PING/curl"
-        [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && { echo "FOUND REGISTRY ON 127.0.0.1"; LOCAL_REGISTRY=127.0.0.1:5000 ; } ;
-        [[ -z "$LOCAL_REGISTRY" ]] || CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
-        export LOCAL_REGISTRY="$LOCAL_REGISTRY"
-        echo "$CACHE_REGISTRY_HOST" | grep  -q -i quay.io && {
-            [[ -z "$LOCAL_REGISTRY" ]] && export CACHE_REGISTRY_HOST=127.0.0.1:5000
-            [[ -z "$LOCAL_REGISTRY" ]] || export CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
-        echo -n ; } ;
-
-        _ping_docker_registry_v2 "$CACHE_REGISTRY_HOST" 2>&1|grep OK -q || { echo "FAIL: CACHE REGISTRY NOT PRESENT";curl -kLv "$CACHE_REGISTRY_HOST" ;docker logs buildregistry ; exit 1 ; } ;
+      #  LOCAL_REGISTRY=""
+      #  ## only search for local registries when not on gitlab/github CI as buildx fails to  resolve the hostname
+      #  (env |grep -q -e GITHUB -e CI_COMMIT_SHA -e GITLAB )|| LOCAL_REGISTRY=$(_get_docker_localhost_registry_ip)
+#     #   [[ "$LOCAL_REGISTRY" = "http://" ]] && LOCAL_REGISTRY=""
+      #  [[ -z "$LOCAL_REGISTRY" ]] && echo "NO LOCAL_REGISTRY FOUND VIA PING/curl"
+      #  [[ -z "$LOCAL_REGISTRY" ]] && _ping_docker_registry_v2 127.0.0.1:5000 && { echo "FOUND REGISTRY ON 127.0.0.1"; LOCAL_REGISTRY=127.0.0.1:5000 ; } ;
+      #  [[ -z "$LOCAL_REGISTRY" ]] || CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
+      #  export LOCAL_REGISTRY="$LOCAL_REGISTRY"
+      #  echo "$CACHE_REGISTRY_HOST" | grep  -q -i quay.io && {
+      #      [[ -z "$LOCAL_REGISTRY" ]] && export CACHE_REGISTRY_HOST=127.0.0.1:5000
+      #      [[ -z "$LOCAL_REGISTRY" ]] || export CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
+      #  echo -n ; } ;
+        
+        #_ping_docker_registry_v2 "$CACHE_REGISTRY_HOST" 2>&1|grep OK -q || { echo "FAIL: CACHE REGISTRY NOT PRESENT";curl -kLv "$CACHE_REGISTRY_HOST" ;docker logs buildregistry ; exit 1 ; } ;
 
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         PUSHCACHETAG="$BUILDCACHETAG"
