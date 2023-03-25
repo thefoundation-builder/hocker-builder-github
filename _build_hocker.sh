@@ -341,7 +341,7 @@ _docker_build() {
       #      [[ -z "$LOCAL_REGISTRY" ]] && export CACHE_REGISTRY_HOST=127.0.0.1:5000
       #      [[ -z "$LOCAL_REGISTRY" ]] || export CACHE_REGISTRY_HOST=$LOCAL_REGISTRY
       #  echo -n ; } ;
-        
+
         #_ping_docker_registry_v2 "$CACHE_REGISTRY_HOST" 2>&1|grep OK -q || { echo "FAIL: CACHE REGISTRY NOT PRESENT";curl -kLv "$CACHE_REGISTRY_HOST" ;docker logs buildregistry ; exit 1 ; } ;
 
         BUILDCACHETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
@@ -458,7 +458,7 @@ _docker_build() {
 #    insecure = true
                 }
                 echo -n "buildx:create" |yellow ;
-                docker buildx create --config /tmp/buildkit/buildkitd.toml  --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
+                docker buildx create --config /tmp/buildkit/buildkitd.toml  --driver docker-container --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
                 #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
                 echo "TESTING CREATED BUILDER:"|blue
                 docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
