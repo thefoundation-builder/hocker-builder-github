@@ -176,13 +176,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:base-focal;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -309,13 +309,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:base-bionic;docker image ls "
       - name: Trivy vulnerability scan @ baseimage-bionic
@@ -361,13 +361,13 @@ jobs:
 #    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -427,13 +427,13 @@ jobs:
 #    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -477,13 +477,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -528,13 +528,13 @@ jobs:
 #    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -594,13 +594,13 @@ jobs:
 #    needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -644,13 +644,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-alpine-dropbear-fpm ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -695,13 +695,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -760,13 +760,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -824,13 +824,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -874,13 +874,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php8.1-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -925,13 +925,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -990,13 +990,13 @@ jobs:
     needs: [ build-php80-nomysql ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1054,13 +1054,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1104,13 +1104,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php8.0-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -1155,13 +1155,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1220,13 +1220,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1284,13 +1284,13 @@ jobs:
     needs: [ build-base-focal ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1334,13 +1334,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php7.4-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -1385,13 +1385,13 @@ jobs:
     needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1450,13 +1450,13 @@ jobs:
     needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1514,13 +1514,13 @@ jobs:
     needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
@@ -1564,13 +1564,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php7.2-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
@@ -1616,13 +1616,13 @@ jobs:
     needs: [ build-base-bionic ]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1) ;docker image ls '
       - name: build images
@@ -1665,13 +1665,13 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
         run: bash -c "docker pull quay.io/thefoundation/hocker:php5.6-dropbear-fpm-imagick-redis-mariadb-npm-mongodb-rabbitmq ; docker image ls  "
       - name: Trivy vulnerability scan @ baseimage-focal
