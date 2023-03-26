@@ -197,7 +197,8 @@ startdir=$(pwd)
 echo -n "::GIT"|red|whiteb
 /bin/sh -c "test -d Hocker || git clone https://github.com/TheFoundation/Hocker.git --recurse-submodules && (cd Hocker ;git pull origin master --recurse-submodules )"|green|whiteb
 imagetester=$(pwd)/Hocker/thefoundation-imagetester.sh
-cp $imagetester build/
+test -e build && cp "$imagetester" build/
+test -e $(pwd)/Hocker/build && cp "$imagetester" $(pwd)/Hocker/build/
 (cd $(pwd)/Hocker/; git submodule update --remote)
 echo "using $imagetester"|yellow
 #echo -n ":BUILD:VERIFY:"|blue;echo "using $imagetester"|yellow
