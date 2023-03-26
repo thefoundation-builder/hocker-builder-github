@@ -1352,9 +1352,9 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 #                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
 #    rm /tmp/.importCI
 #    )
-    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
 
-    docker rmi "${CICACHETAG}"
+time bash -c "    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist |wc -l  ;docker rm cicache )"
+docker rmi "${CICACHETAG}"
 ) ) |red
 
 test -e /tmp/buildcache_persist        || mkdir /tmp/buildcache_persist
