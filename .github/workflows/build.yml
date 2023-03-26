@@ -60,7 +60,8 @@ jobs:
           source-directory: 'downstream'
           destination-github-username: 'thefoundation-builder'
           destination-repository-name: 'hocker-builder-github'
-          user-email: actions@github.com
+#          user-email: actions@github.com
+          user-email: github@committing.8shield.net
           target-branch: main
 
   build-base-focal:
