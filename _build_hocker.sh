@@ -1447,4 +1447,4 @@ echo -n "exiting with:"|yellow ;echo ${buildfail}
 echo "##############################"|blue
 echo "${buildfail}" > /tmp/hocker.build.result
 [[ "$FORCE_UPLOAD" = "true" ]] || exit ${buildfail}
-[[ "$FORCE_UPLOAD" = "true" ]] && { echo "FORCE_UPLOAD set , pretending everything went well ..." ;echo 0 >  > /tmp/hocker.build.result; exit 0 ; } ;
+[[ "$FORCE_UPLOAD" = "true" ]] && { echo "FORCE_UPLOAD set , pretending everything went well ..." ;echo 0 > /tmp/hocker.build.result; exit 0 ; } ;
