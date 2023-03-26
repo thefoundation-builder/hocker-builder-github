@@ -212,7 +212,8 @@ _build_docker_buildx() {
         PROJECT_NAME=hocker
         export PROJECT_NAME=hocker
         pwd |green
-        echo -n ":REG_LOGIN[buildx]:"|blue;(  echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1  || true |grep -v -i -e assword -e  redential| _oneline ) ; ( (docker logout 2>&1 || true ) | grep emoving)| _oneline
+        echo -n ":REG_LOGIN[buildx]:"|blue;(  echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1  || true |grep -v -i -e assword -e  redential| _oneline ) ;
+        ( (docker logout 2>&1 || true ) | grep emoving)| _oneline
         which apk |grep "/apk" -q && apk add git bash
         #export DOCKER_BUILDKIT=1
         git clone git://github.com/docker/buildx ./docker-buildx
@@ -349,7 +350,7 @@ _docker_build() {
         #PUSHCACHETAG=${FINAL_CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         CACHEIMAGETAG=${CACHE_REGISTRY_HOST}/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:${IMAGETAG_SHORT}
 
-        echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
+        #echo "${FINAL_CACHE_REGISTRY_HOST}"|grep -q quay.io && PUSHCACHETAG=127.0.0.1:5000/${CACHE_REGISTRY_PROJECT}/${CACHE_PROJECT_NAME}:buildcache_${REGISTRY_PROJECT}_${PROJECT_NAME}_${IMAGETAG_SHORT}
         echo "LOCAL_REGISTRY: "$(
                                  [[ -z "$LOCAL_REGISTRY" ]] && ( echo "NOT FOUND";docker ps -a |grep buildregistry)
                                  [[ -z "$LOCAL_REGISTRY" ]] || echo "$LOCAL_REGISTRY";)
@@ -491,7 +492,7 @@ _docker_build() {
                     echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
                 )
                 echo "starting buildx..."
-                time docker buildx build  --output=type=registry,push=false   --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch) --cache-from=type=registry,ref=${PUSHCACHETAG} --cache-to=type=local,dest=/tmp/pushcache  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green |sed  -u 's/^/|REG-NOUPL |/g'
+                time docker buildx build  --output=type=registry,push=false   --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=$(_buildx_arch) --cache-from=type=registry,ref=${PUSHCACHETAG} --cache-to=type=local,dest=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}  -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 |tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green |sed  -u 's/^/|REG-NOUPL |/g'
 ## if local docker daemon does not see buildx cache for whatever reasen ( running isolated )
                 docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
 
@@ -523,19 +524,23 @@ echo -n ; } ;
             echo "CREATING NEW DOCKERFILE ${DFILENAME}.imagetest | SOURCE ${DFILENAME}"|green
             cp -auv "$imagetester" image-tester.sh
             wget -c https://the-foundation.gitlab.io/static-testing-assets/ssl/dhparam-8192.pem -O dhparam.pem
-
+            test -e "${DFILENAME}.imagetest" && rm "${DFILENAME}.imagetest"
             ( cat "${DFILENAME}"|grep -v ^HEALTHCHECK|grep -v ^CMD
             echo
             echo "COPY dhparam.pem /etc/ssl/dhparam.pem"
             echo "COPY image-tester.sh / "
-            echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"|head -n5 |red
+            echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"
+            echo "SHOWING CONTENT OF ${DFILENAME}.imagetest "
+            head -n5 "${DFILENAME}.imagetest" |red
+            echo ..
             echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
             echo ..
             echo ..
-            cat "${DFILENAME}.imagetest"|tail -n 5 |purple
+            tail -n 5  "${DFILENAME}.imagetest"|purple
+
             _clock
             echo "::BUILDX:IMAGETEST:2daemon"| tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" |green
-            time ( docker buildx build   --output=type=docker                     --pull --progress plain  --network=host --memory-swap -1 --memory 1024M   --cache-from=type=local,src=/tmp/pushcache   -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest  $buildstring -f "${DFILENAME}.imagetest"  .  2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" | grep -v "sha256:"|awk '!x[$0]++'|blue|sed  -u 's/^/|DAEM-IMAGETEST |/g' )
+            time ( docker buildx build   --output=type=docker                     --pull --progress plain  --network=host --memory-swap -1 --memory 1024M   --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}   -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}.imagetest  $buildstring -f "${DFILENAME}.imagetest"  .  2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.2daemon.TESTRUN.log" | grep -v "sha256:"|awk '!x[$0]++'|blue|sed  -u 's/^/|DAEM-IMAGETEST |/g' )
             _clock
             docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
             #echo "rebuilding in host( should be cached as well)"
@@ -574,15 +579,15 @@ echo "uploading multiarch with buildx"
                           echo "login to cache registry"
                            echo "${CACHE_REGISTRY_PASS}" | docker login --username "${CACHE_REGISTRY_USER}" --password-stdin "${CACHE_REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline
                        )
-              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/pushcache  --cache-to=type=local,dest=/tmp/pushcache                -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
-              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/pushcache  --cache-to=type=registry,mode=max,ref=${PUSHCACHETAG}         -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
+              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}  --cache-to=type=local,dest=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}                                      -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
+              time docker buildx build  --output=type=registry,push=false          --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}  --cache-to=type=registry,mode=max,ref=${PUSHCACHETAG},compression=zstd         -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1
                               loginresult=$( echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}"  2>&1 |grep -v  "WARN" |_oneline)
                               echo "$loginresult" | red
                               if echo "$loginresult"|grep -i  "unauthorized" ; then
                                echo "could not login . would never push .." |red
                               exit 40
                               fi
-              time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/pushcache                                                                 -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 )|tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
+              time docker buildx build  --output=type=registry,push=true  --push  --pull --progress plain --network=host --memory-swap -1 --memory 1024M --platform=${TARGETARCH}   --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}                                                                 -t  ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} $buildstring -f "${DFILENAME}"  .  2>&1 )|tee  -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"|grep -e CACHED -e ^$ -e '\[linux/' -e '[0-9]\]' -e 'internal]' -e DONE -e fail -e error -e Error -e ERROR |grep -v  -e localized-error-pages -e liberror-perl -e ErrorHandler.phpt  |awk '!x[$0]++'|green|sed  -u 's/^/|REG |/g'
             _clock
             echo "${MERGE_LAYERS}" |grep -q "YES" && {
                 test -e /tmp/multisquash/docker-squash-multiarch.sh &&   echo "SQUASHing ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}"|green | tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".buildx.log"
@@ -1001,9 +1006,10 @@ test -e /tmp/buildcache_persist  && (
 ## write-back registry + apt-cacher
 ( cd /tmp/; test -e /tmp/buildcache_persist &&  (
     echo "CICACHE_WRITE_BACK"
-    (docker stop buildregistry;docker rm buildregistry) &
-    (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
-    (docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
+    CONTLIST=$(docker ps -a )
+    (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop buildregistry;docker rm buildregistry) &
+    (echo "$CONTLIST" |grep -q apt-cacher-ng    && docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
+    (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
     echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
@@ -1334,9 +1340,11 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 
 ## CACHES INIT
 
-( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) || (
-    echo "GETTING CICACHE ${CICACHETAG}"
-    [[ -z "${CICACHETAG}" ]] || (
+#( test -e /tmp/buildcache_persist && test -e "$LOCAL_REGISTRY_CACHE" ) ||
+(
+
+[[ -z "${CICACHETAG}" ]] || (
+      echo "GETTING CICACHE ${CICACHETAG}"
 #    docker pull ${CICACHETAG} &&             (
 #        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
 #                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
@@ -1346,6 +1354,9 @@ echo -n "::SYS:PREP=DONE ... " |green ;echo '+++WELCOME+++'|blue |yellowb
 
     docker rmi "${CICACHETAG}"
 ) ) |red
+
+test -e /tmp/buildcache_persist        || mkdir /tmp/buildcache_persist
+test -e /tmp/buildcache_persist/buildx || mkdir /tmp/buildcache_persist/buildx
 
 [[ "$START_APT_CACHE" = "true" ]] && (echo "finding or starting apt proxy"|yellow
 docker ps -a |grep -e ultra-apt-cacher -e apt-cacher-ng || (
@@ -1407,9 +1418,10 @@ esac
 ## write-back registry + apt-cacher
 ( cd /tmp/;test -e /tmp/buildcache_persist &&  (
     echo "CICACHE_WRITE_BACK"
-    (docker stop buildregistry;docker rm buildregistry) &
-    (docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
-    (docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
+    CONTLIST=$(docker ps -a )
+    (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop buildregistry;docker rm buildregistry) &
+    (echo "$CONTLIST" |grep -q apt-cacher-ng    && docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
+    (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
     echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
