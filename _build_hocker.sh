@@ -1006,23 +1006,23 @@ test -e /tmp/buildcache_persist  && (
     du -m -s /tmp/buildcache_persist )
 
 ## write-back registry + apt-cacher
-( cd /tmp/; test -e /tmp/buildcache_persist &&  (
+( cd /tmp/;test -e /tmp/buildcache_persist &&  (
     echo "CICACHE_WRITE_BACK"
     CONTLIST=$(docker ps -a )
     (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop buildregistry;docker rm buildregistry) &
     (echo "$CONTLIST" |grep -q apt-cacher-ng    && docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
     (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
-    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
+#    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
 #    docker pull ${CICACHETAG} &&             (
 #        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
 #                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
 #    rm /tmp/.importCI
 #    )
-    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
+    #docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
 
-    echo "SAVING ${CICACHETAG}"
+    echo "SAVING CICACHE ${CICACHETAG}" ; find /tmp/buildcache_persist/buildx -mtime +14 -delete;
     cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
 )
 
@@ -1425,14 +1425,14 @@ esac
     (echo "$CONTLIST" |grep -q apt-cacher-ng    && docker stop apt-cacher-ng;docker rm apt-cacher-ng) &
     (echo "$CONTLIST" |grep -q ultra-apt-cacher && docker stop ultra-apt-cacher;docker rm ultra-apt-cacher) &
     wait
-    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
+#    echo "REMOVING AND GETTING ${CICACHETAG} AGAIN ( MERGE )"
     docker rmi ${CICACHETAG}
 #    docker pull ${CICACHETAG} &&             (
 #        cd /tmp/;docker save ${CICACHETAG} > /tmp/.importCI ;
 #                                        tar xvf /tmp/.importCI --to-stdout   $(tar tf /tmp/.importCI|grep layer.tar) |tar xv
 #    rm /tmp/.importCI
 #    )
-    docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
+    #docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
 
     echo "SAVING CICACHE ${CICACHETAG}" ; find /tmp/buildcache_persist/buildx -mtime +14 -delete;
     cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
