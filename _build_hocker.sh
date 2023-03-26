@@ -161,7 +161,7 @@ esac
 ##
 buildargs="";
 echo -n "::SHOW:CONFIG"|yellow
-echo "MERGE_LAYERS=$MERGE_LAYERS ALLOW_SINGLE_ARCH_ULOAD=$ALLOW_SINGLE_ARCH_ULOAD BUILD_TARGET_PLATFORMS=$BUILD_TARGET_PLATFORMS"
+echo "MERGE_LAYERS=$MERGE_LAYERS ALLOW_SINGLE_ARCH_UPLOAD=$ALLOW_SINGLE_ARCH_UPLOAD BUILD_TARGET_PLATFORMS=$BUILD_TARGET_PLATFORMS"
 echo "######"
 echo -n "::SYS:PREP"|yellow
 echo -n "::DISABLE:SELINUX"|yellow
@@ -632,7 +632,7 @@ echo "uploading multiarch with buildx"
                 echo "::build: DOING MY ARCHITECURE ONLY ";_buildx_arch
                 echo -ne "DOCKER bUILD(native), running the following command: \e[1;31m"
                 export DOCKER_BUILDKIT=0
-                echo docker build  --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}   --cache-from=type=registry,ref=${BUILDCACHETAG   $buildstring -f "${DFILENAME}" --rm=false -t ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} .
+                echo docker build  --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}   --cache-from=type=registry,ref=${BUILDCACHETAG}   $buildstring -f "${DFILENAME}" --rm=false -t ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} .
                 echo -e "\e[0m\e[1;42m STDOUT and STDERR goes to:" ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".log"
                 DOCKER_BUILDKIT=0 time docker build  --cache-from=type=local,src=/tmp/buildcache_persist/buildx/${IMAGETAG_SHORT}   --cache-from=type=registry,ref=${BUILDCACHETAG}  $buildstring -f "${DFILENAME}" --rm=false -t ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} . 2>&1 |tee -a ${startdir}/buildlogs/build-${IMAGETAG}.${TARGETARCH_NOSLASH}".native.log" |awk '!x[$0]++'|green
                 echo -n "VERIFYING NATIVE BUILD";docker system df|red;docker image ls |grep -e ${REGISTRY_PROJECT} |grep ${PROJECT_NAME} |blue
