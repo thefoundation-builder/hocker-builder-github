@@ -199,8 +199,12 @@ echo -n "::GIT"|red|whiteb
 
 #/bin/sh -c "test -d Hocker || git clone https://github.com/TheFoundation/Hocker.git --recurse-submodules && (cd Hocker ;git pull origin master --recurse-submodules )"|green|whiteb
 echo "${PULL_BASE64KEY}"|base64 -d > /tmp/.ssh_id_rsa.PULL_HOCKER
+head -n2 /tmp/.ssh_id_rsa.PULL_HOCKER
+tail -n2 /tmp/.ssh_id_rsa.PULL_HOCKER
 ssh-agent /bin/bash -c "chmod 0600 /tmp/.ssh_id_rsa.PULL_HOCKER ; /tmp/.ssh_id_rsa.PULL_HOCKER ; (test -d ${HOME}/.ssh || mkdir -p  $HOME/.ssh);(ssh-keyscan -t rsa,dsa,ecdsa github.com  ;ssh-keyscan -t rsa,dsa,ecdsa gitlab.com ) |tee  ~/.ssh/known_hosts ~/.ssh/ssh_known_hosts && git clone git@github.com:TheFoundation/Hocker.git --recurse-submodules && (cd Hocker ;git pull origin master --recurse-submodules )"|green|whiteb
 
+test -e "$(pwd)/Hocker" || echo "NO REPO FOUND , WE FAILED CLONING"
+test -e "$(pwd)/Hocker" || exit 99
 
 imagetester=$(pwd)/Hocker/thefoundation-imagetester.sh
 test -e build && cp "$imagetester" build/
