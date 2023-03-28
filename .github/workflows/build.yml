@@ -139,7 +139,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -273,7 +273,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -377,7 +377,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -443,7 +443,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -544,7 +544,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -610,7 +610,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -711,7 +711,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -776,7 +776,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -840,7 +840,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -941,7 +941,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1006,7 +1006,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1070,7 +1070,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1171,7 +1171,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1236,7 +1236,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1300,7 +1300,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1401,7 +1401,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1466,7 +1466,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1530,7 +1530,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1632,7 +1632,7 @@ jobs:
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker) >> .buildenv;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
              (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
@@ -1700,4 +1700,4 @@ jobs:
 ##         EZORED_AWS_SECRET_KEY: ${{ secrets.EZORED_AWS_SECRET_KEY }}
 ###      run: |
 ###       docker buildx build -f Dockerfile -t ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPO }}:latest --output "type=image,push=true" --platform linux/amd64,linux/arm/v7,linux/arm64 .
-##
+#
