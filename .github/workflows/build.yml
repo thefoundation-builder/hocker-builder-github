@@ -111,7 +111,7 @@ jobs:
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-focal$" && changestatus=true
           # Check if our baseimage is older than a week
-          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-focal
+          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-focal || true 
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output)
           echo "CREATED: $imagestamp"
           imageagedays=$(( ( $(date +%s ) - $(date --date$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
@@ -249,7 +249,7 @@ jobs:
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-bionic$" && changestatus=true
           # Check if our baseimage is older than a week
-          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-bionic
+          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-bionic || true 
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)
           echo "CREATED: $imagestamp"
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
