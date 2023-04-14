@@ -117,6 +117,8 @@ jobs:
           imageagedays=$(( ( $(date +%s ) - $(date --date$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
           maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
+          ## do action also when baseimage missing
+          [[ -z "$imageagedays" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
@@ -253,6 +255,8 @@ jobs:
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
           maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
+          ## do action also when baseimage missing
+          [[ -z "$imageagedays" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
