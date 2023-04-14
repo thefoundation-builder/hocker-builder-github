@@ -112,7 +112,7 @@ jobs:
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output)
           echo "CREATED: $imagestamp"
           imageagedays=$(( ( $(date +%s ) - $(date --date$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
-          maxaimageage=2
+          maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
@@ -248,7 +248,7 @@ jobs:
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)
           echo "CREATED: $imagestamp"
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
-          maxaimageage=2
+          maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
