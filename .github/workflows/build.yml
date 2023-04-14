@@ -109,7 +109,9 @@ jobs:
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-focal$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-focal
-          imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output)
+          echo "CREATED: $imagestamp"
+          imageagedays=$(( ( $(date +%s ) - $(date --date$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
           maxaimageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
@@ -243,6 +245,8 @@ jobs:
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-bionic$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-bionic
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)
+          echo "CREATED: $imagestamp"
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
           maxaimageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
