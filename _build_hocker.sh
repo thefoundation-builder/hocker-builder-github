@@ -548,8 +548,10 @@ echo -n ; } ;
             echo
             echo "COPY dhparam.pem /etc/ssl/dhparam.pem"
             echo "COPY image-tester.sh / "
-            echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest"
-            echo "SHOWING CONTENT OF ${DFILENAME}.imagetest "
+            echo "CMD /bin/bash /image-tester.sh" )  | tee "${DFILENAME}.imagetest" |nl
+            echo "######################"
+            echo "SHOWING CONTENT OF ${DFILENAME}.imagetest (summary)"
+            echo "######################"
             head -n5 "${DFILENAME}.imagetest" |red
             echo ..
             echo "((CONTENTS OF REGULAR DOCKERFILE))"|yellow
