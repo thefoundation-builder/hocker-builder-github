@@ -112,9 +112,11 @@ jobs:
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-focal$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-focal || true 
-          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output)
-          echo "CREATED: $imagestamp"
-          imageagedays=$(( ( $(date +%s ) - $(date --date$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) || true
+          echo "$imagestamp"|grep T|grep -q Z || imagestamp="1970-01-01T12:24:56.472395573Z"
+          imageagedays=$(( ( $now  - $(date --date $imagestamp +%s) ) /(60*60*24) )) || true 
+          now=$(date +%s )
+          echo "CREATED: $imagestamp NOW: $now  AGE: $imageagedays"
           maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           ## do action also when baseimage missing
@@ -250,9 +252,11 @@ jobs:
           echo "$diffed"  |grep -q -e "^build/Dockerfile-base-bionic$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-bionic || true 
-          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)
-          echo "CREATED: $imagestamp"
-          imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)|| true
+          echo "$imagestamp"|grep T|grep -q Z || imagestamp="1970-01-01T12:24:56.472395573Z"
+          imageagedays=$(( ( $now  - $(date --date $imagestamp +%s) ) /(60*60*24) )) || true 
+          now=$(date +%s )
+          echo "CREATED: $imagestamp NOW: $now  AGE: $imageagedays"
           maximageage=2
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           ## do action also when baseimage missing
