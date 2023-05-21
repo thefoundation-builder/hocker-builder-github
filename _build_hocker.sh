@@ -93,6 +93,9 @@ echo "$CACHE_REGISTRY_HOST"|grep  -q docker.io &&  (echo "$REGISTRY_PROJECT" |gr
 #BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
 BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 #BUILD_TARGET_PLATFORMS="linux/amd64"
+#echo "$@"|grep -q bionic && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+echo "$@"|grep -q alpine && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+
 }
 
 ###MODE DECISION
@@ -136,7 +139,7 @@ function colors_list    {   echo_black "black";   echo_blackb "blackb";   echo_w
 _clock() { echo -n WALLCLOCK : |redb ;echo  $( date -u "+%F %T" ) |yellow ; } ;
 
 case $1 in
-  base-focal|base-bionic) MODE="minimal" ;;
+  base-focal|base-bionic|base-jammy) MODE="minimal" ;;
   php72|p72|php72_nomysql|p72_nomysql)  MODE="featuresincreasing" ;;
   php74|p74|php74_nomysql|p74_nomysql)  MODE="featuresincreasing" ;;
   php80|p80|php80_nomysql|p80_nomysql)  MODE="featuresincreasing" ;;
@@ -1396,6 +1399,7 @@ case $1 in
   latest)                                      _build_latest "$@" ;               buildfail=$? ;;
   base-focal)                                  _build_base focal  "$@" ;          buildfail=$? ;;
   base-bionic)                                 _build_base bionic "$@" ;          buildfail=$? ;;
+  base-jammy)                                  _build_base jammy  "$@" ;          buildfail=$? ;;
 
   latest_nomysql)                              _build_latest_nomysql "$@";        buildfail=$? ;;
   php5|p5)                                     _build_php5 "$@" ;                 buildfail=$? ;;
