@@ -90,8 +90,8 @@ echo "$CACHE_REGISTRY_HOST"|grep  -q docker.io &&  (echo "$REGISTRY_PROJECT" |gr
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && {
 
 #BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,darwin"
-#BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
-BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+#BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 #BUILD_TARGET_PLATFORMS="linux/amd64"
 echo "$@"|grep -q bionic && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
 echo "$@"|grep -q alpine && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
