@@ -93,8 +93,8 @@ echo "$CACHE_REGISTRY_HOST"|grep  -q docker.io &&  (echo "$REGISTRY_PROJECT" |gr
 BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
 #BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 #BUILD_TARGET_PLATFORMS="linux/amd64"
-echo "$@"|grep -q bionic && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
-echo "$@"|grep -q alpine && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+#echo "$@"|grep -q bionic && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+#echo "$@"|grep -q alpine && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
 
 }
 
@@ -725,6 +725,7 @@ FEATURESET_MINI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =true|sed 's/ARG \+//g
 FEATURESET_MAXI=$(echo -n|cat ${DFILENAME}|grep ^ARG|grep =    |sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 FEATURESET_MAXI_NOMYSQL=$(echo -n|cat ${DFILENAME}|grep -v -e MYSQL -e mysql -e MARIADB -e mariadb|grep ^ARG|grep =|sed 's/ARG \+//g;s/ //'|cut -d= -f1 |awk '!x[$0]++' |grep INSTALL|sed 's/$/@/g'|tr -d '\n' )
 
+cat "$DFILENAME"|grep ^FROM|grep -q bionic && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
 
 #echo " #### "|uncolored
 echo "BUILDMODE:" $MODE
@@ -1193,6 +1194,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php80_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for ${DFILES}"
@@ -1209,6 +1211,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php80_alpine() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1225,6 +1228,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php80_alpine_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1241,6 +1245,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php81_alpine() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1257,6 +1262,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php81_alpine_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1-alpine* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1307,6 +1313,8 @@ return ${localbuildfail} ; } ;
 
 
 _build_base() {
+    echo $@|grep bionic -q && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+    echo $@|grep alpine -q && BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} "
     for FILENAME in $(ls -1 Dockerfile-base-$1 |grep -v latest$ |sort -r | grep -v nodejs);do
