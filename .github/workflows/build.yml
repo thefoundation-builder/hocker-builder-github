@@ -109,8 +109,6 @@ jobs:
           changestatus=false
           echo "FILES CHANGED IN LAST COMMIT"
           echo "$diffed"
-          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-focal$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-focal || true 
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-focal | jq .[]."Created" --raw-output) || true
@@ -122,6 +120,8 @@ jobs:
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           ## do action also when baseimage missing
           [[ -z "$imageagedays" ]] && changestatus=true
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-focal$" -e build.yml -e docker-install.sh  && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
@@ -251,8 +251,6 @@ jobs:
           changestatus=false
           echo "FILES CHANGED IN LAST COMMIT"
           echo "$diffed"
-          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-jammy$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-jammy || true 
           imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-jammy | jq .[]."Created" --raw-output) || true
@@ -264,6 +262,8 @@ jobs:
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           ## do action also when baseimage missing
           [[ -z "$imageagedays" ]] && changestatus=true
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-jammy$" -e build.yml -e docker-install.sh  && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
@@ -393,11 +393,9 @@ jobs:
           changestatus=false
           echo "FILES CHANGED IN LAST COMMIT"
           echo "$diffed"
-          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-bionic$" && changestatus=true
           # Check if our baseimage is older than a week
           docker pull  $REGISTRY_HOST/thefoundation/hocker:base-bionic || true 
-          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output)|| true
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-bionic | jq .[]."Created" --raw-output) || true
           echo "$imagestamp"|grep T|grep -q Z || imagestamp="1970-01-01T12:24:56.472395573Z"
           now=$(date +%s )
           imageagedays=$(( ( $now  - $(date --date "$( echo $imagestamp |sed 's/\..\+//g;s/T/ /g')" +%s) ) /(60*60*24) )) || true 
@@ -406,6 +404,8 @@ jobs:
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           ## do action also when baseimage missing
           [[ -z "$imageagedays" ]] && changestatus=true
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-bionic$" -e build.yml -e docker-install.sh  && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
