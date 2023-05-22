@@ -1283,8 +1283,6 @@ echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
-
-
 _build_php81() {
 
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
