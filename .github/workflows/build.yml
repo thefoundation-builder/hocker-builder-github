@@ -53,6 +53,7 @@ jobs:
              cp -aurv _build_hocker.sh .github downstream &
              tar cv . |md5sum |cut -d" " -f1 > downstream/.md5sum_of_tar
              bash build/_generate_downstream_readme.sh thefoundation-builder hocker-builder-github > downstream/README.md
+             cat README.md > downstream/README_hocker.md
              wait
 #      - uses: cpina/github-action-push-to-another-repository@main
       - uses: TheFoundation/github-action-push-to-another-repository@main
