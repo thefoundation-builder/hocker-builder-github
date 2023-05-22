@@ -283,18 +283,23 @@ _docker_pull_multiarch() {
     for curtag in $([[ -z "$LOCAL_REGISTRY"  ]] || echo "$LOCAL_REGISTRY"/${PULLTAG} ) ${PULLTAG} ;do
        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] &&  { echo "${REGISTRY_PASSWORD}" | docker login --username "${REGISTRY_USER}" --password-stdin "${REGISTRY_HOST}" 2>&1 || exit 235 ; } |_oneline;echo ;
        [[ "${LOGIN_BEFORE_PULL}" = "true" ]] ||    docker logout  2>&1 |_oneline;echo
+    docker pull  ${curtag} 2>&1  |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline
+    echo ;echo parts of the following step might fail on most daemons..stay relaxed |green
     for current_target in $(echo ${BUILD_TARGET_PLATFORMS}|sed 's/,/ /g');do
         echo ;echo -n "docker pull  (native)                     ${curtag} | :: |" | blue
-          docker pull   ${curtag} 2>&1  |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline
-        echo ;echo the following step will fail on most daemons..stay relaxed |green
         echo -n "docker pull --platform=${current_target}  ${curtag} | :: |" | blue
-        ( DOCKER_CLI_EXPERIMENTAL=enabled  docker pull --platform=${current_target}  ${curtag} 2>&1 || true ) |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline
+        ( ( DOCKER_CLI_EXPERIMENTAL=enabled  docker pull --platform=${current_target}  ${curtag} 2>&1 || true ) |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline ) &
     done
+    sleep 3
+    echo "waiting for pull jobs.."
+    wait
     echo ;echo "now pulling multiarch by digest"|green
     for mydigest in $(DOCKER_CLI_EXPERIMENTAL=enabled  docker manifest inspect ${curtag} |jq  -c '.manifests[]|.digest'|sed 's/"//g') ;do echo "->pull digest for $mydigest";
-        docker pull ${curtag}@${mydigest} 2>&1 |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline &
-        echo ${mydigest} >> /dev/shm/pulled_docker_digests
+        ( docker pull ${curtag}@${mydigest} 2>&1 |grep -v -e Verifying -e Download|grep -v -i helper |sed 's/Pull.\+/↓/g'|sed 's/\(Waiting\|Checksum\|exists\|complete\|fs layer\)$/→/g'|_oneline &
+        echo ${mydigest} >> /dev/shm/pulled_docker_digests ) &
    done;
+    sleep 3
+    echo "waiting for digest pull jobs.."
    done
    docker image ls
 wait
