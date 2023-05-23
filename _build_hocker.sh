@@ -1332,6 +1332,8 @@ _build_base() {
         if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
+    echo "waiting for 120 seconds since registries might not show this image in the next steps immediately and build might fail"
+    wait 120
 echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
