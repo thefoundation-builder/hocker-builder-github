@@ -992,7 +992,7 @@ jobs:
 #        volumes:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-base-jammy ]
+    needs: [ build-php81-nomysql ]
     steps:
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
@@ -1225,7 +1225,7 @@ jobs:
 #        volumes:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-base-jammy ]
+    needs: [ build-php80-nomysql ]
     steps:
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
@@ -1458,7 +1458,7 @@ jobs:
 #        volumes:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-base-focal ]
+    needs: [ build-php74-nomysql ]
     steps:
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
@@ -1691,7 +1691,7 @@ jobs:
 #        volumes:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-base-bionic ]
+    needs: [ build-php72-nomysql ]
     steps:
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
