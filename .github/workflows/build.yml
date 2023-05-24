@@ -165,7 +165,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -307,7 +308,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -449,7 +451,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -552,7 +555,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -618,7 +622,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -719,7 +724,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -785,7 +791,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -886,7 +893,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -951,7 +959,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1015,7 +1024,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1116,7 +1126,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1181,7 +1192,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1245,7 +1257,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1346,7 +1359,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1411,7 +1425,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1475,7 +1490,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1576,7 +1592,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1641,7 +1658,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1705,7 +1723,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
@@ -1806,7 +1825,8 @@ jobs:
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
+        if: always()
         with:
          name: buildlogs
          path: |
