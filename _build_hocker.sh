@@ -1319,7 +1319,7 @@ return ${localbuildfail} ; } ;
 
 
 _build_base() {
-    echo $@|grep jammy  -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+    echo $@|grep jammy  -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     echo $@|grep bionic -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     echo $@|grep alpine -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
