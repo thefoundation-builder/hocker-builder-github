@@ -406,6 +406,149 @@ jobs:
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: "trivy-results.sarif"
+  build-base-jammy:
+    runs-on: ubuntu-latest
+    container: quay.io/thefoundation/library:docker-with-buildx
+    env:
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+      REGISTRY_USER: ${{ secrets.QUAY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASS }}
+
+    environment: push-dockerhub
+    permissions:
+      packages: write
+      contents: read
+#    services:
+#      registry:
+#        image: registry:2
+#        ports:
+#          - 5000:5000
+#        volumes:
+#          - /tmp/buildcache_persist/registry:/var/lib/registry
+#      ultra-apt-cacher:
+#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
+#        ports:
+#          - 3142:3142
+#        volumes:
+#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v3
+      - id: check_build_baseimage
+        # Give an id to the step, so we can reference it later
+        run: |
+          sh -c "( which apk && apk add date ) || true "
+          echo "Detecting changed files"
+          #echo "adding current path as safe dir"
+          git config --global --add safe.directory  $(pwd)
+          #echo "remoteURL is "$(git config --get remote.origin.url)
+          #git clone $(git config --get remote.origin.url) /tmp/cleancheckout
+          echo "Diff HEAD with the previous commit"
+          diffed=$(git log -1 --oneline --name-only --pretty='' HEAD)
+          changestatus=false
+          echo "FILES CHANGED IN LAST COMMIT"
+          echo "$diffed"
+          # Check if our baseimage is older than a week
+          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-jammy || true 
+          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-jammy | jq .[]."Created" --raw-output) || true
+          echo "$imagestamp"|grep T|grep -q Z || imagestamp="1970-01-01T12:24:56.472395573Z"
+          now=$(date +%s )
+          imageagedays=$(( ( $now  - $(date --date "$( echo $imagestamp |sed 's/\..\+//g;s/T/ /g')" +%s) ) /(60*60*24) )) || true 
+          echo "CREATED: $imagestamp NOW: $now  AGE: $imageagedays"
+          maximageage=2
+          [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
+          ## do action also when baseimage missing
+          [[ -z "$imageagedays" ]] && changestatus=true
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-jammy$" -e build.yml -e docker-install.sh  && changestatus=true
+          echo "answer to the did-files-change question is "$changestatus
+          # Set the output named "do_the_build"
+          ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
+          echo "do_the_build=$changestatus" >> $GITHUB_OUTPUT
+          #Write-Host "::set-output name=do_the_build::$HasDiff"
+      - name: NOTICE SKIP
+        if: steps.check_build_baseimage.outputs.do_the_build== 'false'
+        run: echo "BUILDING SKIPPED"
+      - name: Set up QEMU
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        id: buildx
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+        uses: docker/setup-buildx-action@v2
+      - name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+      - name: current images
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+      - name: build images
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+        run: |
+             date +%s > /tmp/.buildstart
+             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
+             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
+             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
+             echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
+             (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
+             mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
+             cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
+             sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh base-jammy " 2>&1
+             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
+             cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
+             echo "RESULT:"$(cat /tmp/hocker.build.result)
+             grep ^0$ /tmp/hocker.build.result
+      - name: show files
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+#        if: failure()
+        if: always()
+        with:
+         name: buildlogs
+         path: |
+              buildlogs
+      - name: CHECK BUILD STATUS
+        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
+        run: grep ^0$ /tmp/hocker.build.result
+
+  scan-base-jammy:
+    runs-on: ubuntu-latest
+    container: quay.io/thefoundation/library:docker-with-buildx
+    needs: build-base-jammy
+    env:
+      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
+    environment: push-dockerhub
+    permissions:
+      packages: read
+      contents: read
+      security-events: write
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - uses: actions/checkout@v3
+#      - name: Set up QEMU
+#        uses: docker/setup-qemu-action@v2
+#      - name: Set up Docker Buildx
+#        id: buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Available platforms
+#        run: echo ${{ steps.buildx.outputs.platforms }}
+      - name: current images
+        run: bash -c "docker pull quay.io/thefoundation/hocker:base-jammy;docker image ls "
+      - name: Trivy vulnerability scan @ baseimage-jammy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'quay.io/thefoundation/hocker:base-jammy'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-jammy
+        uses: github/codeql-action/upload-sarif@main
+        with:
+          sarif_file: "trivy-results.sarif"
 
 
   build-base-focal:
@@ -548,149 +691,6 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Upload Trivy scan results to GitHub Security tab @ baseimage-focal
-        uses: github/codeql-action/upload-sarif@main
-        with:
-          sarif_file: "trivy-results.sarif"
-  build-base-jammy:
-    runs-on: ubuntu-latest
-    container: quay.io/thefoundation/library:docker-with-buildx
-    env:
-      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-      REGISTRY_USER: ${{ secrets.QUAY_USER }}
-      REGISTRY_PASSWORD: ${{ secrets.QUAY_PASS }}
-
-    environment: push-dockerhub
-    permissions:
-      packages: write
-      contents: read
-#    services:
-#      registry:
-#        image: registry:2
-#        ports:
-#          - 5000:5000
-#        volumes:
-#          - /tmp/buildcache_persist/registry:/var/lib/registry
-#      ultra-apt-cacher:
-#        image: registry.gitlab.com/the-foundation/ultra-apt-cacher-ng
-#        ports:
-#          - 3142:3142
-#        volumes:
-#          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
-    if: github.repository_owner == 'thefoundation-builder'
-    steps:
-      - uses: actions/checkout@v3
-      - id: check_build_baseimage
-        # Give an id to the step, so we can reference it later
-        run: |
-          sh -c "( which apk && apk add date ) || true "
-          echo "Detecting changed files"
-          #echo "adding current path as safe dir"
-          git config --global --add safe.directory  $(pwd)
-          #echo "remoteURL is "$(git config --get remote.origin.url)
-          #git clone $(git config --get remote.origin.url) /tmp/cleancheckout
-          echo "Diff HEAD with the previous commit"
-          diffed=$(git log -1 --oneline --name-only --pretty='' HEAD)
-          changestatus=false
-          echo "FILES CHANGED IN LAST COMMIT"
-          echo "$diffed"
-          # Check if our baseimage is older than a week
-          docker pull  $REGISTRY_HOST/thefoundation/hocker:base-jammy || true 
-          imagestamp=$(docker image inspect $REGISTRY_HOST/thefoundation/hocker:base-jammy | jq .[]."Created" --raw-output) || true
-          echo "$imagestamp"|grep T|grep -q Z || imagestamp="1970-01-01T12:24:56.472395573Z"
-          now=$(date +%s )
-          imageagedays=$(( ( $now  - $(date --date "$( echo $imagestamp |sed 's/\..\+//g;s/T/ /g')" +%s) ) /(60*60*24) )) || true 
-          echo "CREATED: $imagestamp NOW: $now  AGE: $imageagedays"
-          maximageage=2
-          [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
-          ## do action also when baseimage missing
-          [[ -z "$imageagedays" ]] && changestatus=true
-          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          echo "$diffed"  |grep -q -e "^build/Dockerfile-base-jammy$" -e build.yml -e docker-install.sh  && changestatus=true
-          echo "answer to the did-files-change question is "$changestatus
-          # Set the output named "do_the_build"
-          ## DEPRECATED#echo#"::set-output name=do_the_build::$changestatus"
-          echo "do_the_build=$changestatus" >> $GITHUB_OUTPUT
-          #Write-Host "::set-output name=do_the_build::$HasDiff"
-      - name: NOTICE SKIP
-        if: steps.check_build_baseimage.outputs.do_the_build== 'false'
-        run: echo "BUILDING SKIPPED"
-      - name: Set up QEMU
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        id: buildx
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-buildx-action@v2
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-      - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
-      - name: build images
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        run: |
-             date +%s > /tmp/.buildstart
-             git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
-             echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
-             (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
-             echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
-             (echo export APT_HTTP_PROXY_URL=${{ secrets.APT_HTTP_PROXY_URL }} ; echo export CACHE_REGISTRY_HOST=ghcr.io ; echo export CACHE_REGISTRY_PROJECT=${{ github.repository_owner }} ; echo export CACHE_PROJECT_NAME=${{ github.event.repository.name }} ;  echo export CACHE_REGISTRY_USER=${{ github.actor }};echo export CACHE_REGISTRY_PASS=${{ secrets.GITHUB_TOKEN }};echo export CICACHETAG="$CICACHETAG:${{ github.event.repository.name }}_"$(echo ${{ github.job }}|sed 's/build-//g'); )>> .buildenv
-             mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
-             cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
-             sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh base-jammy " 2>&1
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
-             cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
-             echo "RESULT:"$(cat /tmp/hocker.build.result)
-             grep ^0$ /tmp/hocker.build.result
-      - name: show files
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-#        if: failure()
-        if: always()
-        with:
-         name: buildlogs
-         path: |
-              buildlogs
-      - name: CHECK BUILD STATUS
-        if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        run: grep ^0$ /tmp/hocker.build.result
-
-  scan-base-jammy:
-    runs-on: ubuntu-latest
-    container: quay.io/thefoundation/library:docker-with-buildx
-    needs: build-base-jammy
-    env:
-      APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
-    environment: push-dockerhub
-    permissions:
-      packages: read
-      contents: read
-      security-events: write
-    if: github.repository_owner == 'thefoundation-builder'
-    steps:
-      - uses: actions/checkout@v3
-#      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
-#      - name: Set up Docker Buildx
-#        id: buildx
-#        uses: docker/setup-buildx-action@v2
-#      - name: Available platforms
-#        run: echo ${{ steps.buildx.outputs.platforms }}
-      - name: current images
-        run: bash -c "docker pull quay.io/thefoundation/hocker:base-jammy;docker image ls "
-      - name: Trivy vulnerability scan @ baseimage-jammy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'quay.io/thefoundation/hocker:base-jammy'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy scan results to GitHub Security tab @ baseimage-jammy
         uses: github/codeql-action/upload-sarif@main
         with:
           sarif_file: "trivy-results.sarif"
