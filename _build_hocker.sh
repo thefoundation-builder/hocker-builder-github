@@ -1110,6 +1110,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php72() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
   localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for ${DFILES}"
@@ -1126,6 +1127,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php72_nomysql() {
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1139,25 +1141,12 @@ _build_php72_nomysql() {
 echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
+    echo "waiting for 90 seconds since registries might not show this image in the next steps immediately and build might fail"
+    wait 90
 return ${localbuildfail} ; } ;
 
 _build_php74() {
-  localbuildfail=0
-  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
-  echo "building for ${DFILES}"
-    for FILENAME in ${DFILES};do
-        echo "DOCKERFILE: ${FILENAME}" |yellow
-        #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel "${FILENAME}"
-        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
-        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
-    done
-echo "#############################"|blue
-echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
-echo "##############################"|blue
-return ${localbuildfail} ; } ;
-
-_build_php74() {
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1187,10 +1176,13 @@ localbuildfail=0
 echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
+    echo "waiting for 90 seconds since registries might not show this image in the next steps immediately and build might fail"
+    wait 90
 return ${localbuildfail} ; } ;
 
 
 _build_php80() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
   echo "building for ${DFILES}" >&2
   for FILENAME in ${DFILES};do
@@ -1206,7 +1198,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php80_nomysql() {
-    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.0* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for ${DFILES}"
@@ -1220,6 +1212,8 @@ _build_php80_nomysql() {
 echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
+    echo "waiting for 90 seconds since registries might not show this image in the next steps immediately and build might fail"
+    wait 90
 return ${localbuildfail} ; } ;
 
 _build_php80_alpine() {
@@ -1291,7 +1285,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php81() {
-
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
   echo "building for ${DFILES}" >&2
   for FILENAME in ${DFILES};do
@@ -1308,6 +1302,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php81_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
     echo "building for ${DFILES}"
@@ -1340,8 +1335,8 @@ _build_base() {
         if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
         [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
     done
-    echo "waiting for 120 seconds since registries might not show this image in the next steps immediately and build might fail"
-    wait 120
+    echo "waiting for 90 seconds since registries might not show this image in the next steps immediately and build might fail"
+    wait 90
 echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
