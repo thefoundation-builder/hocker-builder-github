@@ -144,17 +144,20 @@ case $1 in
   php74|p74|php74_nomysql|p74_nomysql)  MODE="featuresincreasing" ;;
   php80|p80|php80_nomysql|p80_nomysql)  MODE="featuresincreasing" ;;
   php81|p81|php81_nomysql|p81_nomysql)  MODE="featuresincreasing" ;;
+  php82|p82|php82_nomysql|p82_nomysql)  MODE="featuresincreasing" ;;
 
   php5|p5)               MODE="onefullimage" ;;
   php72-maxi|p72-maxi)   MODE="onefullimage" ;;
   php74-maxi|p74-maxi)   MODE="onefullimage" ;;
   php80-maxi|p80-maxi)   MODE="onefullimage" ;;
   php81-maxi|p81-maxi)   MODE="onefullimage" ;;
+  php82-maxi|p82-maxi)   MODE="onefullimage" ;;
 
   php72-mini|p72-mini)   MODE="minimal" ;;
   php74-mini|p74-mini)   MODE="minimal" ;;
   php80-mini|p80-mini)   MODE="minimal" ;;
   php81-mini|p81-mini)   MODE="minimal" ;;
+  php82-mini|p82-mini)   MODE="minimal" ;;
 
   rest|aux) MODE="onefullimage" ;;
   ""  )     MODE="featuresincreasing" ;;  ## empty , build all
@@ -1216,6 +1219,81 @@ echo "##############################"|blue
     wait 90
 return ${localbuildfail} ; } ;
 
+
+_build_php81() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
+  echo "building for ${DFILES}" >&2
+  for FILENAME in ${DFILES};do
+        echo "DOCKERFILE: ${FILENAME}"|yellow
+        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel "${FILENAME}"
+        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
+echo "##############################"|blue
+return ${localbuildfail} ; } ;
+
+_build_php81_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
+    echo "building for ${DFILES}"
+    for FILENAME in ${DFILES};do
+        echo "DOCKERFILE: ${FILENAME}"|yellow
+        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel "${FILENAME}" NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
+echo "##############################"|blue
+return ${localbuildfail} ; } ;
+
+
+
+_build_php82() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.2* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
+  echo "building for ${DFILES}" >&2
+  for FILENAME in ${DFILES};do
+        echo "DOCKERFILE: ${FILENAME}"|yellow
+        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel "${FILENAME}"
+        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
+echo "##############################"|blue
+return ${localbuildfail} ; } ;
+
+_build_php82_nomysql() {
+    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+    localbuildfail=0
+    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.2* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
+    echo "building for ${DFILES}"
+    for FILENAME in ${DFILES};do
+        echo "DOCKERFILE: ${FILENAME}"|yellow
+        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel "${FILENAME}" NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
+echo "##############################"|blue
+return ${localbuildfail} ; } ;
+
+
+
 _build_php80_alpine() {
     export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     localbuildfail=0
@@ -1283,42 +1361,6 @@ echo "#############################"|blue
 echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
 return ${localbuildfail} ; } ;
-
-_build_php81() {
-  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
-  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
-  echo "building for ${DFILES}" >&2
-  for FILENAME in ${DFILES};do
-        echo "DOCKERFILE: ${FILENAME}"|yellow
-        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
-        #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel "${FILENAME}"
-        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
-        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
-    done
-echo "#############################"|blue
-echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
-echo "##############################"|blue
-return ${localbuildfail} ; } ;
-
-_build_php81_nomysql() {
-    BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
-    localbuildfail=0
-    echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php8.1* |grep -v latest$ |sort -r | grep -v nodejs|grep -v alpine);
-    echo "building for ${DFILES}"
-    for FILENAME in ${DFILES};do
-        echo "DOCKERFILE: ${FILENAME}"|yellow
-        grep jammy ${FILENAME} -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
-        #test -f Dockerfile.current && rm Dockerfile.current
-       _run_buildwheel "${FILENAME}" NOMYSQL
-        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+100));fi ;
-        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
-    done
-echo "#############################"|blue
-echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
-echo "##############################"|blue
-return ${localbuildfail} ; } ;
-
 
 _build_base() {
     echo $@|grep focal  -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
@@ -1448,6 +1490,13 @@ case $1 in
   php81-maxi|p81-maxi)                         _build_php81 "$@" ;                buildfail=$? ;;
   php81-alpine|p81-alpine)                     _build_php81_alpine "$@" ;         buildfail=$? ;;
   php81-nomysql-alpine|p81-mini-alpine)        _build_php81_alpine_nomysql "$@" ; buildfail=$? ;;
+
+  php82|p82)                                   _build_php82 "$@" ;                buildfail=$? ;;
+  php82-mini|p82-mini)                         _build_php82 "$@" ;                buildfail=$? ;;
+  php82-nomysql|p82-nomysql)                   _build_php82_nomysql "$@" ;        buildfail=$? ;;
+  php82-maxi|p82-maxi)                         _build_php82 "$@" ;                buildfail=$? ;;
+  php82-alpine|p82-alpine)                     _build_php82_alpine "$@" ;         buildfail=$? ;;
+  php82-nomysql-alpine|p82-mini-alpine)        _build_php82_alpine_nomysql "$@" ; buildfail=$? ;;
 
   rest|aux)                   _build_aux  "$@" ;          buildfail=$? ;;
   **  )                       _build_all ;                buildfail=$? ; _build_latest ; buildfail=$((${buildfail}+$?)) ;;
