@@ -436,9 +436,11 @@ _docker_build() {
         echo;_clock
         echo -n "TAG: $IMAGETAG | BUILD: $buildstring | PULLING ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} IF NOT FOUND | "|yellow
         echo pull our own recent image with DOCKER_BUILDKIT=0 |green
-        _docker_pull_multiarch ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT}
-        echo pull the baseimage in dockerfile: from |green
-        _docker_pull_multiarch $(cat ${DFILENAME}|grep ^FROM|sed 's/^FROM/ /g' |cut -d"#" -f1 |cut -f1)
+        _docker_pull_multiarch ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} &
+        echo pull the baseimage in dockerfile: FROM tag |green
+        _docker_pull_multiarch $(cat ${DFILENAME}|grep ^FROM|sed 's/^FROM/ /g' |cut -d"#" -f1 |cut -f1) &
+        echo waiting
+        wait
         echo;_clock
 
 
