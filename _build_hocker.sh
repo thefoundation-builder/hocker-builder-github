@@ -90,8 +90,8 @@ echo "$CACHE_REGISTRY_HOST"|grep  -q docker.io &&  (echo "$REGISTRY_PROJECT" |gr
 [[ -z "$BUILD_TARGET_PLATFORMS" ]] && {
 
 #export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,darwin"
-export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
-#export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+#export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 #export BUILD_TARGET_PLATFORMS="linux/amd64"
 #echo "$@"|grep -q bionic && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
 #echo "$@"|grep -q alpine && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
@@ -1319,6 +1319,7 @@ return ${localbuildfail} ; } ;
 
 
 _build_base() {
+    echo $@|grep focal  -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     echo $@|grep jammy  -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
     echo $@|grep bionic -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
     echo $@|grep alpine -q && export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7,linux/386"
