@@ -434,6 +434,31 @@ _docker_build() {
         ## NO BUILDX ,use standard instructions
         #export DOCKER_BUILDKIT=0
         echo;_clock
+        
+        docker buildx 2>&1 |grep -q "imagetools" && (
+        echo "RECREATING buildx HELPER" | green
+        echo -n buildx:rm: |yellow;
+                docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
+                echo -n "buildx:create:qemu" |yellow ;
+                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
+                echo "GENERATING CONFIG FOR BUILDER"
+                test -e /tmp/buildkit || mkdir /tmp/buildkit
+                echo '
+# optionally local registry.
+[registry."127.0.0.1:5000"]
+  http = true
+[registry."registry:5000"]
+  http = true
+                                  ' > /tmp/buildkit/buildkitd.toml
+#    insecure = true
+
+                echo -n "buildx:create" |yellow ;
+                docker buildx create --config /tmp/buildkit/buildkitd.toml  --driver docker-container --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
+                #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
+                echo "TESTING CREATED BUILDER:"|blue
+                docker buildx inspect --bootstrap 2>&1 |yellow) &
+                ### # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
+        echo;_clock
         echo -n "TAG: $IMAGETAG | BUILD: $buildstring | PULLING ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} IF NOT FOUND | "|yellow
         echo pull our own recent image with DOCKER_BUILDKIT=0 |green
         _docker_pull_multiarch ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${PROJECT_NAME}:${IMAGETAG_SHORT} &
@@ -462,27 +487,7 @@ _docker_build() {
                 echo " TRYING MULTIARCH "|blue
                 #echo ${have_buildx} |grep -q =true$ &&  docker buildx create --buildkitd-flags '--allow-insecure-entitlement network.host' --driver-opt network=host --driver docker-container --use --name mybuilder_${BUILDER_TOK} ; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --use --name mybuilder_${BUILDER_TOK}; echo ${have_buildx} |grep -q =true$ &&  docker buildx create --append --name mybuilder_${BUILDER_TOK} --platform=linux/aarch64 rpi4
                 # --driver docker-container --driver-opt network=host
-                echo "RECREATING buildx HELPER" | green
-                (echo -n buildx:rm: |yellow;
-                docker buildx rm mybuilder_${BUILDER_TOK}|red | _oneline ;
-                echo -n "buildx:create:qemu" |yellow ;
-                docker run --rm --privileged multiarch/qemu-user-static --reset -p yes 2>&1 |green
-                echo "GENERATING CONFIG FOR BUILDER"
-                test -e /tmp/buildkit || mkdir /tmp/buildkit
-                echo '
-# optionally local registry.
-[registry."127.0.0.1:5000"]
-  http = true
-[registry."registry:5000"]
-  http = true
-                                  ' > /tmp/buildkit/buildkitd.toml
-#    insecure = true
 
-                echo -n "buildx:create" |yellow ;
-                docker buildx create --config /tmp/buildkit/buildkitd.toml  --driver docker-container --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;echo
-                #docker buildx create  --driver docker-container --driver-opt image=moby/buildkit:master,network=host --buildkitd-flags '--allow-insecure-entitlement network.host' --use --driver-opt network=host  --name mybuilder_${BUILDER_TOK} 2>&1 | blueb | _oneline ;
-                echo "TESTING CREATED BUILDER:"|blue
-                docker buildx inspect --bootstrap 2>&1 |yellow) # | yellow|_oneline|grep -A4 -B4  ${TARGETARCH} && arch_ok=yes
                 arch_ok=yes
                 if [ "$arch_ok" = "yes" ] ;then echo "arch_ok" for $TARGETARCH
                 ## RANDOMIZE LOGIN TIME ; SO MULTIPLE RUNNERS DON't TRIGGER POSSIBLE BOT/DDOS-PREVENTION SCRIPTS
