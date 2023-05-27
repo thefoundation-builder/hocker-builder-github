@@ -1097,6 +1097,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php5() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
   localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php5*  | grep -v nodejs);
   echo "building for ${DFILES}"
