@@ -140,13 +140,14 @@ _clock() { echo -n WALLCLOCK : |redb ;echo  $( date -u "+%F %T" ) |yellow ; } ;
 
 case $1 in
   base-focal|base-bionic|base-jammy) MODE="minimal" ;;
+  php56|p56|php56_nomysql|p72_nomysql|php56-nomysql|p56_nomysql)  MODE="onefullimage" ;;
   php72|p72|php72_nomysql|p72_nomysql)  MODE="featuresincreasing" ;;
   php74|p74|php74_nomysql|p74_nomysql)  MODE="featuresincreasing" ;;
   php80|p80|php80_nomysql|p80_nomysql)  MODE="featuresincreasing" ;;
   php81|p81|php81_nomysql|p81_nomysql)  MODE="featuresincreasing" ;;
   php82|p82|php82_nomysql|p82_nomysql)  MODE="featuresincreasing" ;;
 
-  php5|p5)               MODE="onefullimage" ;;
+  php5|p56max|p56-maxi)  MODE="onefullimage" ;;
   php72-maxi|p72-maxi)   MODE="onefullimage" ;;
   php74-maxi|p74-maxi)   MODE="onefullimage" ;;
   php80-maxi|p80-maxi)   MODE="onefullimage" ;;
@@ -1113,6 +1114,24 @@ echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
 echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
+
+_build_php5_nomysql() {
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
+  localbuildfail=0
+  echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php5*  | grep -v nodejs);
+  echo "building for ${DFILES}"
+      for FILENAME in ${DFILES};do
+        echo "DOCKERFILE: ${FILENAME}"|yellow
+        #test -f Dockerfile.current && rm Dockerfile.current
+       _run_buildwheel "${FILENAME}" NOMYSQL
+        if [ "$?" -ne 0 ] ;then localbuildfail=$((${localbuildfail}+10));fi
+        [[ "${FORCE_UPLOAD}" = "true" ]] && localbuildfail=0;
+    done
+echo "#############################"|blue
+echo -n "${FUNCNAME[0]} RETURNING:"|yellow ;echo ${localbuildfail}
+echo "##############################"|blue
+return ${localbuildfail} ; } ;
+
 _build_php72() {
   export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
   localbuildfail=0
@@ -1503,6 +1522,7 @@ case $1 in
   base-jammy)                                  _build_base jammy  "$@" ;          buildfail=$? ;;
 
   latest_nomysql)                              _build_latest_nomysql "$@";        buildfail=$? ;;
+  php56-nomysql|p56_nomysql)                   _build_php5_nomysql "$@" ;         buildfail=$? ;;
   php5|p5)                                     _build_php5 "$@" ;                 buildfail=$? ;;
   php72|p72)                                   _build_php72 "$@" ;                buildfail=$? ;;
   php72-mini|p72-mini)                         _build_php72 "$@" ;                buildfail=$? ;;
