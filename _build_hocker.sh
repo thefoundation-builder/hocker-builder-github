@@ -1097,7 +1097,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php5() {
-  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
   localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php5*  | grep -v nodejs);
   echo "building for ${DFILES}"
@@ -1114,7 +1114,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php72() {
-  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+  export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
   localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for ${DFILES}"
@@ -1131,7 +1131,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php72_nomysql() {
-    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.2* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1150,7 +1150,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php74() {
-    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64,linux/arm/v7"
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
     localbuildfail=0
     echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
     echo "building for ${DFILES}"
@@ -1167,6 +1167,7 @@ echo "##############################"|blue
 return ${localbuildfail} ; } ;
 
 _build_php74_nomysql() {
+    export BUILD_TARGET_PLATFORMS="linux/amd64,linux/arm64"
 localbuildfail=0
   echo "BUILDFUNCTION=${FUNCNAME[0]} ";DFILES=$(ls -1 Dockerfile-php7.4* |grep -v latest$ |sort -r | grep -v nodejs);
   echo "building for ${DFILES}" >&2
