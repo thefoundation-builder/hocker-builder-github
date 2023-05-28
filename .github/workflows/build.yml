@@ -108,7 +108,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -118,7 +118,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php80-nomysql-alpine" 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -175,7 +174,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -185,7 +184,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php80-alpine " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -277,7 +275,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -287,7 +285,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php81-nomysql-alpine" 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -344,7 +341,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -354,7 +351,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php81-alpine " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -447,7 +443,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -457,7 +453,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php82-nomysql-alpine" 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -514,7 +509,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -524,7 +519,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php82-alpine " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -657,7 +651,7 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -667,7 +661,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh base-jammy " 2>&1
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -802,7 +795,7 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -812,7 +805,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh base-focal " 2>&1
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -945,7 +937,7 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -955,7 +947,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh base-bionic " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1050,7 +1041,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1) ;docker image ls '
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1060,7 +1051,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php5 " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
       - name: show files
@@ -1152,7 +1142,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1162,7 +1152,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php72-nomysql " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1218,7 +1207,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1228,7 +1217,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php72-mini " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1283,7 +1271,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1293,7 +1281,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php72-maxi " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1386,7 +1373,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1396,7 +1383,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php74-nomysql " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1452,7 +1438,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1462,7 +1448,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php74-mini " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1520,7 +1505,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1530,7 +1515,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php74-maxi " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1622,7 +1606,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1632,7 +1616,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php80-nomysql " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1688,7 +1671,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1698,7 +1681,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php80-mini " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1753,7 +1735,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1763,7 +1745,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php80-maxi " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1856,7 +1837,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1866,7 +1847,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php81-nomysql " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1923,7 +1903,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1933,7 +1913,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php81-mini " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -1988,7 +1967,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -1998,7 +1977,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php81-maxi " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -2090,7 +2068,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -2100,7 +2078,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php82-nomysql " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -2157,7 +2134,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -2167,7 +2144,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php82-mini " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
@@ -2222,7 +2198,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
       - name: build images
         run: |
-             date +%s > /tmp/.buildstart
+             date +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
              git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger
              echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
@@ -2232,7 +2208,6 @@ jobs:
              mkfifo /tmp/logpipe ; echo -11| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');echo 0|bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/logpipe | while read line;do echo "$line" >&2 ;echo "$line"  ;done | sed 's/\x1B\[[0-9;]\{1,\}[A-Za-z]//g' | tr -d '\000-\010\013\014\016-\037'|sed -u  's/\r/\n/g;s/\t/    /g'|grep --line-buffered -v ^$ | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildlog FALSE $(echo ${{ github.job }}|sed 's/build-//g') "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') info &
              sudo /bin/bash -c "grep -v PASS .buildenv ; test -e /tmp/buildcache_persist || mkdir /tmp/buildcache_persist;source .buildenv;bash _build_hocker.sh php82-maxi " 2>&1 |tee /tmp/logpipe &>/dev/null
-             bash -c 'timediff=$(($(date +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              cat /tmp/hocker.build.result | bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildresult "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g')
              echo "RESULT:"$(cat /tmp/hocker.build.result)
              grep ^0$ /tmp/hocker.build.result
