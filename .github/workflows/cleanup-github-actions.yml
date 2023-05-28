@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sleep for 120 seconds
-          uses: jakejarvis/wait-action@master
-          with:
+        uses: jakejarvis/wait-action@master
+        with:
           time: '120s'
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@main
