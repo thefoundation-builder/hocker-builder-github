@@ -140,14 +140,14 @@ _clock() { echo -n WALLCLOCK : |redb ;echo  $( date -u "+%F %T" ) |yellow ; } ;
 
 case $1 in
   base-focal|base-bionic|base-jammy) MODE="minimal" ;;
-  php56|p56|php56_nomysql|p72_nomysql|php56-nomysql|p56_nomysql)  MODE="onefullimage" ;;
+  php5|p56max|p56-maxi|p5|p56|php5|php56|p56|php56_nomysql|p56_nomysql|php56-nomysql|p56_nomysql)  MODE="onefullimage" ;;
+
   php72|p72|php72_nomysql|p72_nomysql)  MODE="featuresincreasing" ;;
   php74|p74|php74_nomysql|p74_nomysql)  MODE="featuresincreasing" ;;
   php80|p80|php80_nomysql|p80_nomysql)  MODE="featuresincreasing" ;;
   php81|p81|php81_nomysql|p81_nomysql)  MODE="featuresincreasing" ;;
   php82|p82|php82_nomysql|p82_nomysql)  MODE="featuresincreasing" ;;
 
-  php5|p56max|p56-maxi)  MODE="onefullimage" ;;
   php72-maxi|p72-maxi)   MODE="onefullimage" ;;
   php74-maxi|p74-maxi)   MODE="onefullimage" ;;
   php80-maxi|p80-maxi)   MODE="onefullimage" ;;
@@ -885,13 +885,12 @@ fi # end if MODE=featuresincreasing
 tagstring=$(echo "${FEATURES}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)}') ;
 cleantags=$(echo "${tagstring}"|sed 's/^_//g;s/_\+/_/g')
 if $(echo $MODE|grep -q -e featuresincreasing -e onefullimage -e full) ; then
-echo -n "FULL"
+echo -n "MODE:FULL |->Dfiles :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
 #if [[ "$2" == "NOMYSQL"  ]];then
 
 ##LOGIC overwrite## nomysql jobs timed out
 if [[ "$2" == "NOMYSQL"  ]];then
-
-echo "NOMYSQL not trigered by inverse logic for nomysql/maxi builds"
+echo "MODE:NOMYSQL not triggered by inverse logic for nomysql/maxi builds |->Dfiles :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
 else
 
 ###2.1 maxi nomysql
