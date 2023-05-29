@@ -756,8 +756,10 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
   echo "NOMYSQL"
 ###1.1 mini nomysql ####CHECK IF DOCKERFILE OFFERS MARIADB  |
     if [ 0 -eq  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
-          echo "MARIADB NOT FOUND IN DOCKERFILE 2.1"    
+          echo "MARIADB NOT FOUND IN DOCKERFILE 1.1"    
         else
+          echo "MARIADB FOUND IN DOCKERFILE 1.1"    
+
         FEATURESET=${FEATURESET_MINI_NOMYSQL}
         buildstring=$(echo ${FEATURESET} |sed 's/@/\n/g' | grep -v ^$ | sed 's/ \+$//g;s/^/--build-arg /g;s/$/=true /g'|grep -v MARIADB|_oneline)" --build-arg INSTALL_MARIADB=false ";
         #tagstring=$(echo "${FEATURESET}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)}') ;
@@ -970,7 +972,7 @@ if [[ "$2" == "NOMYSQL"  ]];then
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm ${digest};done;rm /dev/shm/pulled_docker_digests
         echo return val currently: ${runbuildfail} |green
-#    fi
+    fi
 else ## NOMYSQL
 
 echo MYSQL
