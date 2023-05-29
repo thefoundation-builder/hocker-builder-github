@@ -130,9 +130,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -210,9 +210,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -329,9 +329,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -409,9 +409,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -529,9 +529,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -609,9 +609,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -751,8 +751,6 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
              while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
@@ -771,9 +769,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -914,8 +912,6 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
              while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
@@ -934,9 +930,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1075,8 +1071,6 @@ jobs:
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
              while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
@@ -1095,9 +1089,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1216,9 +1210,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1403,9 +1397,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1482,9 +1476,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1560,9 +1554,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1680,9 +1674,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1759,9 +1753,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1840,9 +1834,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -1959,9 +1953,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2038,9 +2032,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2116,9 +2110,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2236,9 +2230,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2316,9 +2310,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2394,9 +2388,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2513,9 +2507,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2593,9 +2587,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
@@ -2671,9 +2665,9 @@ jobs:
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo '{"options":{"disable_link_previews":true,"silent":true},"text":" '$(test -e  /tmp/hocker.build.result  && (grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK");test -e  /tmp/hocker.build.result  || echo "NO_RESULT")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(test -e /tmp/hocker.build.result && cat /tmp/hocker.build.result;test -e /tmp/hocker.build.result || echo "NO_RES_FOUND" )'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' > /tmp/notify.json ;echo "SENDING: curl -s -X POST TOYOURTOKENURL   -d "; cat /tmp/notify.json|jq .;echo "RAW_JSON:"$(cat /tmp/notify.json); )
-             (      cat /tmp/notify.json|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
+             (      cat /tmp/notify.json|jq .|curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   --data-binary @-  ; )
              echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
+             ( curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 3
       - name: show files
         if: always()
