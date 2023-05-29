@@ -883,11 +883,14 @@ test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|whi
 
 fi # end if MODE=featuresincreasing
 
-## maxi build gets triggered on featuresincreasing and onefullimage
+## maxi build gets triggered on onefullimage
+################################################################## maxi build gets triggered on featuresincreasing and onefullimage
 ## remove INSTALL_part from FEATURESET so all features underscore separated comes up
+
 tagstring=$(echo "${FEATURES}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)}') ;
 cleantags=$(echo "${tagstring}"|sed 's/^_//g;s/_\+/_/g')
-if $(echo $MODE|grep -q -e featuresincreasing -e onefullimage -e full) ; then
+#if $(echo $MODE|grep -q -e featuresincreasing -e onefullimage -e full) ; then
+if $(echo $MODE|grep -q  -e onefullimage -e full) ; then
 echo  " MODE:FULL |->Dfiles_maria_count :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
 
 if [[ "$2" == "NOMYSQL"  ]];then
