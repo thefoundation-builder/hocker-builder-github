@@ -96,6 +96,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -105,12 +109,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -174,6 +176,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -183,12 +189,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -236,6 +240,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -287,6 +295,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -296,12 +308,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -365,6 +375,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -374,12 +388,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -427,6 +439,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -479,6 +495,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -488,12 +508,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -557,6 +575,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
 #    needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -566,12 +588,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -619,6 +639,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -719,13 +743,13 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             date -u +%s > /tmp/.buildstart ; 
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -766,6 +790,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -865,13 +893,13 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             date -u +%s > /tmp/.buildstart ; 
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -912,6 +940,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1009,13 +1041,13 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             date -u +%s > /tmp/.buildstart ; 
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1055,6 +1087,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1107,6 +1143,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1119,9 +1159,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1) ;docker image ls '
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1183,6 +1221,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php56-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1195,9 +1237,7 @@ jobs:
         run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") $(docker image  ls|grep node |cut -f1 |cut -d" " -f1) ;docker image ls '
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1232,6 +1272,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1286,6 +1330,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-bionic ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1295,12 +1343,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1363,6 +1409,10 @@ jobs:
     if: github.reposity_owner == 'thefoundation-builder'
     needs: [ build-php72-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1372,12 +1422,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1439,6 +1487,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php72-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1448,12 +1500,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1501,6 +1551,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1553,6 +1607,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-focal ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1562,12 +1620,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1630,6 +1686,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php74-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1639,12 +1699,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1709,6 +1767,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php74-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1718,12 +1780,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1771,6 +1831,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1822,6 +1886,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-jammy ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1831,12 +1899,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1899,6 +1965,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php80-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1908,12 +1978,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -1975,6 +2043,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php80-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1984,12 +2056,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2037,6 +2107,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2089,6 +2163,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-jammy ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2098,12 +2176,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2167,6 +2243,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php81-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2176,12 +2256,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2243,6 +2321,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php81-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2252,12 +2334,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2305,6 +2385,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2356,6 +2440,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-base-jammy ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2365,12 +2453,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2434,6 +2520,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php82-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2443,12 +2533,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2510,6 +2598,10 @@ jobs:
     if: github.repository_owner == 'thefoundation-builder'
     needs: [ build-php82-nomysql ]
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2519,12 +2611,10 @@ jobs:
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
-        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done )   || true  &&  docker image ls
+        run: /bin/bash -c 'docker rmi $(docker image  ls --filter=reference="node:*" |grep -v  " ") ' || true  &&  ( (docker image ls |grep ^node |sed 's/ \+/ /g'|cut -d" " -f3)|while read thing ;do docker rmi $thing;done |grep -v eleted |tr -d '\n' )   || true  &&  docker image ls
       - name: build images
         run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &
-             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
+             while (true);do bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g'); sleep 180 ;done &             echo  export REGISTRY_PASSWORD="$REGISTRY_PASSWORD" > .buildenv;
              echo  export REGISTRY_HOST="$REGISTRY_HOST" >> .buildenv ;
              (echo export REGISTRY_PROJECT=thefoundation;echo export PROJECT_NAME=hocker;echo export PULL_BASE64KEY="${{ secrets.PULL_BASE64KEY }}" ) >> .buildenv;
              echo  export REGISTRY_USER="$REGISTRY_USER" >> .buildenv ;
@@ -2572,6 +2662,10 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
+      - name: send_notify
+        run: |
+             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
+             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2

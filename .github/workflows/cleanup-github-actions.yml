@@ -16,10 +16,10 @@ jobs:
   del_runs:
     runs-on: ubuntu-latest
     steps:
-      - name: Sleep for 120 seconds
+      - name: Sleep for 180 seconds
         uses: jakejarvis/wait-action@master
         with:
-          time: '120s'
+          time: '180s'
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@main
         with:
