@@ -240,10 +240,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -439,10 +435,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -639,10 +631,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -801,10 +789,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -962,10 +946,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1120,10 +1100,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1305,10 +1281,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1584,10 +1556,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -1864,10 +1832,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2140,10 +2104,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2418,10 +2378,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
@@ -2695,10 +2651,6 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - name: send_notify
-        run: |
-             mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
-             date -u +%s > /tmp/.buildstart ; 
       - uses: actions/checkout@v3
 #      - name: Set up QEMU
 #        uses: docker/setup-qemu-action@v2
