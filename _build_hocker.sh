@@ -755,8 +755,9 @@ if echo "$MODE" | grep -e "featuresincreasing" -e "mini" ;then  ## BUILD 2 versi
   if [[ "$2" == "NOMYSQL"  ]];then
   echo "NOMYSQL"
 ###1.1 mini nomysql ####CHECK IF DOCKERFILE OFFERS MARIADB  |
-    if [ 0 -lt  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
-        echo "MARIADB FOUND IN DOCKERFILE 1.1 @ ${current_target}"
+    if [ 0 -eq  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
+          echo "MARIADB NOT FOUND IN DOCKERFILE 2.1"    
+        else
         FEATURESET=${FEATURESET_MINI_NOMYSQL}
         buildstring=$(echo ${FEATURESET} |sed 's/@/\n/g' | grep -v ^$ | sed 's/ \+$//g;s/^/--build-arg /g;s/$/=true /g'|grep -v MARIADB|_oneline)" --build-arg INSTALL_MARIADB=false ";
         #tagstring=$(echo "${FEATURESET}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)}') ;
@@ -885,16 +886,19 @@ fi # end if MODE=featuresincreasing
 tagstring=$(echo "${FEATURES}"|cut -d_ -f2 |cut -d= -f1 |awk '{print tolower($0)}') ;
 cleantags=$(echo "${tagstring}"|sed 's/^_//g;s/_\+/_/g')
 if $(echo $MODE|grep -q -e featuresincreasing -e onefullimage -e full) ; then
-echo -n "MODE:FULL |->Dfiles :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
-#if [[ "$2" == "NOMYSQL"  ]];then
+echo  " MODE:FULL |->Dfiles_maria_count :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
+
+if [[ "$2" == "NOMYSQL"  ]];then
 
 ##LOGIC overwrite## nomysql jobs timed out
-if [[ "$2" == "NOMYSQL"  ]];then
-echo "MODE:NOMYSQL not triggered by inverse logic for nomysql/maxi builds |->Dfiles :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
-else
+#if [[ "$2" == "NOMYSQL"  ]];then
+#echo  " MODE:NOMYSQL not triggered by inverse logic for nomysql/maxi builds |->Dfiles_maria_count :"$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)
+#else
 
 ###2.1 maxi nomysql
-    if [ 0 -lt  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
+    if [ 0 -eq  "$(cat ${DFILENAME}|grep INSTALL_MARIADB|wc -l)" ];then
+          echo "MARIADB NOT FOUND IN DOCKERFILE 2.1"    
+        else
           echo "MARIADB FOUND IN DOCKERFILE 2.1"
         FEATURESET="${FEATURESET_MAXI_NOMYSQL}"
         buildstring=$(echo ${FEATURESET} |sed 's/@/\n/g' | grep -v ^$ | sed 's/ \+$//g;s/^/--build-arg /g;s/$/=true /g'|grep -v MARIADB|_oneline)" --build-arg INSTALL_MARIADB=false ";
@@ -966,8 +970,8 @@ else
 #remove all pulled old images from dockerhub
 test -e /dev/shm/pulled_docker_digests && cat /dev/shm/pulled_docker_digests|while read digest;do docker image rm ${digest};done;rm /dev/shm/pulled_docker_digests
         echo return val currently: ${runbuildfail} |green
-    fi
-#else ## NOMYSQL
+#    fi
+else ## NOMYSQL
 
 echo MYSQL
 ###2.1 maxi mysql
