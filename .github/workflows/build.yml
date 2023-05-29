@@ -122,14 +122,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -205,14 +200,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -323,14 +313,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -406,14 +391,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -525,14 +505,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -608,14 +583,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -767,11 +737,6 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
       - name: show files
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -918,11 +883,6 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
       - name: show files
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -1067,11 +1027,6 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
       - name: show files
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -1178,14 +1133,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1362,14 +1312,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1444,14 +1389,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1525,14 +1465,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1644,14 +1579,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1726,14 +1656,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1810,14 +1735,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -1928,14 +1848,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2010,14 +1925,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2091,14 +2001,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2210,14 +2115,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2293,14 +2193,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2374,14 +2269,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2492,14 +2382,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2575,14 +2460,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
@@ -2656,14 +2536,9 @@ jobs:
              echo "RESULT: "$(cat /tmp/hocker.build.result)
              bash -c 'timediff=$(($(date -u +%s)-$(cat /tmp/.buildstart)));echo $timediff'| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g');
              (sleep 10;echo 1| bash /tmp/bash-logger/log-to-influxdb2.sh "${{ secrets.LOGTOINFLUXURL }}" buildstatus FALSE buildtime "${{ secrets.LOGTOINFLUXTOKEN }}" $(echo ${{ github.job }}|sed 's/build-//g') & )
-             bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
-             ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             (      curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FINISHED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
-             echo -n "DELETING INIT:MSG";
-             curl -s -X GET $(echo "${{ secrets.BUILDER_NOTIFICATION_URL }}" |sed 's/messages/messages_delete/g')"/"$(cat /tmp/initmsgid) ;echo  )||true
              sleep 9;             grep ^0$ /tmp/hocker.build.result;
-      - name: notify_on_failure
-        if: failure()
+      - name: notify_final
+        if: always()
         run: |
              bash -c 'seconds=$(($(date -u +%s)-$(cat /tmp/.buildstart)));TZ=UTC printf "AFTER: %d days %(%H hours %M minutes %S seconds)T" $((seconds/86400)) $seconds > /tmp/_send_timediff'
              ( echo "SENDING: curl -s -X POST TOYOURTOKENURL"   -d "'{"options":{"disable_link_previews":true,"silent":true},"text":"[ '$(grep -q ^0$ /tmp/hocker.build.result || echo "NOT_OK";grep -q ^0$ /tmp/hocker.build.result && echo "OK")' [ == FAILED_OR_ABORTED BUILD ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }}) AFTER '$(cat /tmp/_send_timediff)' seconds  RESULT: '$(cat /tmp/hocker.build.result)'.. ","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' ; )
