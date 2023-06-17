@@ -6,8 +6,8 @@ Suggested:
 
 Use cases:
 
-* generic fpm : https://gitlab.com/the-foundation/docker-generic-php-fpm
-* typo3       : https://gitlab.com/the-foundation/Docker-typo3 along with https://gitlab.com/the-foundation/docker-typo3-src
+* generic fpm :          https://gitlab.com/the-foundation/docker-generic-php-fpm
+* typo3       :          https://gitlab.com/the-foundation/Docker-typo3 along with https://gitlab.com/the-foundation/docker-typo3-src
 * websockets along with: https://gitlab.com/the-foundation/docker-addon-domain
 
 
