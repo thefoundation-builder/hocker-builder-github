@@ -1067,7 +1067,7 @@ test -e /tmp/buildcache_persist  && (
     #docker pull ${CICACHETAG} &&             (cd /tmp/; docker export $(docker create --name cicache ${CICACHETAG} /bin/false ) |tar xv buildcache_persist ;docker rm cicache )
 
     echo "SAVING CICACHE ${CICACHETAG}" ; find /tmp/buildcache_persist/buildx -mtime +14 -delete;
-    cd /tmp/;sudo tar cv buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
+    cd /tmp/;sudo tar c buildcache_persist |docker import - "${CICACHETAG}" && docker push "${CICACHETAG}"  )
 )
 
 _docker_purge|_reformat_docker_purge|red
