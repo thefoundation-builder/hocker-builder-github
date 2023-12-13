@@ -1150,7 +1150,7 @@ jobs:
 #        volumes:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
-    needs: [ build-base-bionic ]
+    needs: [ build-base-focal ]
     steps:
       - name: send_notify
         run: |
