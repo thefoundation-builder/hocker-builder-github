@@ -11,14 +11,6 @@ on:
   schedule:
     - cron: '0 0 1 * *'
 # Run monthly, at 00:00 on the 1st day of month.
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "del"
-  cancel-in-progress: false
 
 jobs:
   del_runs:
