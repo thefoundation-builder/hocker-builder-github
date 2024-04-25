@@ -143,6 +143,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -223,6 +224,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -338,6 +340,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -418,6 +421,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -534,6 +538,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -614,6 +619,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -770,6 +776,7 @@ jobs:
         if: always()
         with:
          name: buildlogs_base_jammy
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -927,6 +934,7 @@ jobs:
         if: always()
         with:
          name: buildlogs_base_focal
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1082,6 +1090,7 @@ jobs:
         if: always()
         with:
          name: buildlogs_base_bionic
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1199,6 +1208,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1264,6 +1274,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1382,6 +1393,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1461,6 +1473,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1539,6 +1552,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1655,6 +1669,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1734,6 +1749,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1815,6 +1831,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1930,6 +1947,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2009,6 +2027,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2087,6 +2106,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2203,6 +2223,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2283,6 +2304,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2361,6 +2383,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2476,6 +2499,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2556,6 +2580,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -2634,6 +2659,7 @@ jobs:
         if: always()
         with:
          name: buildlogs
+         merge-multiple: true
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
