@@ -769,7 +769,7 @@ jobs:
 #        if: failure()
         if: always()
         with:
-         name: buildlogs
+         name: buildlogs_base_jammy
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -926,7 +926,7 @@ jobs:
 #        if: failure()
         if: always()
         with:
-         name: buildlogs
+         name: buildlogs_base_focal
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
@@ -1081,7 +1081,7 @@ jobs:
 #        if: failure()
         if: always()
         with:
-         name: buildlogs
+         name: buildlogs_base_bionic
          path: |
               buildlogs
       - name: CHECK BUILD STATUS
