@@ -1,0 +1,34 @@
+name: Cleanup ghcr registry
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  push:
+#    branches:
+#      - 'master'
+#      - 'main'
+  schedule:
+    - cron: '0 0 1 * *'
+# Run monthly, at 00:00 on the 1st day of month.
+
+jobs:
+
+  cleanup_registry:
+#    needs: finish-release
+    runs-on: ubuntu-latest
+    #container: ghcr.io/thefoundation-builder/docker-with-buildx:latest
+    if: github.repository_owner == 'thefoundation-builder'
+    steps:
+      - name: Sleep for 0.5 minutes
+        run: sleep 30
+        shell: bash
+      - uses: actions/delete-package-versions@v4
+        name: delete non-build containers
+        with: 
+          package-name: "${{ github.event.repository.name }}"
+          package-type: 'container'
+          min-versions-to-keep: 4
+          delete-only-untagged-versions: 'true'
+          ignore-versions: '.*(buildcache|baseimage|builder)(|.*)'
+          #token: ${{ secrets.PACKAGE_TOKEN }}
+          token: ${{ github.token }}
