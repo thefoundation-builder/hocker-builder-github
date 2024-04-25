@@ -46,7 +46,7 @@ jobs:
     ## ONLY on https://github.com/thefoundation/ -> push to the builder repo
     if: github.repository_owner == 'TheFoundation'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: prep-downstream
         run: |
              mkdir downstream
@@ -100,12 +100,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -138,7 +138,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -180,12 +180,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -218,7 +218,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -240,12 +240,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -295,12 +295,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -333,7 +333,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -375,12 +375,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -413,7 +413,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -435,12 +435,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -491,12 +491,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -529,7 +529,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -571,12 +571,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -609,7 +609,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -631,12 +631,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -684,7 +684,7 @@ jobs:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: check_build_baseimage
         # Give an id to the step, so we can reference it later
         run: |
@@ -726,11 +726,11 @@ jobs:
              date -u +%s > /tmp/.buildstart ; 
       - name: Set up QEMU
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         id: buildx
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -765,7 +765,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -789,12 +789,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -841,7 +841,7 @@ jobs:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: check_build_baseimage
         # Give an id to the step, so we can reference it later
         run: |
@@ -883,11 +883,11 @@ jobs:
              date -u +%s > /tmp/.buildstart ; 
       - name: Set up QEMU
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         id: buildx
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -922,7 +922,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -946,12 +946,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -996,7 +996,7 @@ jobs:
 #          - /tmp/buildcache_persist/apt-cacher-ng:/var/cache/apt-cacher-ng
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - id: check_build_baseimage
         # Give an id to the step, so we can reference it later
         run: |
@@ -1038,11 +1038,11 @@ jobs:
              date -u +%s > /tmp/.buildstart ; 
       - name: Set up QEMU
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         id: buildx
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Available platforms
         run: echo ${{ steps.buildx.outputs.platforms }}
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
@@ -1077,7 +1077,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1100,12 +1100,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1156,12 +1156,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1194,7 +1194,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1234,12 +1234,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1259,7 +1259,7 @@ jobs:
       - name: show files
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1281,12 +1281,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1339,12 +1339,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1377,7 +1377,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1418,12 +1418,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1456,7 +1456,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1496,12 +1496,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1534,7 +1534,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1556,12 +1556,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1612,12 +1612,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1650,7 +1650,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1691,12 +1691,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1729,7 +1729,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1772,12 +1772,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1810,7 +1810,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1832,12 +1832,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1887,12 +1887,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -1925,7 +1925,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -1966,12 +1966,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2004,7 +2004,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2044,12 +2044,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2082,7 +2082,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2104,12 +2104,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2160,12 +2160,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2198,7 +2198,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2240,12 +2240,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2278,7 +2278,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2318,12 +2318,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2356,7 +2356,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2378,12 +2378,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2433,12 +2433,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2471,7 +2471,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2513,12 +2513,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2551,7 +2551,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2591,12 +2591,12 @@ jobs:
         run: |
              mkdir -p buildlogs|| true;git clone https://gitlab.com/the-foundation/bash-logger.git /tmp/bash-logger;(curl -s -X POST "${{ secrets.BUILDER_NOTIFICATION_URL }}"   -d '{"options": { "disable_link_previews": true,"silent":true },"text":"[ ↑_STARTING BUILD_↑ ](https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/actions/runs/${{ github.run_id }})","origin":"'$(echo "${{ github.job }}@${{ github.repository_owner }}/${{ github.event.repository.name }}"|sed 's/build-//g')'"}' |jq .message_id --raw-output > /tmp/initmsgid)||true
              date -u +%s > /tmp/.buildstart ; 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
@@ -2629,7 +2629,7 @@ jobs:
         if: always()
         run: bash -c "ls buildlogs/  -lh1 ; tail -n 30 buildlogs/*"
       - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
 #        if: failure()
         if: always()
         with:
@@ -2651,12 +2651,12 @@ jobs:
       security-events: write
     if: github.repository_owner == 'thefoundation-builder'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 #      - name: Set up QEMU
-#        uses: docker/setup-qemu-action@v2
+#        uses: docker/setup-qemu-action@v3
 #      - name: Set up Docker Buildx
 #        id: buildx
-#        uses: docker/setup-buildx-action@v2
+#        uses: docker/setup-buildx-action@v3
 #      - name: Available platforms
 #        run: echo ${{ steps.buildx.outputs.platforms }}
       - name: current images
